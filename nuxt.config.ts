@@ -58,6 +58,9 @@ export default defineNuxtConfig({
     prerender: {
       routes: prerenderRoutes,
       crawlLinks: true,
+      // DB may be unreachable at build time (e.g. preview envs); don't fail
+      // the whole build — unprerendered routes fall back to runtime SSR.
+      failOnError: false,
     },
   },
 
