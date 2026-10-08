@@ -1,0 +1,26 @@
+{
+  "eyebrow": "概要",
+  "title": "スタジオは一人の人間",
+  "name": "Tai 戴赟杰",
+  "role": "エンジニア、PM、ビルダー。",
+  "p1": "**深圳**のフルスタックソフトウェアエンジニア兼プロジェクトマネージャー。MIIT認定インターネットアーキテクチャデザイナー——独立系ソフトウェアをエンドツーエンドで構築する。",
+  "p2": "一貫した信条：**問題のスタック全体を自分のものにする**——戦略、デザイン、コード、ローンチ、運用。",
+  "cards": [
+    {
+      "label": "拠点",
+      "title": "中国・深圳",
+      "text": "UTC+8 · 世界中と仕事、非同期優先"
+    },
+    {
+      "label": "事業",
+      "title": "独立系プロダクト",
+      "text": "越境 EC 運営も"
+    },
+    {
+      "label": "コアスタック",
+      "title": "Vue 3 · Nuxt 3 · React · Next.js · Laravel · Tailwind CSS · PostgreSQL · Supabase · Cloudflare Workers · OpenAI · Gemini · WooCommerce",
+      "text": "",
+      "compact": true
+    }
+  ]
+}

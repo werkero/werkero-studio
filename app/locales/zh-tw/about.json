@@ -1,0 +1,26 @@
+{
+  "eyebrow": "關於",
+  "title": "工作室是一個人",
+  "name": "Tai 戴赟杰",
+  "role": "工程師、專案經理、建造者。",
+  "p1": "在**深圳**的全端軟體工程師與專案經理，工信部認證網際網路架構設計師——端到端構建獨立軟體。",
+  "p2": "一以貫之：**擁有一個問題的整個技術棧**——戰略、設計、程式碼、上線、運維。",
+  "cards": [
+    {
+      "label": "基地",
+      "title": "中國深圳",
+      "text": "UTC+8 · 面向全球，異步優先"
+    },
+    {
+      "label": "業務",
+      "title": "獨立產品",
+      "text": "以及跨境電商營運"
+    },
+    {
+      "label": "核心技術棧",
+      "title": "Vue 3 · Nuxt 3 · React · Next.js · Laravel · Tailwind CSS · PostgreSQL · Supabase · Cloudflare Workers · OpenAI · Gemini · WooCommerce",
+      "text": "",
+      "compact": true
+    }
+  ]
+}

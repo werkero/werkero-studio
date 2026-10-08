@@ -1,0 +1,26 @@
+{
+  "eyebrow": "关于",
+  "title": "工作室是一个人",
+  "name": "Tai 戴赟杰",
+  "role": "工程师、项目经理、建造者。",
+  "p1": "在**深圳**的全栈软件工程师与项目经理，工信部认证互联网架构设计师——端到端构建独立软件。",
+  "p2": "一以贯之：**拥有一个问题的整个技术栈**——战略、设计、代码、上线、运维。",
+  "cards": [
+    {
+      "label": "基地",
+      "title": "中国深圳",
+      "text": "UTC+8 · 面向全球，异步优先"
+    },
+    {
+      "label": "业务",
+      "title": "独立产品",
+      "text": "以及跨境电商运营"
+    },
+    {
+      "label": "核心技术栈",
+      "title": "Vue 3 · Nuxt 3 · React · Next.js · Laravel · Tailwind CSS · PostgreSQL · Supabase · Cloudflare Workers · OpenAI · Gemini · WooCommerce",
+      "text": "",
+      "compact": true
+    }
+  ]
+}
