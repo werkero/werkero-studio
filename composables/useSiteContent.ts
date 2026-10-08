@@ -37,7 +37,7 @@ export function useSiteContent() {
   const faqUi = computed(() => getL1(loc.value, 'faq'))
   const servicesUi = computed(() => getL1(loc.value, 'services'))
   const positionUi = computed(() => getL1(loc.value, 'position'))
-  const processUi = computed(() => getL1(loc.value, 'process'))
+  const processUi = computed(() => getL1(loc.value, 'workflow'))
   const aboutUi = computed(() => getL1(loc.value, 'about'))
   const commonUi = computed(() => getL1(loc.value, 'common'))
 

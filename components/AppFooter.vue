@@ -10,7 +10,7 @@
           <p class="col-h">{{ foot.explore }}</p>
           <a :href="anchor('#services')">{{ nav.services }}</a>
           <a :href="anchor('#work')">{{ nav.work }}</a>
-          <a :href="anchor('#process')">{{ nav.process }}</a>
+          <a :href="anchor('#process')">{{ nav.workflow }}</a>
           <a :href="anchor('#about')">{{ nav.about }}</a>
         </div>
         <div class="col">
