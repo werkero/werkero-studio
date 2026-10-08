@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "description": "Werkero 是 Tai 的個人工作室——設計並構建網站產品、品牌與 AI 工具。"
+  },
+  "services": {
+    "eyebrow": "我們做什麼",
+    "title": "三個領域，一個工作室。"
+  },
+  "works": {
+    "eyebrow": "精選作品",
+    "title": "代表作。"
+  },
+  "faq": {
+    "eyebrow": "問答",
+    "title": "有必要知道的。"
+  },
+  "cta": {
+    "title": "有值得做的東西嗎？"
+  },
+  "footer": {
+    "tagline": "獨立工作室，專注網站產品、品牌與 AI 工具。"
+  }
+}

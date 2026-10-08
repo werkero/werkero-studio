@@ -1,0 +1,18 @@
+{
+  "eyebrow": "QUESTIONS",
+  "title": "Before you ask",
+  "items": [
+    {
+      "q": "How does a project start?",
+      "a": "A conversation about the problem, not the feature list — then a written statement, success criteria and fixed scope before any code."
+    },
+    {
+      "q": "How long does a build take?",
+      "a": "A focused project usually ships in weeks, not quarters. You get a fixed timeline with the written statement — and a build that actually hits it."
+    },
+    {
+      "q": "What does it cost?",
+      "a": "Fixed scope, fixed price — quoted after we agree on the written statement. No hourly billing, no surprise invoices."
+    }
+  ]
+}

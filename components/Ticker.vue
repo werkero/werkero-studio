@@ -1,11 +1,11 @@
 <template>
   <div class="ticker-block">
-    <p class="eyebrow wrap" style="margin-bottom: 1.6rem">{{ label }}</p>
+    <p class="kicker wrap tick-label"><span class="ast">✳</span> {{ label }}</p>
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
         <template v-for="n in 2" :key="n">
-          <span v-for="(item, i) in items" :key="i" class="tick-unit">
-            <span class="tick-item">{{ item }}</span><span class="tick-sep" />
+          <span v-for="(item, i) in items" :key="`${n}-${i}`" class="tick-unit">
+            <span class="tick-item" :class="{ alt: i % 2 === 1 }">{{ item }}</span><span class="tick-sep">✳</span>
           </span>
         </template>
       </div>
@@ -18,7 +18,10 @@ defineProps<{ label: string; items: string[] }>()
 </script>
 
 <style scoped>
-.ticker-block { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 2.2rem 0; }
+.ticker-block { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 2rem 0 2.4rem; background: var(--cream); }
+.tick-label { justify-content: center; margin-bottom: 1.8rem; }
 .tick-unit { display: inline-flex; align-items: center; }
-.tick-item { font-family: var(--font-serif); font-size: 1.5rem; color: var(--paper); opacity: 0.85; }
+.tick-item { font-size: 1.45rem; letter-spacing: 0.02em; padding: 0 1.7rem; color: var(--ink); font-weight: 600; white-space: nowrap; }
+.tick-item.alt { font-family: var(--font-serif); font-style: italic; font-weight: 500; }
+.tick-sep { font-size: 1rem; color: var(--ink); opacity: 0.7; }
 </style>

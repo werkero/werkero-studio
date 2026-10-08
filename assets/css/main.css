@@ -9,8 +9,8 @@
   --cream-2: #efe9da;
   --paper: #faf7f0;
   --white: #ffffff;
-  --lime: #d4e157;
-  --lime-deep: #b8c93a;
+  --lime: #e6f542;
+  --lime-deep: #c8d63a;
   --red-glow: #b03a2e;
   --blue-glow: #2743c7;
   --purple-glow: #7b4fd6;
@@ -184,7 +184,7 @@ img, svg { display: block; }
   white-space: nowrap; user-select: none;
   text-align: center;
 }
-.footer-crop { overflow: hidden; max-height: 0.68em; }
+.footer-crop { overflow: hidden; height: clamp(2.6rem, 11.5vw, 12rem); margin-top: 2rem; }
 
 /* ---------- flag switcher ---------- */
 .fi { border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,0.18); }

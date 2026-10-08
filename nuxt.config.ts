@@ -19,6 +19,8 @@ export default defineNuxtConfig({
   },
 
   i18n: {
+    lazy: false,
+    defaultLocale: 'en',
     locales: [
       { code: 'en', language: 'en-US', name: 'English' },
       { code: 'zh-cn', language: 'zh-CN', name: '简体中文' },

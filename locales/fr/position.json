@@ -1,0 +1,21 @@
+{
+  "eyebrow": "NOTRE POSITION",
+  "headline": "Le design et l'ingénierie sont {hl}un seul et même acte{/hl} — jugés à une seule aune : est-ce que ça marche en production, pour de vraies personnes ?",
+  "principles": [
+    {
+      "n": "01",
+      "title": "Fini bat impressionnant",
+      "text": "Un produit modeste qui sort bat une démo brillante dans un diaporama."
+    },
+    {
+      "n": "02",
+      "title": "Rien à moitié construit",
+      "text": "Chaque fonctionnalité sort complète — designée, développée, testée — ou pas du tout."
+    },
+    {
+      "n": "03",
+      "title": "La précision est l'esthétique",
+      "text": "Un pixel de travers ou une requête lente se corrige, il ne se justifie pas."
+    }
+  ]
+}

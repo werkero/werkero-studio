@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "description": "Werkero ist das unabhängige Studio von Tai — Design und Entwicklung von Webprodukten, Marken und KI-Tools."
+  },
+  "services": {
+    "eyebrow": "Was wir tun",
+    "title": "Drei Disziplinen, ein Studio."
+  },
+  "works": {
+    "eyebrow": "Arbeiten",
+    "title": "Ausgewählte Arbeiten."
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Gut zu wissen."
+  },
+  "cta": {
+    "title": "Etwas, das es wert ist, gebaut zu werden?"
+  },
+  "footer": {
+    "tagline": "Unabhängiges Studio für Webprodukte, Marken und KI-Tools."
+  }
+}

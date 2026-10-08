@@ -1,0 +1,59 @@
+{
+  "eyebrow": "SELECTED WORK",
+  "title": "Featured works",
+  "sideNote": "Six products, designed and engineered end to end — all shipped.",
+  "viewCase": "VIEW CASE",
+  "featured": "laurero",
+  "badge": "FEATURED PROJECT · LAURERO · ",
+  "banner": "A decision a student can defend.",
+  "items": {
+    "laurero": {
+      "category": "AI PRODUCT · FLAGSHIP",
+      "tagline": "AI advisor for China's gaokao applications",
+      "description": "Admission probabilities and program data turned into decisions a student can defend — honest risk ranges, never “guaranteed admission”.",
+      "bg": "#0d0d12",
+      "doodle": "dash",
+      "title": "Laurero"
+    },
+    "ai-archives": {
+      "category": "AI ARCHIVE · EXPERIENCE",
+      "tagline": "AI-curated classified archive",
+      "description": "An AI-curated historical archive dressed as a classified registry office — dossiers, file numbers and stamps, rendered with archival restraint in five languages.",
+      "bg": "#f2e8d5",
+      "doodle": "doc",
+      "title": "The Registry"
+    },
+    "awarely": {
+      "category": "COMMERCE · AI DECISIONS",
+      "tagline": "Cross-border commerce · AI home decisions",
+      "description": "A cross-border store selling physical products, and an AI product helping households weigh health and living choices.",
+      "bg": "#e6f0dd",
+      "doodle": "globe",
+      "title": "Awarely"
+    },
+    "aether": {
+      "category": "APP · AI CAPTURE",
+      "tagline": "AI inspiration capture",
+      "description": "Capture a spark in seconds; AI structures it into something executable.",
+      "bg": "#f6dfe0",
+      "doodle": "spark",
+      "title": "Aether"
+    },
+    "arkhyx-blog": {
+      "category": "OPEN SOURCE · PUBLISHING",
+      "tagline": "Open-source blog engine",
+      "description": "An open-source blog engine with a CMS spine — fast pages, a clean Markdown workflow, zero bloat between thought and publication.",
+      "bg": "#dfe6f2",
+      "doodle": "tri",
+      "title": "Arkhyx"
+    },
+    "kyvero": {
+      "category": "BRAND FAMILY",
+      "tagline": "One of the -ero family",
+      "description": "Part of the same -ero family as Laurero — a shared name, a shared design language, and one standard: finished beats impressive.",
+      "bg": "#e8e0f0",
+      "doodle": "frames",
+      "title": "Kyvero"
+    }
+  }
+}

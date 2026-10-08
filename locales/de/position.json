@@ -1,0 +1,21 @@
+{
+  "eyebrow": "UNSERE HALTUNG",
+  "headline": "Design und Engineering sind {hl}ein einziger Akt des Machens{/hl} — gemessen an einem einzigen Maßstab: Funktioniert es in Produktion, für echte Menschen?",
+  "principles": [
+    {
+      "n": "01",
+      "title": "Fertig schlägt beeindruckend",
+      "text": "Ein bescheidenes Produkt, das erscheint, schlägt eine brillante Demo in einer Präsentation."
+    },
+    {
+      "n": "02",
+      "title": "Nichts Halbgebautes",
+      "text": "Jedes Feature erscheint vollständig — designt, entwickelt, getestet — oder gar nicht."
+    },
+    {
+      "n": "03",
+      "title": "Präzision ist die Ästhetik",
+      "text": "Ein verrutschter Pixel oder eine langsame Abfrage wird behoben, nicht erklärt."
+    }
+  ]
+}

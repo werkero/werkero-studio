@@ -4,14 +4,18 @@
       <nav class="nav-links">
         <a :href="anchor('#services')">{{ nav.services }}</a>
         <a :href="anchor('#work')">{{ nav.work }}</a>
-        <a :href="anchor('#faq')">{{ nav.faq }}</a>
+        <a :href="anchor('#process')">{{ nav.process }}</a>
+        <a :href="anchor('#about')">{{ nav.about }}</a>
       </nav>
       <NuxtLink :to="localePath('/')" class="brand" aria-label="Werkero Studio home">
         <LogoMark :size="30" />
         <span class="brand-word">WERKERO</span>
       </NuxtLink>
       <div class="nav-right">
-        <a :href="anchor('#contact')" class="contact-link">{{ nav.contact }}</a>
+        <a :href="anchor('#contact')" class="contact-pill">
+          {{ nav.contact }}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 L17 7 M8 7 h9 v9" /></svg>
+        </a>
         <LangSwitcher />
       </div>
     </div>
@@ -19,14 +23,9 @@
 </template>
 
 <script setup lang="ts">
-const { locale } = useI18n()
+const { nav } = useSiteContent()
 const localePath = useLocalePath()
 const anchor = (hash: string) => localePath({ path: '/', hash })
-
-const { data: page } = await useAsyncData(`site-${locale.value}`, () =>
-  queryCollection('site').path(`/${locale.value}`).first()
-)
-const nav = computed(() => (page.value as any)?.nav ?? { services: '', work: '', faq: '', contact: '' })
 const scrolled = ref(false)
 
 onMounted(() => {
@@ -40,43 +39,47 @@ onMounted(() => {
 <style scoped>
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   color: var(--paper);
 }
 .nav-inner {
   display: flex; align-items: center; justify-content: space-between;
-  width: min(1200px, 94vw); margin: 0 auto;
-  padding: 1.1rem 0.4rem;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  width: min(1240px, 94vw); margin: 0 auto;
+  padding: 1.15rem 0.4rem;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.nav-links, .nav-right { display: flex; align-items: center; gap: 1.6rem; }
-.nav a { text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-.nav-links a { position: relative; }
+.nav-links, .nav-right { display: flex; align-items: center; gap: 1.7rem; }
+.nav a { text-decoration: none; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.04em; }
+.nav-links a { position: relative; opacity: 0.92; }
 .nav-links a::after {
   content: ''; position: absolute; left: 0; bottom: -4px; height: 1px; width: 0;
   background: currentColor; transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-links a:hover::after { width: 100%; }
 .brand { display: inline-flex; align-items: center; gap: 0.6rem; }
-.brand-word { font-weight: 800; letter-spacing: 0.12em; font-size: 0.95rem; }
-.contact-link {
-  border: 1px solid currentColor; border-radius: 64px; padding: 0.55rem 1.2rem;
-  transition: background 0.3s, color 0.3s;
+.brand-word { font-weight: 800; letter-spacing: 0.14em; font-size: 0.98rem; }
+.contact-pill {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--lime); color: var(--ink) !important;
+  border-radius: 64px; padding: 0.62rem 1.35rem; font-weight: 700 !important;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.contact-link:hover { background: var(--lime); border-color: var(--lime); color: var(--ink); }
+.contact-pill:hover { transform: translateY(-2px); }
 
 /* scrolled: white floating pill */
 .nav.scrolled { color: var(--ink); }
 .nav.scrolled .nav-inner {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-radius: 64px;
-  margin-top: 0.8rem; padding: 0.7rem 1.6rem;
+  margin-top: 0.8rem; padding: 0.65rem 1.5rem;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
-  width: min(860px, 94vw);
+  width: min(920px, 94vw);
 }
-@media (max-width: 720px) {
+@media (max-width: 860px) {
   .nav-links { display: none; }
+}
+@media (max-width: 560px) {
   .brand-word { display: none; }
 }
 </style>

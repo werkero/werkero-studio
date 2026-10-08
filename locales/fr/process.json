@@ -1,0 +1,50 @@
+{
+  "eyebrow": "COMMENT ÇA MARCHE",
+  "title": "Du brief au lancement",
+  "sideNote": "Six étapes, toujours dans cet ordre — ennuyeux à dessein.",
+  "output": "LIVRABLE",
+  "steps": [
+    {
+      "n": "01",
+      "title": "Comprendre",
+      "tag": "DES JOURS, PAS DES SEMAINES",
+      "text": "Pour qui, que casse un échec, à quoi ressemble « fini » — jusqu’à ce que le vrai problème se sépare de la solution demandée.",
+      "output": "Énoncé du problème · Critères de succès · Non-objectifs explicites"
+    },
+    {
+      "n": "02",
+      "title": "Plan",
+      "tag": "L'ARCHITECTURE D'ABORD",
+      "text": "Modèle de données, surface API et forme du déploiement décidés d’emblée — les erreurs coûteuses se font sur papier, pas en production.",
+      "output": "Schéma · Contrat API · Plan infra"
+    },
+    {
+      "n": "03",
+      "title": "Design",
+      "tag": "DANS LE NAVIGATEUR",
+      "text": "Designé dans le médium de livraison — vraie typographie, vrais breakpoints, vrai contenu. Pas de maquettes pixel-perfect qui mentent.",
+      "output": "UI fonctionnelle · Design tokens · Spec motion"
+    },
+    {
+      "n": "04",
+      "title": "Construction",
+      "tag": "LE LONG MILIEU",
+      "text": "Le gros du travail : des fonctionnalités construites de bout en bout, testées à l’arrivée, relues face à l’énoncé écrit.",
+      "output": "Fonctionnalités livrées · Tests · Notes de relecture"
+    },
+    {
+      "n": "05",
+      "title": "Affinage",
+      "tag": "LES 10 DERNIERS %",
+      "text": "La partie que la plupart des équipes sautent — performance, cas limites, états d’erreur, et les cent petits détails qui font le « fini ».",
+      "output": "Budget perf tenu · Cas limites fermés · Passe polish"
+    },
+    {
+      "n": "06",
+      "title": "Lancement",
+      "tag": "PRODUCTION, POUR DE VRAI",
+      "text": "Déployé, supervisé et transmis — avec le runbook, pas seulement le repo.",
+      "output": "URL live · Supervision · Docs de passation"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "intro": "一人工作室，做网页产品、品牌与 AI 工具——设计与工程端到端。",
+  "explore": "浏览",
+  "services": "服务",
+  "connect": "联系",
+  "github": "GitHub — @adlerdler",
+  "contact": "联系",
+  "email": "hello@werkero.studio",
+  "location": "中国深圳 · UTC+8",
+  "copyright": "© 2026 Werkero Studio。版权所有。Werk——德语“工作/创造” · -ero——与 Kyvero、Laurero 共享的后缀",
+  "backToTop": "回到顶部",
+  "serviceList": [
+    "Web 平台",
+    "AI 产品",
+    "电商",
+    "品牌与网页"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "eyebrow": "SERVICES",
+  "title": "What we do",
+  "sideNote": "Four disciplines, one pair of hands — brief to production.",
+  "details": "Details",
+  "items": [
+    {
+      "title": "Full-Stack Web Apps",
+      "text": "Production systems, end to end — from database schema to the last transition.",
+      "doodle": "browser"
+    },
+    {
+      "title": "AI Product Engineering",
+      "text": "LLM features that survive real users — and admit what they don't know.",
+      "doodle": "sparkles"
+    },
+    {
+      "title": "E-Commerce Systems",
+      "text": "Cross-border storefronts that convert — and stay up on launch day.",
+      "doodle": "eglobe"
+    },
+    {
+      "title": "Brand & Web Design",
+      "text": "Identity and interfaces with a point of view — typographic, restrained, fast.",
+      "doodle": "shapes",
+      "wide": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "eyebrow": "HOW IT WORKS",
+  "title": "From brief to shipped",
+  "sideNote": "Six steps, always in this order — boring on purpose.",
+  "output": "OUTPUT",
+  "steps": [
+    {
+      "n": "01",
+      "title": "Understand",
+      "tag": "DAYS, NOT WEEKS",
+      "text": "Who is this for, what breaks if it fails, what does “done” look like — until the real problem separates from the requested solution.",
+      "output": "Problem statement · Success criteria · Explicit non-goals"
+    },
+    {
+      "n": "02",
+      "title": "Blueprint",
+      "tag": "ARCHITECTURE FIRST",
+      "text": "Data model, API surface and deployment shape decided up front — the expensive mistakes get made on paper, not in production.",
+      "output": "Schema · API contract · Infra plan"
+    },
+    {
+      "n": "03",
+      "title": "Design",
+      "tag": "IN THE BROWSER",
+      "text": "Designed in the medium it ships in — real type, real breakpoints, real content. No pixel-perfect mockups that lie.",
+      "output": "Working UI · Design tokens · Motion spec"
+    },
+    {
+      "n": "04",
+      "title": "Build",
+      "tag": "THE LONG MIDDLE",
+      "text": "The bulk of the work: features built end to end, tested as they land, reviewed against the written statement.",
+      "output": "Shipped features · Tests · Review notes"
+    },
+    {
+      "n": "05",
+      "title": "Refine",
+      "tag": "THE LAST 10%",
+      "text": "The part most teams skip — performance, edge cases, error states, and the hundred small things that make it feel finished.",
+      "output": "Perf budget met · Edge cases closed · Polish pass"
+    },
+    {
+      "n": "06",
+      "title": "Ship",
+      "tag": "PRODUCTION, FOR REAL",
+      "text": "Deployed, monitored and handed over — with the runbook, not just the repo.",
+      "output": "Live URL · Monitoring · Handover docs"
+    }
+  ]
+}

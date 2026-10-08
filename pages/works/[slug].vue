@@ -1,10 +1,11 @@
 <template>
   <main v-if="work">
-    <!-- detail hero -->
-    <section class="whero">
-      <div class="bubbles" aria-hidden="true"><i /><i /><i /></div>
+    <!-- detail hero (dark, artifact language) -->
+    <section class="whero glow-wrap">
+      <div class="glow glow-blue whero-glow" aria-hidden="true" />
+      <div class="glow glow-purple whero-glow2" aria-hidden="true" />
       <div class="wrap whero-inner">
-        <p class="eyebrow rise in">{{ labels.kicker }}</p>
+        <p class="kicker on-dark-k rise in"><span class="ast lime">✳</span> {{ labels.kicker }}</p>
         <h1 class="whero-title rise in" style="transition-delay: 120ms">{{ work.title }}</h1>
         <p class="whero-tag rise in" style="transition-delay: 240ms">{{ work.tagline }}</p>
         <div class="wmeta rise in" style="transition-delay: 360ms">
@@ -23,12 +24,12 @@
     <!-- body -->
     <section class="section">
       <div class="wrap narrow">
-        <Reveal><p class="eyebrow">{{ labels.overview }}</p></Reveal>
+        <Reveal><p class="kicker"><span class="ast">✳</span> {{ labels.overview }}</p></Reveal>
         <Reveal :delay="80">
           <p class="overview">{{ work.overview }}</p>
         </Reveal>
         <Reveal :delay="120">
-          <ContentRenderer :value="work" class="prose body-copy" />
+          <div class="prose body-copy" v-html="work.bodyHtml || ''" />
         </Reveal>
         <Reveal :delay="140" v-if="work.highlights?.length">
           <ul class="highlights">
@@ -43,8 +44,8 @@
       <NuxtLink :to="localePath(`/works/${nextWork.slug}`)" class="next-card">
         <div class="wrap next-inner">
           <div>
-            <p class="eyebrow">{{ labels.next }}</p>
-            <h2 class="display">{{ nextWork.title }}</h2>
+            <p class="kicker on-dark-k"><span class="ast lime">✳</span> {{ labels.next }}</p>
+            <h2 class="display next-title">{{ nextWork.title }}</h2>
           </div>
           <span class="btn-lime">
             {{ labels.view }}
@@ -58,7 +59,7 @@
 
 <script setup lang="ts">
 const route = useRoute()
-const { locale } = useI18n()
+const { locale, page } = useSiteContent()
 const localePath = useLocalePath()
 const slug = route.params.slug as string
 
@@ -69,10 +70,7 @@ if (!work.value) {
   throw createError({ statusCode: 404, statusMessage: 'Project not found' })
 }
 
-const { data: site } = await useAsyncData(`site-${locale.value}`, () =>
-  queryCollection('site').path(`/${locale.value}`).first()
-)
-const labels = computed(() => (site.value as any)?.work_detail ?? {
+const labels = computed(() => (page.value as any)?.work_detail ?? {
   kicker: 'Case study', role: 'Role', scope: 'Scope',
   overview: 'Overview', next: 'Next project', view: 'View case',
 })
@@ -92,12 +90,16 @@ useHead({ title: () => `${(work.value as any)?.title ?? 'Work'} — Werkero Stud
 </script>
 
 <style scoped>
-.whero { position: relative; padding: 11rem 0 5rem; overflow: hidden; }
+.whero { position: relative; background: #0a0a0e; color: var(--paper); padding: 11rem 0 5rem; overflow: hidden; }
+.whero-glow { width: 40vw; height: 40vw; right: -12vw; top: -10vw; opacity: 0.45; }
+.whero-glow2 { width: 30vw; height: 30vw; left: -10vw; bottom: -12vw; opacity: 0.35; }
 .whero-inner { position: relative; z-index: 1; }
-.whero-title { font-size: clamp(3.2rem, 9vw, 8rem); line-height: 1; margin: 1.4rem 0 0; }
-.whero-tag { font-size: clamp(1.1rem, 1rem + 0.8vw, 1.5rem); color: var(--muted); margin: 1.4rem 0 0; max-width: 52ch; line-height: 1.55; }
-.wmeta { display: flex; gap: 3.5rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); flex-wrap: wrap; }
-.wmeta-k { display: block; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.kicker.on-dark-k { color: rgba(250, 247, 240, 0.72); }
+.kicker .ast.lime { color: var(--lime); }
+.whero-title { font-size: clamp(3.2rem, 9vw, 8rem); line-height: 1; margin: 1.4rem 0 0; color: #faf7f0; font-weight: 500; }
+.whero-tag { font-size: clamp(1.1rem, 1rem + 0.8vw, 1.5rem); color: rgba(250,247,240,0.65); margin: 1.4rem 0 0; max-width: 52ch; line-height: 1.55; }
+.wmeta { display: flex; gap: 3.5rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line-dark); flex-wrap: wrap; }
+.wmeta-k { display: block; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,247,240,0.5); margin-bottom: 0.5rem; }
 .wmeta-v { font-weight: 600; }
 .narrow { max-width: 820px; }
 .overview { font-family: var(--font-serif); font-size: clamp(1.4rem, 1.2rem + 1vw, 1.9rem); line-height: 1.45; margin: 1.6rem 0 2.6rem; }
@@ -105,14 +107,14 @@ useHead({ title: () => `${(work.value as any)?.title ?? 'Work'} — Werkero Stud
 .highlights { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
 .highlights li {
   border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem 1.4rem;
-  background: rgba(250, 247, 240, 0.025); line-height: 1.6;
+  background: var(--white); line-height: 1.6;
 }
-.highlights li::before { content: ''; display: inline-block; width: 9px; height: 9px; background: var(--lime); transform: rotate(8deg); margin-right: 0.8rem; }
-.nextwrap { border-top: 1px solid var(--line); background: #050508; }
+.nextwrap { background: #07070b; }
 .next-card { display: block; text-decoration: none; color: inherit; }
 .next-inner {
   display: flex; justify-content: space-between; align-items: center; gap: 2rem;
   padding-top: 5rem; padding-bottom: 5rem;
 }
+.next-title { color: #faf7f0; }
 @media (max-width: 760px) { .next-inner { flex-direction: column; align-items: flex-start; } }
 </style>

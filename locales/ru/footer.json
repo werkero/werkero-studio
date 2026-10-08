@@ -1,0 +1,18 @@
+{
+  "intro": "Студия одного человека: веб-продукты, бренды и ИИ-инструменты — дизайн и инженерия под ключ.",
+  "explore": "НАВИГАЦИЯ",
+  "services": "УСЛУГИ",
+  "connect": "СВЯЗЬ",
+  "github": "GitHub — @adlerdler",
+  "contact": "Связаться",
+  "email": "hello@werkero.studio",
+  "location": "Шэньчжэнь, Китай · UTC+8",
+  "copyright": "© 2026 Werkero Studio. Все права защищены. Werk — по-немецки «работа и созидание» · -ero — суффикс, общий с Kyvero и Laurero",
+  "backToTop": "НАВЕРХ",
+  "serviceList": [
+    "Веб-платформы",
+    "ИИ-продукты",
+    "E-commerce",
+    "Бренд и веб"
+  ]
+}

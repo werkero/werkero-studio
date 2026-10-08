@@ -1,0 +1,50 @@
+{
+  "eyebrow": "SO ARBEITEN WIR",
+  "title": "Vom Briefing bis live",
+  "sideNote": "Sechs Schritte, immer in dieser Reihenfolge — absichtlich langweilig.",
+  "output": "ERGEBNIS",
+  "steps": [
+    {
+      "n": "01",
+      "title": "Verstehen",
+      "tag": "TAGE, NICHT WOCHEN",
+      "text": "Für wen, was bricht bei einem Fehler, wie sieht „fertig“ aus — bis sich das echte Problem von der gewünschten Lösung trennt.",
+      "output": "Problemstellung · Erfolgskriterien · Explizite Nicht-Ziele"
+    },
+    {
+      "n": "02",
+      "title": "Blaupause",
+      "tag": "ARCHITEKTUR ZUERST",
+      "text": "Datenmodell, API-Schnittfläche und Deployment-Form vorab entschieden — die teuren Fehler passieren auf Papier, nicht in Produktion.",
+      "output": "Schema · API-Vertrag · Infra-Plan"
+    },
+    {
+      "n": "03",
+      "title": "Design",
+      "tag": "IM BROWSER",
+      "text": "Im Auslieferungsmedium designt — echte Typografie, echte Breakpoints, echte Inhalte. Keine pixelgenauen Mockups, die lügen.",
+      "output": "Lauffähige UI · Design-Tokens · Motion-Spec"
+    },
+    {
+      "n": "04",
+      "title": "Bau",
+      "tag": "DIE LANGE MITTE",
+      "text": "Der Hauptteil der Arbeit: Features Ende zu Ende gebaut, bei Landung getestet, gegen die schriftliche Aussage geprüft.",
+      "output": "Gelieferte Features · Tests · Review-Notizen"
+    },
+    {
+      "n": "05",
+      "title": "Feinschliff",
+      "tag": "DIE LETZTEN 10 %",
+      "text": "Der Teil, den die meisten Teams überspringen — Performance, Edge Cases, Fehlerzustände und die hundert Kleinigkeiten, die es fertig wirken lassen.",
+      "output": "Perf-Budget eingehalten · Edge Cases geschlossen · Polish-Durchgang"
+    },
+    {
+      "n": "06",
+      "title": "Launch",
+      "tag": "PRODUKTION, WIRKLICH",
+      "text": "Deployed, überwacht und übergeben — mit Runbook, nicht nur dem Repo.",
+      "output": "Live-URL · Monitoring · Übergabedoku"
+    }
+  ]
+}

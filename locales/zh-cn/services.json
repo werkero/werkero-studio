@@ -1,0 +1,29 @@
+{
+  "eyebrow": "服务",
+  "title": "我们做什么",
+  "sideNote": "四个领域，一双手——从需求到上线。",
+  "details": "详情",
+  "items": [
+    {
+      "title": "全栈 Web 应用",
+      "text": "端到端的生产系统——从数据库结构到最后一个过渡动画。",
+      "doodle": "browser"
+    },
+    {
+      "title": "AI 产品工程",
+      "text": "经得起真实用户的 LLM 功能——不知道就承认不知道。",
+      "doodle": "sparkles"
+    },
+    {
+      "title": "电商系统",
+      "text": "高转化的跨境独立站——上线当天不宕机。",
+      "doodle": "eglobe"
+    },
+    {
+      "title": "品牌与网页设计",
+      "text": "有观点的品牌与界面——字体排印、克制、快。",
+      "doodle": "shapes",
+      "wide": true
+    }
+  ]
+}

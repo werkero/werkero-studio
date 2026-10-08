@@ -1,0 +1,21 @@
+{
+  "eyebrow": "OUR POSITION",
+  "headline": "Design and engineering are {hl}one act of making{/hl} — judged by one standard: does it work in production, for real people?",
+  "principles": [
+    {
+      "n": "01",
+      "title": "Finished beats impressive",
+      "text": "A modest product that ships beats a brilliant demo in a slide deck."
+    },
+    {
+      "n": "02",
+      "title": "No half-built anything",
+      "text": "Every feature ships complete — designed, engineered, tested — or not at all."
+    },
+    {
+      "n": "03",
+      "title": "Precision is the aesthetic",
+      "text": "A stray pixel or slow query gets fixed, not explained away."
+    }
+  ]
+}

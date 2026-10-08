@@ -1,0 +1,59 @@
+{
+  "eyebrow": "厳選作品",
+  "title": "代表作",
+  "sideNote": "6つのプロダクトを設計から開発までエンドツーエンド——すべて出荷済み。",
+  "viewCase": "ケースを見る",
+  "featured": "laurero",
+  "badge": "FEATURED PROJECT · LAURERO · ",
+  "banner": "生徒が自信を持って語れる判断を。",
+  "items": {
+    "laurero": {
+      "category": "AI プロダクト · フラッグシップ",
+      "tagline": "中国・高考出願の AI アドバイザー",
+      "description": "合格確率と学科データを、生徒が自信を持って語れる判断に変える——正直なリスクレンジ。「合格保証」は決して言わない。",
+      "bg": "#0d0d12",
+      "doodle": "dash",
+      "title": "Laurero"
+    },
+    "awarely": {
+      "category": "コマース · AI 意思決定",
+      "tagline": "越境コマース · AI ホーム意思決定",
+      "description": "実物商品を売る越境ストアと、家庭の健康・暮らしの選択を助ける AI プロダクト。",
+      "bg": "#e6f0dd",
+      "doodle": "globe",
+      "title": "Awarely"
+    },
+    "ai-archives": {
+      "category": "AI アーカイブ · 体験",
+      "tagline": "AI キュレーションの機密文書館",
+      "description": "機密登録局に扮した AI キュレーションの歴史文書館——調書、整理番号、印章を、文書館らしい抑制で5言語展開。",
+      "bg": "#f2e8d5",
+      "doodle": "doc",
+      "title": "The Registry"
+    },
+    "aether": {
+      "category": "アプリ · AI キャプチャ",
+      "tagline": "AI インスピレーションキャプチャ",
+      "description": "ひらめきを数秒でキャプチャ。AI が実行可能な形に構造化する。",
+      "bg": "#f6dfe0",
+      "doodle": "spark",
+      "title": "Aether"
+    },
+    "arkhyx-blog": {
+      "category": "オープンソース · 出版",
+      "tagline": "オープンソースのブログエンジン",
+      "description": "CMS の背骨を持つオープンソースのブログエンジン——高速ページ、クリーンな Markdown ワークフロー。思考から公開まで無駄なし。",
+      "bg": "#dfe6f2",
+      "doodle": "tri",
+      "title": "Arkhyx"
+    },
+    "kyvero": {
+      "category": "ブランドファミリー",
+      "tagline": "-ero ファミリーの一員",
+      "description": "Laurero と同じ -ero ファミリー——共有の名前、共有のデザイン言語、そしてひとつの基準：完成は感動に勝る。",
+      "bg": "#e8e0f0",
+      "doodle": "frames",
+      "title": "Kyvero"
+    }
+  }
+}

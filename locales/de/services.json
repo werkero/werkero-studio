@@ -1,0 +1,29 @@
+{
+  "eyebrow": "LEISTUNGEN",
+  "title": "Was wir tun",
+  "sideNote": "Vier Disziplinen, ein Paar Hände — vom Briefing bis zur Produktion.",
+  "details": "Details",
+  "items": [
+    {
+      "title": "Full-Stack-Web-Apps",
+      "text": "Produktionssysteme, Ende zu Ende — vom Datenbankschema bis zur letzten Transition.",
+      "doodle": "browser"
+    },
+    {
+      "title": "KI-Produktentwicklung",
+      "text": "LLM-Features, die echte Nutzer überstehen — und zugeben, was sie nicht wissen.",
+      "doodle": "sparkles"
+    },
+    {
+      "title": "E-Commerce-Systeme",
+      "text": "Grenzüberschreitende Shops, die konvertieren — und am Launch-Tag online bleiben.",
+      "doodle": "eglobe"
+    },
+    {
+      "title": "Brand- & Webdesign",
+      "text": "Identität und Interfaces mit Haltung — typografisch, zurückhaltend, schnell.",
+      "doodle": "shapes",
+      "wide": true
+    }
+  ]
+}

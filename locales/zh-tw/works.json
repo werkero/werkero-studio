@@ -1,0 +1,59 @@
+{
+  "eyebrow": "精選作品",
+  "title": "代表作品",
+  "sideNote": "六個產品，從設計到工程端到端——全部已上線。",
+  "viewCase": "查看案例",
+  "featured": "laurero",
+  "badge": "FEATURED PROJECT · LAURERO · ",
+  "banner": "一個學生能為之辯護的決定。",
+  "items": {
+    "laurero": {
+      "category": "AI 產品 · 旗艦",
+      "tagline": "中國高考志願 AI 顧問",
+      "description": "把錄取機率和院校數據，變成學生能為之辯護的決定——誠實的風險區間，從不承諾「包錄取」。",
+      "bg": "#0d0d12",
+      "doodle": "dash",
+      "title": "Laurero"
+    },
+    "ai-archives": {
+      "category": "AI 檔案 · 體驗",
+      "tagline": "AI 策展的機密檔案館",
+      "description": "一座扮成機密檔案室的 AI 歷史檔案館——卷宗、編號與印章，以檔案式的克制呈現五種語言。",
+      "bg": "#f2e8d5",
+      "doodle": "doc",
+      "title": "The Registry"
+    },
+    "awarely": {
+      "category": "電商 · AI 決策",
+      "tagline": "跨境電商 · AI 居家決策",
+      "description": "一家銷售實物商品的跨境店鋪，以及一個幫家庭權衡健康與生活選擇的 AI 產品。",
+      "bg": "#e6f0dd",
+      "doodle": "globe",
+      "title": "Awarely"
+    },
+    "aether": {
+      "category": "應用 · AI 捕捉",
+      "tagline": "AI 靈感捕捉",
+      "description": "幾秒鐘捕捉一個閃念；AI 把它整理成可執行的東西。",
+      "bg": "#f6dfe0",
+      "doodle": "spark",
+      "title": "Aether"
+    },
+    "arkhyx-blog": {
+      "category": "開源 · 出版",
+      "tagline": "開源部落格引擎",
+      "description": "一個帶 CMS 脊梁的開源部落格引擎——頁面飛快、乾淨的 Markdown 工作流，從想法到發佈零臃腫。",
+      "bg": "#dfe6f2",
+      "doodle": "tri",
+      "title": "Arkhyx"
+    },
+    "kyvero": {
+      "category": "品牌家族",
+      "tagline": "-ero 家族的一員",
+      "description": "與 Laurero 同屬 -ero 家族——共享的名字、共享的設計語言，和同一個標準：完成勝過驚豔。",
+      "bg": "#e8e0f0",
+      "doodle": "frames",
+      "title": "Kyvero"
+    }
+  }
+}

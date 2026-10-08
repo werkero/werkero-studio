@@ -1,0 +1,29 @@
+{
+  "eyebrow": "SERVICES",
+  "title": "Ce que nous faisons",
+  "sideNote": "Quatre disciplines, une seule paire de mains — du brief à la production.",
+  "details": "Détails",
+  "items": [
+    {
+      "title": "Applications Web Full-Stack",
+      "text": "Des systèmes de production de bout en bout — du schéma de base de données à la dernière transition.",
+      "doodle": "browser"
+    },
+    {
+      "title": "Ingénierie Produit IA",
+      "text": "Des fonctionnalités LLM qui survivent aux vrais utilisateurs — et admettent ce qu'elles ignorent.",
+      "doodle": "sparkles"
+    },
+    {
+      "title": "Systèmes E-Commerce",
+      "text": "Des boutiques transfrontalières qui convertissent — et tiennent le jour du lancement.",
+      "doodle": "eglobe"
+    },
+    {
+      "title": "Design de Marque & Web",
+      "text": "Identité et interfaces avec un point de vue — typographique, sobre, rapide.",
+      "doodle": "shapes",
+      "wide": true
+    }
+  ]
+}

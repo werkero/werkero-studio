@@ -1,0 +1,59 @@
+{
+  "eyebrow": "AUSGEWÄHLTE ARBEITEN",
+  "title": "Referenzprojekte",
+  "sideNote": "Sechs Produkte, Ende zu Ende designt und entwickelt — alle live.",
+  "viewCase": "CASE ANSEHEN",
+  "featured": "laurero",
+  "badge": "FEATURED PROJECT · LAURERO · ",
+  "banner": "Eine Entscheidung, die ein Schüler verteidigen kann.",
+  "items": {
+    "laurero": {
+      "category": "KI-PRODUKT · FLAGGSCHIFF",
+      "tagline": "KI-Berater für Chinas Gaokao-Bewerbungen",
+      "description": "Zulassungswahrscheinlichkeiten und Studiengangsdaten, verwandelt in Entscheidungen, die ein Schüler verteidigen kann — ehrliche Risikospannen, niemals „garantierte Zulassung“.",
+      "bg": "#0d0d12",
+      "doodle": "dash",
+      "title": "Laurero"
+    },
+    "ai-archives": {
+      "category": "KI-ARCHIV · ERLEBNIS",
+      "tagline": "KI-kuratiertes Geheimarchiv",
+      "description": "Ein KI-kuratiertes historisches Archiv im Gewand einer Geheimregistratur — Dossiers, Aktenzeichen und Stempel, mit archivarischer Zurückhaltung in fünf Sprachen.",
+      "bg": "#f2e8d5",
+      "doodle": "doc",
+      "title": "The Registry"
+    },
+    "awarely": {
+      "category": "HANDEL · KI-ENTSCHEIDUNGEN",
+      "tagline": "Grenzüberschreitender Handel · KI-Haushaltsentscheidungen",
+      "description": "Ein grenzüberschreitender Shop für physische Produkte und ein KI-Produkt, das Haushalten bei Gesundheits- und Lebensentscheidungen hilft.",
+      "bg": "#e6f0dd",
+      "doodle": "globe",
+      "title": "Awarely"
+    },
+    "aether": {
+      "category": "APP · KI-CAPTURE",
+      "tagline": "KI-Inspirations-Capture",
+      "description": "Einen Geistesblitz in Sekunden festhalten; die KI strukturiert ihn zu etwas Ausführbarem.",
+      "bg": "#f6dfe0",
+      "doodle": "spark",
+      "title": "Aether"
+    },
+    "arkhyx-blog": {
+      "category": "OPEN SOURCE · PUBLISHING",
+      "tagline": "Open-Source-Blog-Engine",
+      "description": "Eine Open-Source-Blog-Engine mit CMS-Rückgrat — schnelle Seiten, sauberer Markdown-Workflow, null Ballast zwischen Gedanke und Veröffentlichung.",
+      "bg": "#dfe6f2",
+      "doodle": "tri",
+      "title": "Arkhyx"
+    },
+    "kyvero": {
+      "category": "MARKENFAMILIE",
+      "tagline": "Mitglied der -ero-Familie",
+      "description": "Teil derselben -ero-Familie wie Laurero — ein geteilter Name, eine geteilte Designsprache und ein Standard: Fertig schlägt beeindruckend.",
+      "bg": "#e8e0f0",
+      "doodle": "frames",
+      "title": "Kyvero"
+    }
+  }
+}

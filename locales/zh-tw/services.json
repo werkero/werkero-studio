@@ -1,0 +1,29 @@
+{
+  "eyebrow": "服務",
+  "title": "我們做什麼",
+  "sideNote": "四個領域，一雙手——從需求到上線。",
+  "details": "詳情",
+  "items": [
+    {
+      "title": "全端 Web 應用",
+      "text": "端到端的生產系統——從資料庫結構到最後一個過場動畫。",
+      "doodle": "browser"
+    },
+    {
+      "title": "AI 產品工程",
+      "text": "經得起真實使用者的 LLM 功能——不知道就承認不知道。",
+      "doodle": "sparkles"
+    },
+    {
+      "title": "電商系統",
+      "text": "高轉換的跨境獨立站——上線當天不當機。",
+      "doodle": "eglobe"
+    },
+    {
+      "title": "品牌與網頁設計",
+      "text": "有觀點的品牌與介面——字體排印、克制、快。",
+      "doodle": "shapes",
+      "wide": true
+    }
+  ]
+}

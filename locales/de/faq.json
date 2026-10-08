@@ -1,0 +1,18 @@
+{
+  "eyebrow": "FRAGEN",
+  "title": "Bevor Sie fragen",
+  "items": [
+    {
+      "q": "Wie startet ein Projekt?",
+      "a": "Ein Gespräch über das Problem, nicht über die Feature-Liste — dann eine schriftliche Aussage, Erfolgskriterien und fixer Umfang, bevor eine Zeile Code entsteht."
+    },
+    {
+      "q": "Wie lange dauert ein Build?",
+      "a": "Ein fokussiertes Projekt shipped in Wochen, nicht in Quartalen. Sie erhalten eine fixe Timeline mit der schriftlichen Aussage — und einen Build, der sie einhält."
+    },
+    {
+      "q": "Was kostet es?",
+      "a": "Fixer Umfang, fixer Preis — kalkuliert nach Einigung auf die schriftliche Aussage. Keine Stundenabrechnung, keine Überraschungsrechnungen."
+    }
+  ]
+}

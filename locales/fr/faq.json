@@ -1,0 +1,18 @@
+{
+  "eyebrow": "QUESTIONS",
+  "title": "Avant de demander",
+  "items": [
+    {
+      "q": "Comment démarre un projet ?",
+      "a": "Une conversation sur le problème, pas sur la liste des fonctionnalités — puis un énoncé écrit, des critères de succès et un périmètre fixe avant la moindre ligne de code."
+    },
+    {
+      "q": "Combien de temps prend une réalisation ?",
+      "a": "Un projet cadré se livre en semaines, pas en trimestres. Vous recevez un calendrier fixe avec l’énoncé écrit — et une réalisation qui le tient."
+    },
+    {
+      "q": "Combien ça coûte ?",
+      "a": "Périmètre fixe, prix fixe — devisé après accord sur l’énoncé écrit. Pas de facturation horaire, pas de facture surprise."
+    }
+  ]
+}

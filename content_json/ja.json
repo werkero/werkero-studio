@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "description": "Werkero は Tai の個人スタジオ——Webプロダクト、ブランド、AIツールを設計・開発します。"
+  },
+  "services": {
+    "eyebrow": "事業内容",
+    "title": "3つの領域、1つのスタジオ。"
+  },
+  "works": {
+    "eyebrow": "作品",
+    "title": "選りすぐりの仕事。"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "知っておくといいこと。"
+  },
+  "cta": {
+    "title": "作る価値のあるもの、ありますか？"
+  },
+  "footer": {
+    "tagline": "Webプロダクト、ブランド、AIツールのためのインディペンデント・スタジオ。"
+  }
+}

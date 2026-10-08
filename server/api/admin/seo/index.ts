@@ -1,0 +1,8 @@
+import { makeAdminResource } from '../../../utils/crud'
+
+const h = makeAdminResource({"table": "seo", "perm": "seo", "i18nFields": ["meta"], "plainFields": ["page_key", "noindex"], "listColumns": "id, page_key, noindex, updated_at", "orderBy": "page_key ASC"})
+
+export default defineEventHandler(async (event) => {
+  if (event.method === 'POST') return h.create(event)
+  return h.list(event)
+})

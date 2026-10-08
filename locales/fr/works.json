@@ -1,0 +1,59 @@
+{
+  "eyebrow": "PROJETS SÉLECTIONNÉS",
+  "title": "Projets phares",
+  "sideNote": "Six produits, designés et développés de bout en bout — tous livrés.",
+  "viewCase": "VOIR LE CAS",
+  "featured": "laurero",
+  "badge": "FEATURED PROJECT · LAURERO · ",
+  "banner": "Une décision qu’un élève peut défendre.",
+  "items": {
+    "laurero": {
+      "category": "PRODUIT IA · PHARE",
+      "tagline": "Conseiller IA pour le gaokao chinois",
+      "description": "Des probabilités d’admission et des données de filières transformées en décisions qu’un élève peut défendre — des fourchettes de risque honnêtes, jamais d’« admission garantie ».",
+      "bg": "#0d0d12",
+      "doodle": "dash",
+      "title": "Laurero"
+    },
+    "ai-archives": {
+      "category": "ARCHIVE IA · EXPÉRIENCE",
+      "tagline": "Archive classifiée curée par IA",
+      "description": "Une archive historique curée par IA, déguisée en bureau d’enregistrement classifié — dossiers, numéros et tampons, rendus avec une retenue archivistique en cinq langues.",
+      "bg": "#f2e8d5",
+      "doodle": "doc",
+      "title": "The Registry"
+    },
+    "awarely": {
+      "category": "COMMERCE · DÉCISIONS IA",
+      "tagline": "Commerce transfrontalier · décisions maison par IA",
+      "description": "Une boutique transfrontalière vendant des produits physiques, et un produit IA aidant les foyers à peser leurs choix de santé et de vie.",
+      "bg": "#e6f0dd",
+      "doodle": "globe",
+      "title": "Awarely"
+    },
+    "aether": {
+      "category": "APP · CAPTURE IA",
+      "tagline": "Capture d’inspiration par IA",
+      "description": "Capturez une étincelle en quelques secondes ; l’IA la structure en quelque chose d’exécutable.",
+      "bg": "#f6dfe0",
+      "doodle": "spark",
+      "title": "Aether"
+    },
+    "arkhyx-blog": {
+      "category": "OPEN SOURCE · ÉDITION",
+      "tagline": "Moteur de blog open source",
+      "description": "Un moteur de blog open source avec une colonne CMS — pages rapides, workflow Markdown épuré, zéro lourdeur entre l’idée et la publication.",
+      "bg": "#dfe6f2",
+      "doodle": "tri",
+      "title": "Arkhyx"
+    },
+    "kyvero": {
+      "category": "FAMILLE DE MARQUE",
+      "tagline": "Membre de la famille -ero",
+      "description": "Membre de la même famille -ero que Laurero — un nom partagé, un langage design partagé, et un seul standard : fini bat impressionnant.",
+      "bg": "#e8e0f0",
+      "doodle": "frames",
+      "title": "Kyvero"
+    }
+  }
+}
