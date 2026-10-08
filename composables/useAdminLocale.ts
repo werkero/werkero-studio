@@ -78,5 +78,5 @@ export function useAdminLocale() {
 
   const current = computed(() => ADMIN_LOCALES.find((l) => l.code === locale.value) ?? ADMIN_LOCALES[0])
 
-  return { locale, setLocale, t, current, locales: ADMIN_LOCALES }
+  return { locale, setLocale, t, current, locales: ADMIN_LOCALES, uiLang }
 }
