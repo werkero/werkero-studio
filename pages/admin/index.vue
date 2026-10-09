@@ -1,34 +1,56 @@
 <template>
   <div>
-    <div class="adm-hint">{{ t('currentLocaleOnly') }}</div>
-    <div class="adm-cards">
-      <div v-for="c in cards" :key="c.key" class="adm-card" :class="{ warn: c.warn }">
-        <div class="n">{{ c.count === null ? '—' : c.count }}</div>
-        <div class="l"><NuxtLink :to="c.to">{{ c.label }}</NuxtLink></div>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
-      <div class="adm-panel">
-        <h2>{{ t('recentInquiries') }}</h2>
-        <table v-if="recent.length" class="adm-table">
-          <thead><tr><th>{{ t('name') }}</th><th>{{ t('email') }}</th><th>{{ t('status') }}</th></tr></thead>
-          <tbody>
-            <tr v-for="q in recent" :key="q.id">
-              <td>{{ q.name }}</td><td>{{ q.email }}</td>
-              <td><span class="adm-badge" :class="statusClass(q.status)">{{ q.status }}</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-else style="color:#6b7280">{{ t('noData') }}</p>
-      </div>
-      <div class="adm-panel">
-        <h2>{{ t('failedTranslations') }}</h2>
-        <p style="font-size:28px;font-weight:700;margin:0" :style="{ color: failedCount ? '#dc2626' : '#15803d' }">
-          {{ failedCount === null ? '—' : failedCount }}
-        </p>
-        <p style="margin-top:8px"><NuxtLink to="/admin/translations">{{ t('translations') }} →</NuxtLink></p>
-      </div>
-    </div>
+    <p style="font-size: 13px; color: #909399; margin-bottom: 16px;">{{ t('currentLocaleOnly') }}</p>
+
+    <!-- Stat cards -->
+    <el-row :gutter="16" style="margin-bottom: 24px;">
+      <el-col v-for="c in cards" :key="c.key" :xs="12" :sm="8" :lg="6" style="margin-bottom: 16px;">
+        <NuxtLink :to="c.to" style="text-decoration: none;">
+          <el-card shadow="hover" style="cursor: pointer;">
+            <div style="font-size: 28px; font-weight: bold;">{{ c.count === null ? '—' : c.count }}</div>
+            <div style="font-size: 13px; color: #909399; margin-top: 4px;">{{ c.label }}</div>
+          </el-card>
+        </NuxtLink>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="16">
+      <!-- Recent inquiries -->
+      <el-col :xs="24" :lg="12" style="margin-bottom: 16px;">
+        <el-card>
+          <template #header>
+            <span style="font-weight: 600;">{{ t('recentInquiries') }}</span>
+          </template>
+          <ul v-if="recent.length" style="list-style: none; margin: 0; padding: 0;">
+            <li v-for="q in recent" :key="q.id" style="padding: 10px 0; border-bottom: 1px solid #ebeef5; display: flex; align-items: center; gap: 12px;">
+              <div style="min-width: 0; flex: 1;">
+                <div style="font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ q.name }}</div>
+                <div style="font-size: 12px; color: #909399; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ q.email }}</div>
+              </div>
+              <el-tag :type="statusType(q.status)" size="small">{{ q.status }}</el-tag>
+            </li>
+          </ul>
+          <p v-else style="font-size: 13px; color: #909399;">{{ t('noData') }}</p>
+        </el-card>
+      </el-col>
+
+      <!-- Failed translations -->
+      <el-col :xs="24" :lg="12" style="margin-bottom: 16px;">
+        <el-card>
+          <template #header>
+            <span style="font-weight: 600;">{{ t('failedTranslations') }}</span>
+          </template>
+          <p style="font-size: 36px; font-weight: bold; margin: 0;" :style="{ color: failedCount ? '#f56c6c' : '#67c23a' }">
+            {{ failedCount === null ? '—' : failedCount }}
+          </p>
+          <p style="margin: 12px 0 0;">
+            <NuxtLink to="/admin/translations" style="font-size: 13px; color: #909399; text-decoration: none;">
+              {{ t('translations') }} →
+            </NuxtLink>
+          </p>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -59,8 +81,8 @@ const cards = computed(() =>
   ]),
 )
 
-function statusClass(s: string) {
-  return s === 'new' ? 'blue' : s === 'spam' ? 'red' : s === 'closed' ? 'gray' : 'amber'
+function statusType(s: string) {
+  return s === 'new' ? 'primary' : s === 'spam' ? 'danger' : s === 'closed' ? 'info' : 'warning'
 }
 
 onMounted(async () => {

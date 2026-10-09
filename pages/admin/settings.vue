@@ -1,115 +1,136 @@
 <template>
   <div>
-    <div class="adm-tabs">
-      <button :class="{ active: tab === 'settings' }" @click="tab = 'settings'">{{ t('settings') }}</button>
-      <button :class="{ active: tab === 'credentials' }" @click="tab = 'credentials'">{{ t('provider') }} / API</button>
-    </div>
+    <el-tabs v-model="tab">
+      <el-tab-pane :label="t('settings')" name="settings" />
+      <el-tab-pane :label="`${t('provider')} / API`" name="credentials" />
+    </el-tabs>
 
     <!-- site settings -->
-    <div v-if="tab === 'settings'">
+    <template v-if="tab === 'settings'">
       <!-- Basic site settings form -->
-      <div class="adm-panel" style="margin-bottom:18px">
-        <h2>{{ uiZh ? '网站基础设置' : 'Basic Site Settings' }}</h2>
-        <div v-if="basicError" class="adm-error">{{ basicError }}</div>
-        <div class="adm-form-grid">
-          <div class="adm-field">
-            <label>{{ uiZh ? '网站名称' : 'Site Name' }}<span class="req"> *</span></label>
-            <input v-model="basicForm['site.name']" class="adm-input" />
-          </div>
-          <div class="adm-field">
-            <label>{{ uiZh ? '站点地址' : 'Site URL' }}</label>
-            <input v-model="basicForm['site.url']" class="adm-input" placeholder="https://…" />
-          </div>
-          <div class="adm-field">
-            <label>{{ uiZh ? '网站描述' : 'Site Description' }}</label>
-            <input v-model="basicForm['site.description']" class="adm-input" />
-          </div>
-          <div class="adm-field">
-            <label>{{ uiZh ? '时区' : 'Timezone' }}</label>
-            <select v-model="basicForm['site.timezone']" class="adm-select">
-              <option value="UTC">UTC</option>
-              <option value="Asia/Shanghai">Asia/Shanghai (UTC+8)</option>
-              <option value="Asia/Tokyo">Asia/Tokyo (UTC+9)</option>
-              <option value="Europe/Berlin">Europe/Berlin</option>
-              <option value="Europe/London">Europe/London</option>
-              <option value="America/New_York">America/New_York</option>
-              <option value="America/Los_Angeles">America/Los_Angeles</option>
-            </select>
-          </div>
-          <div class="adm-field full">
-            <label>{{ uiZh ? '版权信息' : 'Copyright' }}</label>
-            <input v-model="basicForm['site.copyright']" class="adm-input" />
-          </div>
-        </div>
-        <div style="margin-top:12px">
-          <button class="adm-btn primary" :disabled="basicSaving" @click="saveBasic">{{ basicSaving ? t('loading') : t('save') }}</button>
-        </div>
-      </div>
+      <el-card style="margin-bottom: 16px">
+        <template #header>
+          <span style="font-weight: 600">{{ uiZh ? '网站基础设置' : 'Basic Site Settings' }}</span>
+        </template>
 
-      <div class="adm-toolbar"><div class="spacer" />
-        <button class="adm-btn primary" @click="openNew">+ {{ t('new') }}</button>
-      </div>
-      <div class="adm-tablewrap">
-        <table class="adm-table">
-          <thead><tr><th>{{ t('key') }}</th><th>{{ t('value') }}</th><th>{{ t('description') }}</th><th>{{ t('actions') }}</th></tr></thead>
-          <tbody>
-            <tr v-for="s in settings" :key="s.key">
-              <td><code>{{ s.key }}</code></td>
-              <td><div class="adm-ellipsis">{{ fmtVal(s.value) }}</div></td>
-              <td>{{ s.description || '—' }}</td>
-              <td><button class="adm-btn sm" @click="openEdit(s)">{{ t('edit') }}</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-if="editing" class="adm-modal-mask" @click.self="editing = null">
-        <div class="adm-modal" style="width:640px">
-          <h2>{{ editing.isNew ? t('new') : t('edit') }} — {{ t('settings') }}</h2>
-          <div v-if="formError" class="adm-error">{{ formError }}</div>
-          <div class="adm-form-grid">
-            <div class="adm-field full"><label>{{ t('key') }}<span class="req"> *</span></label>
-              <input v-model="form.key" class="adm-input" :disabled="!editing.isNew" /></div>
-            <div class="adm-field full"><label>{{ t('value') }}</label>
-              <textarea v-model="form.value" class="adm-textarea code" rows="4" placeholder='text or JSON' /></div>
-            <div class="adm-field full"><label>{{ t('description') }}</label>
-              <input v-model="form.description" class="adm-input" /></div>
+        <el-alert v-if="basicError" type="error" :title="basicError" show-icon style="margin-bottom: 16px" />
+
+        <el-form label-position="top">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px">
+            <el-form-item :label="uiZh ? '网站名称' : 'Site Name'" required>
+              <el-input v-model="basicForm['site.name']" style="width: 100%" />
+            </el-form-item>
+            <el-form-item :label="uiZh ? '站点地址' : 'Site URL'">
+              <el-input v-model="basicForm['site.url']" placeholder="https://…" style="width: 100%" />
+            </el-form-item>
+            <el-form-item :label="uiZh ? '网站描述' : 'Site Description'">
+              <el-input v-model="basicForm['site.description']" style="width: 100%" />
+            </el-form-item>
+            <el-form-item :label="uiZh ? '时区' : 'Timezone'">
+              <el-select v-model="basicForm['site.timezone']" style="width: 100%">
+                <el-option v-for="tz in timezoneOptions" :key="tz" :label="tz" :value="tz" />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="uiZh ? '版权信息' : 'Copyright'" style="grid-column: span 2">
+              <el-input v-model="basicForm['site.copyright']" style="width: 100%" />
+            </el-form-item>
           </div>
-          <div class="adm-modal-foot">
-            <button class="adm-btn" @click="editing = null">{{ t('cancel') }}</button>
-            <button class="adm-btn primary" :disabled="saving" @click="saveSetting">{{ t('save') }}</button>
+        </el-form>
+
+        <el-button type="primary" :loading="basicSaving" @click="saveBasic">{{ t('save') }}</el-button>
+      </el-card>
+
+      <!-- Key-value table -->
+      <el-card>
+        <template #header>
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="font-weight: 600">{{ t('settings') }}</span>
+            <el-button type="primary" @click="openNew">+ {{ t('new') }}</el-button>
           </div>
-        </div>
-      </div>
-    </div>
+        </template>
+
+        <el-table :data="settings" style="width: 100%">
+          <el-table-column prop="key" :label="t('key')">
+            <template #default="{ row }"><code>{{ row.key }}</code></template>
+          </el-table-column>
+          <el-table-column prop="value" :label="t('value')">
+            <template #default="{ row }">
+              <div style="max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{ fmtVal(row.value) }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" :label="t('description')">
+            <template #default="{ row }">{{ row.description || '—' }}</template>
+          </el-table-column>
+          <el-table-column :label="t('actions')" width="100">
+            <template #default="{ row }">
+              <el-button size="small" @click="openEdit(row)">{{ t('edit') }}</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+
+      <!-- Edit modal -->
+      <el-dialog v-model="editingOpen" :title="`${editing?.isNew ? t('new') : t('edit')} — ${t('settings')}`" width="640px">
+        <el-alert v-if="formError" type="error" :title="formError" show-icon style="margin-bottom: 16px" />
+        <el-form label-position="top">
+          <el-form-item :label="t('key')" required>
+            <el-input v-model="form.key" :disabled="!editing?.isNew" style="font-family: monospace" />
+          </el-form-item>
+          <el-form-item :label="t('value')">
+            <el-input v-model="form.value" type="textarea" :rows="4" placeholder="text or JSON" style="font-family: monospace" />
+          </el-form-item>
+          <el-form-item :label="t('description')">
+            <el-input v-model="form.description" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <el-button @click="editing = null">{{ t('cancel') }}</el-button>
+          <el-button type="primary" :loading="saving" @click="saveSetting">{{ t('save') }}</el-button>
+        </template>
+      </el-dialog>
+    </template>
 
     <!-- credentials -->
-    <div v-if="tab === 'credentials'">
-      <div class="adm-tablewrap" style="margin-bottom:18px">
-        <table class="adm-table">
-          <thead><tr><th>{{ t('provider') }}</th><th>{{ t('label') }}</th><th>{{ t('masked') }}</th><th>{{ t('updated') }}</th></tr></thead>
-          <tbody>
-            <tr v-for="c in creds" :key="c.id">
-              <td><code>{{ c.provider }}</code></td><td>{{ c.label || '—' }}</td>
-              <td><code>{{ c.masked }}</code></td><td>{{ fmtDate(c.updated_at) }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="adm-panel">
-        <h2>{{ t('saveCredential') }}</h2>
-        <div v-if="credError" class="adm-error">{{ credError }}</div>
-        <div class="adm-form-grid">
-          <div class="adm-field"><label>{{ t('provider') }}<span class="req"> *</span></label>
-            <input v-model="cred.provider" class="adm-input" placeholder="deepl" /></div>
-          <div class="adm-field"><label>{{ t('label') }}</label>
-            <input v-model="cred.label" class="adm-input" /></div>
-          <div class="adm-field full"><label>{{ t('secret') }}<span class="req"> *</span></label>
-            <input v-model="cred.secret" type="password" class="adm-input" autocomplete="new-password" />
-            <span class="ph">Full key required every time. Stored AES-256-GCM encrypted.</span></div>
-        </div>
-        <div style="margin-top:14px"><button class="adm-btn primary" :disabled="credSaving" @click="saveCred">{{ t('saveCredential') }}</button></div>
-      </div>
-    </div>
+    <template v-if="tab === 'credentials'">
+      <el-card style="margin-bottom: 16px">
+        <template #header>
+          <span style="font-weight: 600">{{ t('provider') }} / API</span>
+        </template>
+        <el-table :data="creds" style="width: 100%">
+          <el-table-column prop="provider" :label="t('provider')">
+            <template #default="{ row }"><code>{{ row.provider }}</code></template>
+          </el-table-column>
+          <el-table-column prop="label" :label="t('label')">
+            <template #default="{ row }">{{ row.label || '—' }}</template>
+          </el-table-column>
+          <el-table-column prop="masked" :label="t('masked')">
+            <template #default="{ row }"><code>{{ row.masked }}</code></template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+
+      <el-card>
+        <template #header>
+          <span style="font-weight: 600">{{ t('saveCredential') }}</span>
+        </template>
+        <el-alert v-if="credError" type="error" :title="credError" show-icon style="margin-bottom: 16px" />
+        <el-form label-position="top">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px">
+            <el-form-item :label="t('provider')" required>
+              <el-input v-model="cred.provider" placeholder="deepl" style="font-family: monospace" />
+            </el-form-item>
+            <el-form-item :label="t('label')">
+              <el-input v-model="cred.label" />
+            </el-form-item>
+            <el-form-item :label="t('secret')" required style="grid-column: span 2">
+              <el-input v-model="cred.secret" type="password" autocomplete="new-password" />
+              <div style="font-size: 12px; color: #909399; margin-top: 4px">{{ uiZh ? '每次需填写完整密钥。AES-256-GCM 加密存储。' : 'Full key required every time. Stored AES-256-GCM encrypted.' }}</div>
+            </el-form-item>
+          </div>
+        </el-form>
+        <el-button type="primary" :loading="credSaving" @click="saveCred">{{ t('saveCredential') }}</el-button>
+      </el-card>
+    </template>
   </div>
 </template>
 
@@ -125,6 +146,10 @@ const tab = ref('settings')
 const settings = ref<any[]>([])
 const creds = ref<any[]>([])
 const editing = ref<any | null>(null)
+const editingOpen = computed({
+  get: () => !!editing.value,
+  set: (v: boolean) => { if (!v) editing.value = null },
+})
 const form = ref({ key: '', value: '', description: '' })
 const formError = ref('')
 const saving = ref(false)
@@ -137,6 +162,16 @@ const basicForm = ref<Record<string, string>>({})
 const basicError = ref('')
 const basicSaving = ref(false)
 const uiZh = computed(() => uiLang.value === 'zh-cn')
+
+const timezoneOptions = [
+  'UTC',
+  'Asia/Shanghai',
+  'Asia/Tokyo',
+  'Europe/Berlin',
+  'Europe/London',
+  'America/New_York',
+  'America/Los_Angeles',
+]
 
 function fmtVal(v: any) {
   return typeof v === 'string' ? v : JSON.stringify(v)

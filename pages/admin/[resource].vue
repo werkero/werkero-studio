@@ -1,83 +1,112 @@
 <template>
   <div>
-    <div v-if="!res" class="adm-panel"><p>Unknown resource.</p></div>
+    <div v-if="!res">
+      <el-card><p>Unknown resource.</p></el-card>
+    </div>
     <div v-else>
-      <div class="adm-hint">{{ t('currentLocaleOnly') }}</div>
-      <div class="adm-toolbar">
-        <div class="spacer" />
-        <button v-if="canEdit" class="adm-btn primary" @click="openNew">+ {{ t('new') }}</button>
+      <p style="margin-bottom: 16px; color: #909399; font-size: 13px;">
+        {{ t('currentLocaleOnly') }} <el-tag type="info" size="small">[{{ locale }}]</el-tag>
+      </p>
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+        <el-button v-if="canEdit" type="primary" @click="openNew">+ {{ t('new') }}</el-button>
       </div>
 
-      <div class="adm-tablewrap">
-        <table class="adm-table">
-          <thead>
-            <tr>
-              <th>{{ t('title') }}</th>
-              <th>7 <span style="text-transform:none">locales</span></th>
-              <th>{{ t('status') }}</th>
-              <th>{{ t('updated') }}</th>
-              <th>{{ t('actions') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in rows" :key="row.id">
-              <td>
-                <div class="adm-ellipsis"><b>{{ titleOf(row) }}</b></div>
-                <span v-if="!translated(row)" class="adm-badge amber">{{ t('untranslated') }}</span>
-              </td>
-              <td><span class="adm-badge" :class="completeOf(row) === 7 ? 'green' : 'gray'">{{ completeOf(row) }}/7</span></td>
-              <td><span v-if="row.status" class="adm-badge" :class="statusClass(row.status)">{{ row.status }}</span></td>
-              <td style="white-space:nowrap">{{ fmtDate(row.updated_at) }}</td>
-              <td>
-                <div class="adm-row-actions">
-                  <button v-if="canEdit" class="adm-btn sm" @click="openEdit(row)">{{ t('edit') }}</button>
-                  <template v-if="canPublish && res.statuses.length">
-                    <button v-if="row.status !== 'published'" class="adm-btn sm" @click="setStatus(row, 'published')">{{ t('publish') }}</button>
-                    <button v-if="row.status === 'published'" class="adm-btn sm" @click="setStatus(row, 'draft')">{{ t('unpublish') }}</button>
-                  </template>
-                  <button v-if="canDelete" class="adm-btn sm danger" @click="remove(row)">{{ t('delete') }}</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="adm-pager">
-          <button class="adm-btn sm" :disabled="page <= 1" @click="goPage(page - 1)">‹</button>
-          <span>{{ t('page') }} {{ page }} / {{ totalPages }} · {{ t('total') }} {{ total }}</span>
-          <button class="adm-btn sm" :disabled="page >= totalPages" @click="goPage(page + 1)">›</button>
+      <el-card>
+        <el-table :data="rows" style="width: 100%">
+          <el-table-column :label="t('title')" min-width="220">
+            <template #default="{ row }">
+              <div style="font-weight: 600;">{{ titleOf(row) }}</div>
+              <el-tag v-if="!translated(row)" type="warning" size="small" style="margin-top: 4px;">{{ t('untranslated') }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="7 locales" width="100">
+            <template #default="{ row }">
+              <el-tag :type="completeOf(row) === 7 ? 'success' : 'info'" size="small">{{ completeOf(row) }}/7</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column :label="t('status')" width="120">
+            <template #default="{ row }">
+              <el-tag v-if="row.status" :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column :label="t('updated')" width="170">
+            <template #default="{ row }">
+              <span style="white-space: nowrap;">{{ fmtDate(row.updated_at) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="t('actions')" width="260" fixed="right">
+            <template #default="{ row }">
+              <el-button v-if="canEdit" size="small" @click="openEdit(row)">{{ t('edit') }}</el-button>
+              <template v-if="canPublish && res.statuses.length">
+                <el-button v-if="row.status !== 'published'" size="small" @click="setStatus(row, 'published')">{{ t('publish') }}</el-button>
+                <el-button v-if="row.status === 'published'" size="small" @click="setStatus(row, 'draft')">{{ t('unpublish') }}</el-button>
+              </template>
+              <el-button v-if="canDelete" size="small" type="danger" @click="remove(row)">{{ t('delete') }}</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div style="display: flex; justify-content: center; margin-top: 16px;">
+          <el-pagination
+            v-model:current-page="page"
+            :page-size="pageSize"
+            :total="total"
+            layout="prev, pager, next"
+            @current-change="load"
+          />
         </div>
-      </div>
+      </el-card>
 
-      <!-- edit modal -->
-      <div v-if="editing" class="adm-modal-mask" @click.self="closeEdit">
-        <div class="adm-modal">
-          <h2>{{ editing.id ? t('edit') : t('new') }} — {{ uiZh ? res.nameZh : res.name }}</h2>
-          <p class="adm-hint">{{ t('currentLocaleOnly') }}</p>
-          <div v-if="formError" class="adm-error">{{ formError }}</div>
-          <div class="adm-form-grid">
-            <div v-for="f in res.fields" :key="f.key" class="adm-field" :class="{ full: ['textarea','markdown','json'].includes(f.type) }">
-              <label>
-                {{ f.label }}<span v-if="f.required" class="req"> *</span>
-                <span v-if="f.i18n" class="i18ntag">[{{ locale }}]</span>
-              </label>
-              <input v-if="f.type === 'text'" v-model="form[f.key]" class="adm-input" :placeholder="f.placeholder" />
-              <input v-if="f.type === 'number'" v-model="form[f.key]" type="number" class="adm-input" />
-              <select v-if="f.type === 'select'" v-model="form[f.key]" class="adm-select">
-                <option value="">—</option>
-                <option v-for="o in f.options" :key="o.value" :value="o.value">{{ o.label }}</option>
-              </select>
-              <textarea v-if="f.type === 'textarea'" v-model="form[f.key]" class="adm-textarea" :placeholder="f.placeholder" />
-              <textarea v-if="f.type === 'markdown'" v-model="form[f.key]" class="adm-textarea code" rows="8" placeholder="Markdown…" />
-              <textarea v-if="f.type === 'json'" v-model="form[f.key]" class="adm-textarea code" rows="4" :placeholder="f.placeholder || (f.lines ? 'one per line' : 'JSON')" />
-              <span v-if="f.placeholder && f.type !== 'json'" class="ph">{{ f.placeholder }}</span>
-            </div>
-          </div>
-          <div class="adm-modal-foot">
-            <button class="adm-btn" @click="closeEdit">{{ t('cancel') }}</button>
-            <button class="adm-btn primary" :disabled="saving" @click="save">{{ saving ? t('loading') : t('save') }}</button>
-          </div>
-        </div>
-      </div>
+      <!-- edit dialog -->
+      <el-dialog
+        v-model="showModal"
+        :title="`${editing?.id ? t('edit') : t('new')} — ${uiZh ? res.nameZh : res.name}`"
+        width="720px"
+      >
+        <p style="color: #909399; font-size: 13px; margin-bottom: 12px;">
+          {{ t('currentLocaleOnly') }} <el-tag type="info" size="small">[{{ locale }}]</el-tag>
+        </p>
+        <el-alert v-if="formError" type="error" :closable="false" :title="formError" style="margin-bottom: 16px;" />
+        <el-form label-position="top">
+          <el-row :gutter="16">
+            <el-col v-for="f in res.fields" :key="f.key" :span="['textarea','markdown','json'].includes(f.type) ? 24 : 12">
+              <el-form-item>
+                <template #label>
+                  {{ f.label }}<span v-if="f.required" style="color: #f56c6c;"> *</span>
+                  <el-tag v-if="f.i18n" type="info" size="small" style="margin-left: 4px;">[{{ locale }}]</el-tag>
+                </template>
+                <el-input v-if="f.type === 'text'" v-model="form[f.key]" :placeholder="f.placeholder" />
+                <el-input v-if="f.type === 'number'" v-model="form[f.key]" type="number" />
+                <el-select v-if="f.type === 'select'" v-model="form[f.key]" style="width: 100%;">
+                  <el-option label="—" value="" />
+                  <el-option v-for="o in f.options" :key="o.value" :label="o.label" :value="o.value" />
+                </el-select>
+                <el-input v-if="f.type === 'textarea'" v-model="form[f.key]" type="textarea" :rows="3" :placeholder="f.placeholder" />
+                <el-input
+                  v-if="f.type === 'markdown'"
+                  v-model="form[f.key]"
+                  type="textarea"
+                  :rows="8"
+                  placeholder="Markdown…"
+                  :input-style="{ fontFamily: 'monospace' }"
+                />
+                <el-input
+                  v-if="f.type === 'json'"
+                  v-model="form[f.key]"
+                  type="textarea"
+                  :rows="4"
+                  :placeholder="f.placeholder || (f.lines ? 'one per line' : 'JSON')"
+                  :input-style="{ fontFamily: 'monospace' }"
+                />
+                <div v-if="f.placeholder && f.type !== 'json'" style="color: #909399; font-size: 12px; margin-top: 4px;">{{ f.placeholder }}</div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <template #footer>
+          <el-button @click="closeEdit">{{ t('cancel') }}</el-button>
+          <el-button type="primary" :loading="saving" @click="save">{{ t('save') }}</el-button>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -105,9 +134,12 @@ const rows = ref<any[]>([])
 const page = ref(1)
 const pageSize = 20
 const total = ref(0)
-const totalPages = ref(1)
 
-const editing = ref<any | null>(null) // row or {id:null}
+const editing = ref<any | null>(null)
+const showModal = computed({
+  get: () => !!editing.value,
+  set: (v: boolean) => { if (!v) closeEdit() },
+})
 const form = ref<Record<string, any>>({})
 const formError = ref('')
 const saving = ref(false)
@@ -127,8 +159,8 @@ function translated(row: any) {
 function completeOf(row: any) {
   return i18nCompleteness(row[res.value.titleField])
 }
-function statusClass(s: string) {
-  return s === 'published' || s === 'approved' ? 'green' : s === 'archived' || s === 'rejected' || s === 'spam' ? 'gray' : 'amber'
+function statusType(s: string) {
+  return s === 'published' || s === 'approved' ? 'success' : s === 'archived' || s === 'rejected' || s === 'spam' ? 'info' : 'warning'
 }
 function fmtDate(d: string) {
   if (!d) return '—'
@@ -140,9 +172,7 @@ async function load() {
   const r: any = await api.get(`/api/admin/${res.value.slug}`, { page: page.value, pageSize, locale: locale.value })
   rows.value = r.data || []
   total.value = r.pagination?.total || 0
-  totalPages.value = r.pagination?.totalPages || 1
 }
-function goPage(p: number) { page.value = p; load() }
 
 /** Convert a stored value into an editable string for the form. */
 function toForm(f: AdminField, row: any): string {
