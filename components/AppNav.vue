@@ -9,7 +9,7 @@
       </nav>
       <NuxtLink :to="localePath('/')" class="brand" aria-label="Werkero Studio home">
         <LogoMark :size="30" />
-        <span class="brand-word">WERKERO</span>
+        <span class="brand-word">{{ siteName }}</span>
       </NuxtLink>
       <div class="nav-right">
         <a :href="anchor('#contact')" class="contact-pill">
@@ -24,6 +24,8 @@
 
 <script setup lang="ts">
 const { nav } = useSiteContent()
+const { get: getSetting } = await useSiteSettings()
+const siteName = computed(() => getSetting('site.name', 'WERKERO'))
 const localePath = useLocalePath()
 const anchor = (hash: string) => localePath({ path: '/', hash })
 const scrolled = ref(false)

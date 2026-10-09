@@ -58,14 +58,19 @@ const DICT: Record<string, Record<string, string>> = {
   },
 }
 
+/** Module-level singleton: guarantees layout and pages share the exact same ref.
+ * (useState('admin-locale') was not propagating across layout/page boundary.) */
+const _adminLocale = ref('en')
+let _adminLocaleInit = false
+
 export function useAdminLocale() {
-  const locale = useState<string>('admin-locale', () => {
-    if (typeof localStorage !== 'undefined') {
-      const saved = localStorage.getItem(ADMIN_LOCALE_KEY)
-      if (saved && ADMIN_LOCALES.some((l) => l.code === saved)) return saved
-    }
-    return 'en'
-  })
+  // Init once from localStorage on client
+  if (!_adminLocaleInit && typeof localStorage !== 'undefined') {
+    _adminLocaleInit = true
+    const saved = localStorage.getItem(ADMIN_LOCALE_KEY)
+    if (saved && ADMIN_LOCALES.some((l) => l.code === saved)) _adminLocale.value = saved
+  }
+  const locale = _adminLocale
 
   const setLocale = (code: string) => {
     locale.value = code

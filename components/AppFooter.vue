@@ -3,7 +3,7 @@
     <div class="wrap">
       <div class="cols">
         <div class="col-brand">
-          <div class="brand"><LogoMark :size="28" /><span class="brand-word">WERKERO</span></div>
+          <div class="brand"><LogoMark :size="28" /><span class="brand-word">{{ siteName }}</span></div>
           <p class="intro">{{ foot.intro }}</p>
         </div>
         <div class="col">
@@ -25,16 +25,19 @@
         </div>
       </div>
       <div class="legal">
-        <p>{{ foot.copyright }}</p>
+        <p>{{ siteCopyright || foot.copyright }}</p>
         <a href="#top" @click.prevent="toTop">{{ foot.backToTop }} ↑</a>
       </div>
     </div>
-    <div class="footer-crop" aria-hidden="true"><div class="giant-word">WERKERO</div></div>
+    <div class="footer-crop" aria-hidden="true"><div class="giant-word">{{ siteName }}</div></div>
   </footer>
 </template>
 
 <script setup lang="ts">
 const { nav, footer: foot } = useSiteContent()
+const { get: getSetting } = await useSiteSettings()
+const siteName = computed(() => getSetting('site.name', 'WERKERO'))
+const siteCopyright = computed(() => getSetting('site.copyright', ''))
 const localePath = useLocalePath()
 const anchor = (hash: string) => localePath({ path: '/', hash })
 const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })

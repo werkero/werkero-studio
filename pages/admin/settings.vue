@@ -7,6 +7,45 @@
 
     <!-- site settings -->
     <div v-if="tab === 'settings'">
+      <!-- Basic site settings form -->
+      <div class="adm-panel" style="margin-bottom:18px">
+        <h2>{{ uiZh ? '网站基础设置' : 'Basic Site Settings' }}</h2>
+        <div v-if="basicError" class="adm-error">{{ basicError }}</div>
+        <div class="adm-form-grid">
+          <div class="adm-field">
+            <label>{{ uiZh ? '网站名称' : 'Site Name' }}<span class="req"> *</span></label>
+            <input v-model="basicForm['site.name']" class="adm-input" />
+          </div>
+          <div class="adm-field">
+            <label>{{ uiZh ? '站点地址' : 'Site URL' }}</label>
+            <input v-model="basicForm['site.url']" class="adm-input" placeholder="https://…" />
+          </div>
+          <div class="adm-field">
+            <label>{{ uiZh ? '网站描述' : 'Site Description' }}</label>
+            <input v-model="basicForm['site.description']" class="adm-input" />
+          </div>
+          <div class="adm-field">
+            <label>{{ uiZh ? '时区' : 'Timezone' }}</label>
+            <select v-model="basicForm['site.timezone']" class="adm-select">
+              <option value="UTC">UTC</option>
+              <option value="Asia/Shanghai">Asia/Shanghai (UTC+8)</option>
+              <option value="Asia/Tokyo">Asia/Tokyo (UTC+9)</option>
+              <option value="Europe/Berlin">Europe/Berlin</option>
+              <option value="Europe/London">Europe/London</option>
+              <option value="America/New_York">America/New_York</option>
+              <option value="America/Los_Angeles">America/Los_Angeles</option>
+            </select>
+          </div>
+          <div class="adm-field full">
+            <label>{{ uiZh ? '版权信息' : 'Copyright' }}</label>
+            <input v-model="basicForm['site.copyright']" class="adm-input" />
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <button class="adm-btn primary" :disabled="basicSaving" @click="saveBasic">{{ basicSaving ? t('loading') : t('save') }}</button>
+        </div>
+      </div>
+
       <div class="adm-toolbar"><div class="spacer" />
         <button class="adm-btn primary" @click="openNew">+ {{ t('new') }}</button>
       </div>
@@ -92,6 +131,12 @@ const saving = ref(false)
 const cred = ref({ provider: '', label: '', secret: '' })
 const credError = ref('')
 const credSaving = ref(false)
+// Basic site settings form (maps to site_settings keys)
+const BASIC_KEYS = ['site.name', 'site.url', 'site.description', 'site.timezone', 'site.copyright']
+const basicForm = ref<Record<string, string>>({})
+const basicError = ref('')
+const basicSaving = ref(false)
+const uiZh = computed(() => uiLang.value === 'zh-cn')
 
 function fmtVal(v: any) {
   return typeof v === 'string' ? v : JSON.stringify(v)
@@ -102,6 +147,27 @@ function fmtDate(d: string) {
 async function load() {
   settings.value = await api.get('/api/admin/settings')
   creds.value = await api.get('/api/admin/credentials')
+  // Populate basic form from settings
+  const map: Record<string, string> = {}
+  for (const s of settings.value) {
+    if (BASIC_KEYS.includes(s.key)) {
+      map[s.key] = typeof s.value === 'string' ? s.value : JSON.stringify(s.value)
+    }
+  }
+  for (const k of BASIC_KEYS) if (!(k in map)) map[k] = ''
+  basicForm.value = map
+}
+async function saveBasic() {
+  basicError.value = ''
+  if (!basicForm.value['site.name']?.trim()) { basicError.value = 'Site Name required'; return }
+  basicSaving.value = true
+  try {
+    for (const k of BASIC_KEYS) {
+      await api.put('/api/admin/settings', { key: k, value: basicForm.value[k] || '' })
+    }
+    await load()
+  } catch (e: any) { basicError.value = adminErrorMessage(e) }
+  finally { basicSaving.value = false }
 }
 function openNew() { editing.value = { isNew: true }; form.value = { key: '', value: '', description: '' }; formError.value = '' }
 function openEdit(s: any) {
