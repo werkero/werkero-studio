@@ -1,4 +1,4 @@
-import { useDb } from '../../utils/db'
+import { useDb } from '../utils/db'
 
 // Public: site basic settings for frontend (site.name, site.url, etc.)
 export default defineEventHandler(async (event) => {
