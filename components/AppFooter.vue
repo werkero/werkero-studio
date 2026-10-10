@@ -20,7 +20,7 @@
         <div class="col">
           <p class="col-h">{{ foot.connect }}</p>
           <a href="https://github.com/adlerdler" target="_blank" rel="noopener">{{ foot.github }} ↗</a>
-          <a :href="anchor('#contact')">{{ foot.contact }}</a>
+          <NuxtLink :to="localePath('/contact')">{{ foot.contact }}</NuxtLink>
           <span class="muted">{{ foot.location }}</span>
         </div>
       </div>

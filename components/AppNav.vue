@@ -12,10 +12,10 @@
         <span class="brand-word">{{ siteName }}</span>
       </NuxtLink>
       <div class="nav-right">
-        <a :href="anchor('#contact')" class="contact-pill">
+        <NuxtLink :to="localePath('/contact')" class="contact-pill">
           {{ nav.contact }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 L17 7 M8 7 h9 v9" /></svg>
-        </a>
+        </NuxtLink>
         <LangSwitcher />
       </div>
     </div>

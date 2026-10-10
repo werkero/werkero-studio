@@ -40,6 +40,7 @@ export function useSiteContent() {
   const processUi = computed(() => getL1(loc.value, 'workflow'))
   const aboutUi = computed(() => getL1(loc.value, 'about'))
   const commonUi = computed(() => getL1(loc.value, 'common'))
+  const contactUi = computed(() => getL1(loc.value, 'contact'))
 
   // L3: dynamic content from API
   const { data: allWorks } = useAsyncData(`works-${loc.value}`, () =>
@@ -82,6 +83,7 @@ export function useSiteContent() {
     process: processUi.value,
     about: aboutUi.value,
     common: commonUi.value,
+    contact: contactUi.value,
   }))
 
   const works = computed(() => allWorks.value ?? [])
