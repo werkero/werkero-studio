@@ -19,11 +19,6 @@
               <el-tag v-if="!translated(row)" type="warning" size="small" style="margin-top: 4px;">{{ t('untranslated') }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="7 locales" width="100">
-            <template #default="{ row }">
-              <el-tag :type="completeOf(row) === 7 ? 'success' : 'info'" size="small">{{ completeOf(row) }}/7</el-tag>
-            </template>
-          </el-table-column>
           <el-table-column :label="t('status')" width="120">
             <template #default="{ row }">
               <el-tag v-if="row.status" :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
@@ -59,7 +54,7 @@
       <!-- edit dialog -->
       <el-dialog
         v-model="showModal"
-        :title="`${editing?.id ? t('edit') : t('new')} — ${uiZh ? res.nameZh : res.name}`"
+        :title="`${editing?.id ? t('edit') : t('new')} — ${t('res.' + res.slug)}`"
         width="720px"
       >
         <p style="color: #909399; font-size: 13px; margin-bottom: 12px;">
@@ -71,14 +66,14 @@
             <el-col v-for="f in res.fields" :key="f.key" :span="['textarea','markdown','json'].includes(f.type) ? 24 : 12">
               <el-form-item>
                 <template #label>
-                  {{ f.label }}<span v-if="f.required" style="color: #f56c6c;"> *</span>
+                  {{ t('field.' + f.key) }}<span v-if="f.required" style="color: #f56c6c;"> *</span>
                   <el-tag v-if="f.i18n" type="info" size="small" style="margin-left: 4px;">[{{ locale }}]</el-tag>
                 </template>
                 <el-input v-if="f.type === 'text'" v-model="form[f.key]" :placeholder="f.placeholder" />
                 <el-input v-if="f.type === 'number'" v-model="form[f.key]" type="number" />
                 <el-select v-if="f.type === 'select'" v-model="form[f.key]" style="width: 100%;">
                   <el-option label="—" value="" />
-                  <el-option v-for="o in f.options" :key="o.value" :label="o.label" :value="o.value" />
+                  <el-option v-for="o in f.options" :key="o.value || o" :label="t('opt.' + (o.value || o)) !== 'opt.' + (o.value || o) ? t('opt.' + (o.value || o)) : (o.label || o)" :value="o.value || o" />
                 </el-select>
                 <el-input v-if="f.type === 'textarea'" v-model="form[f.key]" type="textarea" :rows="3" :placeholder="f.placeholder" />
                 <el-input
@@ -112,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ADMIN_RESOURCES, i18nCompleteness, i18nPick, type AdminField } from '~/utils/admin-resources'
+import { ADMIN_RESOURCES, i18nPick, type AdminField } from '~/utils/admin-resources'
 import { useAdminApi, adminErrorMessage } from '~/composables/useAdminApi'
 import { useAdminLocale } from '~/composables/useAdminLocale'
 
@@ -121,6 +116,10 @@ definePageMeta({ layout: 'admin' })
 const route = useRoute()
 const { t, locale, uiLang } = useAdminLocale()
 const uiZh = computed(() => uiLang.value === 'zh-cn')
+const dateLocale = computed(() => {
+  const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
+  return map[uiLang.value] || 'en-US'
+})
 const api = useAdminApi()
 
 const res = computed(() => ADMIN_RESOURCES[route.params.resource as string])
@@ -156,15 +155,12 @@ function translated(row: any) {
   if (typeof v === 'string') return v !== ''
   return (v as any)[locale.value] != null && (v as any)[locale.value] !== ''
 }
-function completeOf(row: any) {
-  return i18nCompleteness(row[res.value.titleField])
-}
 function statusType(s: string) {
   return s === 'published' || s === 'approved' ? 'success' : s === 'archived' || s === 'rejected' || s === 'spam' ? 'info' : 'warning'
 }
 function fmtDate(d: string) {
   if (!d) return '—'
-  return new Date(d).toLocaleString(uiZh.value ? 'zh-CN' : 'en-US', { hour12: false })
+  return new Date(d).toLocaleString(dateLocale.value, { hour12: false })
 }
 
 async function load() {
@@ -228,7 +224,7 @@ async function save() {
   try {
     for (const f of res.value.fields) {
       if (f.required && !String(form.value[f.key] ?? '').trim() && !editing.value.id) {
-        formError.value = `${f.label} ${t('required')}`
+        formError.value = `${t('field.' + f.key)} ${t('required')}`
         return
       }
       const v = fromForm(f, form.value[f.key] ?? '')

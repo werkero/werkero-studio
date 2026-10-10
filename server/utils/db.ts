@@ -3,7 +3,7 @@ import pg from 'pg'
 let _pool: pg.Pool | null = null
 
 /** Shared Postgres connection pool (local dev: werkero on localhost). */
-export function useDb(): pg.Pool {
+export function useDb(): any {
   if (!_pool) {
     const url = process.env.POSTGRES_URL
     if (!url) throw new Error('POSTGRES_URL is not set')

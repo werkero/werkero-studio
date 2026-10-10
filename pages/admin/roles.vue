@@ -1,57 +1,59 @@
 <template>
   <div>
-    <div class="adm-toolbar"><div class="spacer" />
-      <button class="adm-btn primary" @click="openNewRole">+ {{ t('new') }}</button>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+      <el-button type="primary" @click="openNewRole">+ {{ t('new') }}</el-button>
     </div>
-    <div class="adm-tablewrap">
-      <table class="adm-table">
-        <thead><tr><th>Slug</th><th>{{ t('name') }}</th><th>{{ t('permissions') }}</th><th>{{ t('users') }}</th><th>{{ t('actions') }}</th></tr></thead>
-        <tbody>
-          <tr v-for="r in rows" :key="r.id">
-            <td><code>{{ r.slug }}</code> <span v-if="r.is_system" class="adm-badge gray">{{ t('systemRole') }}</span></td>
-            <td>{{ r.name }}</td><td>{{ r.perm_count }}</td><td>{{ r.user_count }}</td>
-            <td><button v-if="!r.is_system" class="adm-btn sm" @click="openEdit(r)">{{ t('permissions') }}</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <el-card>
+      <el-table :data="rows" style="width: 100%">
+        <el-table-column :label="t('slug')" width="180">
+          <template #default="{ row }">
+            <code>{{ row.slug }}</code>
+            <el-tag v-if="row.is_system" type="info" size="small" style="margin-left: 8px;">{{ t('systemRole') }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :label="t('name')" prop="name" min-width="160" />
+        <el-table-column :label="t('permissions')" prop="perm_count" width="140" />
+        <el-table-column :label="t('users')" prop="user_count" width="120" />
+        <el-table-column :label="t('actions')" width="160" fixed="right">
+          <template #default="{ row }">
+            <el-button v-if="!row.is_system" size="small" @click="openEdit(row)">{{ t('permissions') }}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
 
     <!-- new role -->
-    <div v-if="newRole" class="adm-modal-mask" @click.self="newRole = null">
-      <div class="adm-modal" style="width:480px">
-        <h2>{{ t('new') }} — {{ t('roles') }}</h2>
-        <div v-if="nrError" class="adm-error">{{ nrError }}</div>
-        <div class="adm-form-grid">
-          <div class="adm-field"><label>Slug<span class="req"> *</span></label><input v-model="nr.slug" class="adm-input" /></div>
-          <div class="adm-field"><label>{{ t('name') }}<span class="req"> *</span></label><input v-model="nr.name" class="adm-input" /></div>
-        </div>
-        <div class="adm-modal-foot">
-          <button class="adm-btn" @click="newRole = null">{{ t('cancel') }}</button>
-          <button class="adm-btn primary" @click="createRole">{{ t('create') }}</button>
-        </div>
-      </div>
-    </div>
+    <el-dialog v-model="newRole" :title="`${t('new')} — ${t('roles')}`" width="480px">
+      <el-alert v-if="nrError" type="error" :closable="false" :title="nrError" style="margin-bottom: 16px;" />
+      <el-form label-width="100px" label-position="left">
+        <el-form-item :label="t('slug')" required>
+          <el-input v-model="nr.slug" />
+        </el-form-item>
+        <el-form-item :label="t('name')" required>
+          <el-input v-model="nr.name" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="newRole = false">{{ t('cancel') }}</el-button>
+        <el-button type="primary" @click="createRole">{{ t('create') }}</el-button>
+      </template>
+    </el-dialog>
 
     <!-- permission editor -->
-    <div v-if="editing" class="adm-modal-mask" @click.self="editing = null">
-      <div class="adm-modal">
-        <h2>{{ editing.slug }} — {{ t('permissions') }}</h2>
-        <p class="adm-hint">Checkboxes pre-filled from the role's initial assignment; saving replaces the full set.</p>
-        <div v-if="permError" class="adm-error">{{ permError }}</div>
-        <div class="adm-checks">
-          <template v-for="g in PERMISSION_CATALOG" :key="g.module">
-            <div class="adm-module">{{ g.module }}</div>
-            <label v-for="p in g.perms" :key="p" class="adm-check">
-              <input type="checkbox" :value="p" v-model="selected" /> {{ p }}
-            </label>
-          </template>
+    <el-dialog v-model="permDialogVisible" :title="`${editing?.slug || ''} — ${t('permissions')}`" width="640px">
+      <p style="font-size: 13px; color: #909399; margin-bottom: 16px;">{{ t('permHint') }}</p>
+      <el-alert v-if="permError" type="error" :closable="false" :title="permError" style="margin-bottom: 16px;" />
+      <el-checkbox-group v-model="selected">
+        <div v-for="g in PERMISSION_CATALOG" :key="g.module" style="margin-bottom: 16px;">
+          <div style="font-weight: 600; font-size: 13px; color: #909399; margin-bottom: 8px; text-transform: uppercase;">{{ g.module }}</div>
+          <el-checkbox v-for="p in g.perms" :key="p" :label="p" style="margin-right: 16px; margin-bottom: 8px;" />
         </div>
-        <div class="adm-modal-foot">
-          <button class="adm-btn" @click="editing = null">{{ t('cancel') }}</button>
-          <button class="adm-btn primary" :disabled="saving" @click="savePerms">{{ t('savePermissions') }}</button>
-        </div>
-      </div>
-    </div>
+      </el-checkbox-group>
+      <template #footer>
+        <el-button @click="permDialogVisible = false">{{ t('cancel') }}</el-button>
+        <el-button type="primary" :loading="saving" @click="savePerms">{{ t('savePermissions') }}</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -72,6 +74,12 @@ const saving = ref(false)
 const newRole = ref(false)
 const nr = ref({ slug: '', name: '' })
 const nrError = ref('')
+
+/** Controls the permission editor dialog visibility (editing holds the role object). */
+const permDialogVisible = computed({
+  get: () => !!editing.value,
+  set: (v: boolean) => { if (!v) editing.value = null },
+})
 
 const allPerms = PERMISSION_CATALOG.flatMap((g) => g.perms)
 

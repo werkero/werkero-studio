@@ -10,28 +10,28 @@
       <!-- Basic site settings form -->
       <el-card style="margin-bottom: 16px">
         <template #header>
-          <span style="font-weight: 600">{{ uiZh ? '网站基础设置' : 'Basic Site Settings' }}</span>
+          <span style="font-weight: 600">{{ t('basicSiteSettings') }}</span>
         </template>
 
         <el-alert v-if="basicError" type="error" :title="basicError" show-icon style="margin-bottom: 16px" />
 
         <el-form label-position="top">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px">
-            <el-form-item :label="uiZh ? '网站名称' : 'Site Name'" required>
+            <el-form-item :label="t('siteName')" required>
               <el-input v-model="basicForm['site.name']" style="width: 100%" />
             </el-form-item>
-            <el-form-item :label="uiZh ? '站点地址' : 'Site URL'">
+            <el-form-item :label="t('siteUrl')">
               <el-input v-model="basicForm['site.url']" placeholder="https://…" style="width: 100%" />
             </el-form-item>
-            <el-form-item :label="uiZh ? '网站描述' : 'Site Description'">
+            <el-form-item :label="t('siteDesc')">
               <el-input v-model="basicForm['site.description']" style="width: 100%" />
             </el-form-item>
-            <el-form-item :label="uiZh ? '时区' : 'Timezone'">
+            <el-form-item :label="t('siteTimezone')">
               <el-select v-model="basicForm['site.timezone']" style="width: 100%">
                 <el-option v-for="tz in timezoneOptions" :key="tz" :label="tz" :value="tz" />
               </el-select>
             </el-form-item>
-            <el-form-item :label="uiZh ? '版权信息' : 'Copyright'" style="grid-column: span 2">
+            <el-form-item :label="t('siteCopyright')" style="grid-column: span 2">
               <el-input v-model="basicForm['site.copyright']" style="width: 100%" />
             </el-form-item>
           </div>
@@ -124,7 +124,7 @@
             </el-form-item>
             <el-form-item :label="t('secret')" required style="grid-column: span 2">
               <el-input v-model="cred.secret" type="password" autocomplete="new-password" />
-              <div style="font-size: 12px; color: #909399; margin-top: 4px">{{ uiZh ? '每次需填写完整密钥。AES-256-GCM 加密存储。' : 'Full key required every time. Stored AES-256-GCM encrypted.' }}</div>
+              <div style="font-size: 12px; color: #909399; margin-top: 4px">{{ t('credHint') }}</div>
             </el-form-item>
           </div>
         </el-form>
@@ -141,6 +141,10 @@ import { useAdminLocale } from '~/composables/useAdminLocale'
 definePageMeta({ layout: 'admin' })
 
 const { t, uiLang } = useAdminLocale()
+const dateLocale = computed(() => {
+  const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
+  return map[uiLang.value] || 'en-US'
+})
 const api = useAdminApi()
 const tab = ref('settings')
 const settings = ref<any[]>([])
@@ -177,7 +181,7 @@ function fmtVal(v: any) {
   return typeof v === 'string' ? v : JSON.stringify(v)
 }
 function fmtDate(d: string) {
-  return d ? new Date(d).toLocaleString(uiLang.value === 'zh-cn' ? 'zh-CN' : 'en-US', { hour12: false }) : '—'
+  return d ? new Date(d).toLocaleString(dateLocale.value, { hour12: false }) : '—'
 }
 async function load() {
   settings.value = await api.get('/api/admin/settings')

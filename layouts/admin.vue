@@ -2,52 +2,100 @@
   <div class="adm-ep">
     <div class="adm-ep-shell">
       <!-- Sidebar -->
-      <aside class="adm-ep-side">
+      <aside class="adm-ep-side" :class="{ 'is-collapsed': sidebarCollapsed }">
         <div class="adm-ep-brand">
-          <div class="adm-ep-brand-name">Werkero</div>
-          <div class="adm-ep-brand-sub">Admin Console</div>
+          <div class="adm-ep-logo">W</div>
+          <div v-show="!sidebarCollapsed" class="adm-ep-brand-text">
+            <div class="adm-ep-brand-name">Werkero</div>
+            <div class="adm-ep-brand-sub">Admin Console</div>
+          </div>
         </div>
+
         <nav class="adm-ep-nav">
-          <div class="adm-ep-nav-group">{{ t('content') }}</div>
-          <el-button text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin' }" @click="navigateTo('/admin')">
-            {{ t('dashboard') }}
-          </el-button>
-          <template v-for="r in contentNav" :key="r.slug">
+          <div v-show="!sidebarCollapsed" class="adm-ep-nav-group">{{ t('content') }}</div>
+          <el-tooltip
+            v-for="item in contentItems"
+            :key="item.slug"
+            :content="item.label"
+            placement="right"
+            :disabled="!sidebarCollapsed"
+            :show-after="300"
+          >
             <el-button
-              v-if="can(r.perm + '.view')"
               text
               class="adm-ep-nav-btn"
-              :class="{ 'is-active': route.path === `/admin/${r.slug}` }"
-              @click="navigateTo(`/admin/${r.slug}`)"
+              :class="{ 'is-active': isActive(item.path) }"
+              @click="navigateTo(item.path)"
             >
-              {{ uiZh ? r.nameZh : r.name }}
+              <span class="adm-ep-nav-icon">{{ item.icon }}</span>
+              <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ item.label }}</span>
             </el-button>
-          </template>
-          <el-button v-if="can('inquiries.view')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/inquiries' }" @click="navigateTo('/admin/inquiries')">{{ t('inquiries') }}</el-button>
-          <el-button v-if="can('media.view')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/media' }" @click="navigateTo('/admin/media')">{{ t('media') }}</el-button>
-          <el-button v-if="can('translation.trigger')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/translations' }" @click="navigateTo('/admin/translations')">{{ t('translations') }}</el-button>
-          <div class="adm-ep-nav-group">{{ t('system') }}</div>
-          <el-button v-if="can('settings.view')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/settings' }" @click="navigateTo('/admin/settings')">{{ t('settings') }}</el-button>
-          <el-button v-if="can('users.view')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/users' }" @click="navigateTo('/admin/users')">{{ t('users') }}</el-button>
-          <el-button v-if="can('roles.view')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/roles' }" @click="navigateTo('/admin/roles')">{{ t('roles') }}</el-button>
-          <el-button v-if="can('logs.view')" text class="adm-ep-nav-btn" :class="{ 'is-active': route.path === '/admin/logs' }" @click="navigateTo('/admin/logs')">{{ t('logs') }}</el-button>
+          </el-tooltip>
+
+          <div v-show="!sidebarCollapsed" class="adm-ep-nav-group">{{ t('system') }}</div>
+          <el-tooltip
+            v-for="item in systemItems"
+            :key="item.slug"
+            :content="item.label"
+            placement="right"
+            :disabled="!sidebarCollapsed"
+            :show-after="300"
+          >
+            <el-button
+              text
+              class="adm-ep-nav-btn"
+              :class="{ 'is-active': isActive(item.path) }"
+              @click="navigateTo(item.path)"
+            >
+              <span class="adm-ep-nav-icon">{{ item.icon }}</span>
+              <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ item.label }}</span>
+            </el-button>
+          </el-tooltip>
         </nav>
+
         <div class="adm-ep-side-foot">
-          <el-button text class="adm-ep-nav-btn" @click="goSite">← {{ t('backToSite') }}</el-button>
+          <el-tooltip :content="t('backToSite')" placement="right" :disabled="!sidebarCollapsed" :show-after="300">
+            <el-button text class="adm-ep-nav-btn" @click="goSite">
+              <span class="adm-ep-nav-icon">←</span>
+              <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ t('backToSite') }}</span>
+            </el-button>
+          </el-tooltip>
         </div>
       </aside>
 
       <!-- Main -->
       <div class="adm-ep-main">
         <header class="adm-ep-top">
-          <h1 class="adm-ep-title">{{ pageTitle }}</h1>
+          <el-button text class="adm-ep-collapse" :title="t('content')" @click="sidebarCollapsed = !sidebarCollapsed">
+            <span class="adm-ep-nav-icon" style="margin: 0">{{ sidebarCollapsed ? '→' : '←' }}</span>
+          </el-button>
+
+          <el-breadcrumb separator="/" class="adm-ep-crumb">
+            <el-breadcrumb-item v-for="(c, i) in breadcrumbs" :key="i">
+              <a v-if="c.path" class="adm-ep-crumb-link" @click.prevent="navigateTo(c.path)">{{ c.label }}</a>
+              <span v-else>{{ c.label }}</span>
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+
           <div class="adm-ep-spacer" />
-          <el-select v-model="localeModel" class="adm-ep-locale" placeholder="Language">
+
+          <el-select v-model="localeModel" class="adm-ep-locale" size="small" :aria-label="t('content')">
             <el-option v-for="l in locales" :key="l.code" :label="l.name" :value="l.code" />
           </el-select>
-          <span v-if="me" class="adm-ep-user"><b>{{ me.username }}</b> · {{ me.role }}</span>
-          <el-button @click="logout">{{ t('logout') }}</el-button>
+
+          <el-divider direction="vertical" class="adm-ep-div" />
+
+          <template v-if="me">
+            <el-avatar :size="30" class="adm-ep-avatar">{{ avatarInitial }}</el-avatar>
+            <div class="adm-ep-user-meta">
+              <span class="adm-ep-username">{{ me.username }}</span>
+              <el-tag size="small" type="info" effect="plain" class="adm-ep-role">{{ me.role }}</el-tag>
+            </div>
+          </template>
+
+          <el-button text type="danger" class="adm-ep-logout" @click="logout">{{ t('logout') }}</el-button>
         </header>
+
         <main class="adm-ep-body">
           <slot />
         </main>
@@ -72,6 +120,9 @@ const uiZh = computed(() => uiLang.value === 'zh-cn')
 const me = useState<any>('admin-me', () => null)
 const api = useAdminApi()
 
+const SIDEBAR_KEY = 'werkero_admin_sidebar'
+const sidebarCollapsed = ref(false)
+
 const localeModel = computed({
   get: () => locale.value,
   set: (v: string) => setLocale(v),
@@ -82,19 +133,92 @@ const can = (perm: string) => {
   return p.includes(perm)
 }
 
+const NAV_ICONS: Record<string, string> = {
+  dashboard: '▦',
+  works: '◈',
+  products: '⬢',
+  services: '✦',
+  faqs: '?',
+  testimonials: '❝',
+  'process-steps': '☰',
+  'position-principles': '◎',
+  seo: '⌕',
+  inquiries: '✉',
+  media: '◫',
+  translations: '⇄',
+  settings: '⚙',
+  users: '●',
+  roles: '⬣',
+  logs: '▤',
+}
+
+interface NavItem {
+  slug: string
+  label: string
+  path: string
+  icon: string
+}
+
 const contentNav = computed(() => ADMIN_RESOURCE_LIST)
+
+const contentItems = computed<NavItem[]>(() => {
+  const items: NavItem[] = [
+    { slug: 'dashboard', label: t('dashboard'), path: '/admin', icon: NAV_ICONS.dashboard },
+  ]
+  for (const r of contentNav.value) {
+    if (!can(r.perm + '.view')) continue
+    items.push({ slug: r.slug, label: t('res.' + r.slug), path: `/admin/${r.slug}`, icon: NAV_ICONS[r.slug] || '•' })
+  }
+  if (can('inquiries.view')) items.push({ slug: 'inquiries', label: t('inquiries'), path: '/admin/inquiries', icon: NAV_ICONS.inquiries })
+  if (can('media.view')) items.push({ slug: 'media', label: t('media'), path: '/admin/media', icon: NAV_ICONS.media })
+  if (can('translation.trigger')) items.push({ slug: 'translations', label: t('translations'), path: '/admin/translations', icon: NAV_ICONS.translations })
+  return items
+})
+
+const systemItems = computed<NavItem[]>(() => {
+  const defs: Array<[string, string, string, string]> = [
+    ['settings', t('settings'), '/admin/settings', 'settings.view'],
+    ['users', t('users'), '/admin/users', 'users.view'],
+    ['roles', t('roles'), '/admin/roles', 'roles.view'],
+    ['logs', t('logs'), '/admin/logs', 'logs.view'],
+  ]
+  return defs
+    .filter(([, , , perm]) => can(perm))
+    .map(([slug, label, path]) => ({ slug, label, path, icon: NAV_ICONS[slug] || '•' }))
+})
+
+const isActive = (p: string) => route.path === p
 
 const pageTitle = computed(() => {
   const seg = route.path.split('/').filter(Boolean).pop() || ''
   if (seg === 'admin') return t('dashboard')
   const r = ADMIN_RESOURCE_LIST.find((x) => x.slug === seg)
-  if (r) return uiZh.value ? r.nameZh : r.name
+  if (r) return t('res.' + r.slug)
   const map: Record<string, string> = {
     inquiries: t('inquiries'), media: t('media'), translations: t('translations'),
     settings: t('settings'), users: t('users'), roles: t('roles'), logs: t('logs'),
   }
   return map[seg] || seg
 })
+
+const breadcrumbs = computed(() => {
+  const seg = route.path.split('/').filter(Boolean).pop() || ''
+  const crumbs: Array<{ label: string; path: string }> = [{ label: t('dashboard'), path: '/admin' }]
+  if (!seg || seg === 'admin') return crumbs
+  const r = ADMIN_RESOURCE_LIST.find((x) => x.slug === seg)
+  if (r) return [...crumbs, { label: t('content'), path: '' }, { label: t('res.' + r.slug), path: '' }]
+  const contentMap: Record<string, string> = {
+    inquiries: t('inquiries'), media: t('media'), translations: t('translations'),
+  }
+  const systemMap: Record<string, string> = {
+    settings: t('settings'), users: t('users'), roles: t('roles'), logs: t('logs'),
+  }
+  if (contentMap[seg]) return [...crumbs, { label: t('content'), path: '' }, { label: contentMap[seg], path: '' }]
+  if (systemMap[seg]) return [...crumbs, { label: t('system'), path: '' }, { label: systemMap[seg], path: '' }]
+  return [...crumbs, { label: seg, path: '' }]
+})
+
+const avatarInitial = computed(() => (String(me.value?.username || 'A').charAt(0) || 'A').toUpperCase())
 
 async function loadMe() {
   if (me.value) return
@@ -113,73 +237,173 @@ function goSite() {
   navigateTo('/')
 }
 
-onMounted(loadMe)
+onMounted(() => {
+  loadMe()
+  try {
+    sidebarCollapsed.value = localStorage.getItem(SIDEBAR_KEY) === '1'
+  } catch { /* ignore */ }
+})
+
+watch(sidebarCollapsed, (v) => {
+  try {
+    localStorage.setItem(SIDEBAR_KEY, v ? '1' : '0')
+  } catch { /* ignore */ }
+})
 </script>
 
 <style scoped>
 .adm-ep {
   min-height: 100vh;
-  background: #141414;
-  color: #e5e5e5;
+  background: #0f0f11;
+  color: #e4e4e7;
 }
 .adm-ep-shell {
   display: flex;
   min-height: 100vh;
 }
+
+/* ---------- Sidebar ---------- */
 .adm-ep-side {
-  width: 240px;
+  width: 232px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: #1d1e1f;
-  border-right: 1px solid #2e2e2e;
-  min-height: 100vh;
+  background: #161618;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  transition: width 0.2s ease;
+  z-index: 20;
+}
+.adm-ep-side.is-collapsed {
+  width: 68px;
 }
 .adm-ep-brand {
-  padding: 18px 20px;
-  border-bottom: 1px solid #2e2e2e;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 65px;
+  overflow: hidden;
+}
+.adm-ep-logo {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(91, 140, 255, 0.35);
+}
+.adm-ep-brand-text {
+  overflow: hidden;
+  white-space: nowrap;
 }
 .adm-ep-brand-name {
   font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.04em;
-  color: #f5f5f5;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: #fafafa;
 }
 .adm-ep-brand-sub {
-  font-size: 12px;
-  color: #8a8a8a;
-  margin-top: 2px;
+  font-size: 11px;
+  color: #71717a;
+  margin-top: 1px;
 }
 .adm-ep-nav {
   flex: 1;
-  padding: 12px;
+  padding: 12px 10px;
   overflow-y: auto;
+  overflow-x: hidden;
+}
+.adm-ep-nav::-webkit-scrollbar {
+  width: 4px;
+}
+.adm-ep-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
 }
 .adm-ep-nav-group {
-  padding: 10px 12px 6px;
-  font-size: 12px;
+  padding: 12px 12px 6px;
+  font-size: 11px;
   font-weight: 600;
-  color: #8a8a8a;
+  color: #63636b;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 .adm-ep-nav-btn {
   width: 100%;
   justify-content: flex-start;
   margin-bottom: 2px;
-  color: #cfcfcf;
+  color: #a1a1aa;
+  border-radius: 8px;
+  padding: 9px 12px;
+  height: auto;
+  position: relative;
+  border: 0;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 .adm-ep-nav-btn:hover {
   color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
 }
 .adm-ep-nav-btn.is-active {
-  background: #2e2e2e;
+  background: rgba(255, 255, 255, 0.07);
   color: #ffffff;
+  font-weight: 500;
+}
+.adm-ep-nav-btn.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, #5b8cff, #8b5cf6);
+}
+.adm-ep-nav-icon {
+  width: 22px;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+.is-collapsed .adm-ep-nav-btn {
+  justify-content: center;
+  padding: 10px 0;
+}
+.is-collapsed .adm-ep-nav-icon {
+  margin-right: 0;
+}
+.is-collapsed .adm-ep-nav {
+  padding: 12px 8px;
+}
+.is-collapsed .adm-ep-brand {
+  justify-content: center;
+  padding: 14px 0;
+}
+.adm-ep-nav-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13.5px;
 }
 .adm-ep-side-foot {
-  padding: 12px;
-  border-top: 1px solid #2e2e2e;
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
+
+/* ---------- Main / top bar ---------- */
 .adm-ep-main {
   flex: 1;
   min-width: 0;
@@ -192,34 +416,94 @@ onMounted(loadMe)
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 24px;
-  background: rgba(20, 20, 20, 0.9);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid #2e2e2e;
+  gap: 14px;
+  height: 60px;
+  padding: 0 20px;
+  background: rgba(15, 15, 17, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.adm-ep-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-  color: #f5f5f5;
+.adm-ep-collapse {
+  color: #a1a1aa;
+  padding: 8px;
+  border-radius: 8px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.adm-ep-collapse:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.adm-ep-crumb :deep(.el-breadcrumb__inner) {
+  color: #a1a1aa;
+  font-weight: 400;
+  font-size: 13.5px;
+  transition: color 0.2s ease;
+}
+.adm-ep-crumb :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+  color: #fafafa;
+  font-weight: 500;
+}
+.adm-ep-crumb-link {
+  cursor: pointer;
+}
+.adm-ep-crumb-link:hover {
+  color: #ffffff;
+}
+.adm-ep-crumb :deep(.el-breadcrumb__separator) {
+  color: #52525b;
+  margin: 0 8px;
 }
 .adm-ep-spacer {
   flex: 1;
 }
 .adm-ep-locale {
-  width: 150px;
+  width: 132px;
 }
-.adm-ep-user {
+.adm-ep-div {
+  border-color: rgba(255, 255, 255, 0.1);
+  height: 22px;
+}
+.adm-ep-avatar {
+  background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  color: #fff;
+  font-weight: 700;
   font-size: 14px;
-  color: #8a8a8a;
+  flex-shrink: 0;
+}
+.adm-ep-user-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.adm-ep-username {
+  font-size: 13px;
+  color: #e4e4e7;
+  font-weight: 500;
   white-space: nowrap;
 }
-.adm-ep-user b {
-  color: #e5e5e5;
+.adm-ep-role {
+  text-transform: capitalize;
+}
+.adm-ep-logout {
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+.adm-ep-logout:hover {
+  background: rgba(245, 108, 108, 0.1);
 }
 .adm-ep-body {
   padding: 24px;
   flex: 1;
+}
+
+/* Layered card surface to match the refined dark theme */
+.adm-ep-body :deep(.el-card) {
+  background: #1a1a1e;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+.adm-ep-body :deep(.el-card__header) {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 </style>

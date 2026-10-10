@@ -1,36 +1,49 @@
 <template>
   <div class="space-y-4">
-    <!-- Upload panel -->
-    <el-card>
-      <template #header>
-        <span class="text-base font-semibold">{{ t('register') }} / Upload</span>
+    <!-- Upload button -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+      <el-button type="primary" @click="uploadDialogVisible = true">
+        <span style="margin-right: 4px;">+</span> {{ t('upload') }}
+      </el-button>
+    </div>
+
+    <!-- Upload dialog -->
+    <el-dialog v-model="uploadDialogVisible" :title="t('upload')" width="520px" :close-on-click-modal="false">
+      <el-alert v-if="formError" :title="formError" type="error" :closable="false" show-icon style="margin-bottom: 16px;" />
+
+      <el-upload
+        ref="uploadRef"
+        drag
+        :auto-upload="false"
+        :show-file-list="true"
+        :limit="1"
+        :on-change="onFileChange"
+        :on-remove="onFileRemove"
+        accept="image/*,video/*,.pdf,.svg,.webp"
+        style="margin-bottom: 16px;"
+      >
+        <div style="padding: 20px 0;">
+          <div style="font-size: 48px; margin-bottom: 12px;">📁</div>
+          <div style="font-size: 14px; color: #c0c4cc;">{{ t('dragDropHint') }}</div>
+          <div style="font-size: 12px; color: #909399; margin-top: 4px;">{{ t('orClickHint') }}</div>
+        </div>
+      </el-upload>
+
+      <el-form label-position="top">
+        <el-form-item :label="t('alt') + ' [' + locale + ']'">
+          <el-input v-model="alt" :placeholder="t('altPlaceholder')" />
+        </el-form-item>
+      </el-form>
+
+      <el-progress v-if="uploadProgress > 0 && uploadProgress < 100" :percentage="uploadProgress" style="margin-bottom: 16px;" />
+
+      <template #footer>
+        <el-button @click="uploadDialogVisible = false">{{ t('cancel') }}</el-button>
+        <el-button type="primary" :loading="saving" :disabled="!pickedFile" @click="upload">
+          {{ t('upload') }}
+        </el-button>
       </template>
-
-      <el-alert v-if="formError" :title="formError" type="error" :closable="false" show-icon class="mb-4" />
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1.5">
-            Upload file <span class="text-red-500">*</span>
-          </label>
-          <input ref="fileInput" type="file" accept="image/*,video/*,.pdf,.svg,.webp" class="media-file-input" @change="onFilePick" />
-          <p v-if="pickedName" class="text-xs text-gray-500 mt-1.5">{{ pickedName }} ({{ pickedSize }})</p>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1.5">
-            {{ t('alt') }} <span class="text-xs text-gray-500">[{{ locale }}]</span>
-          </label>
-          <el-input v-model="alt" />
-        </div>
-        <div class="flex items-end justify-end">
-          <el-button type="primary" :loading="saving" :disabled="!pickedFile" @click="upload">
-            Upload
-          </el-button>
-        </div>
-      </div>
-
-      <p class="text-xs text-gray-500 mt-3">Upload goes to Vercel Blob (CDN).</p>
-    </el-card>
+    </el-dialog>
 
     <!-- Filter bar -->
     <div class="flex flex-wrap items-center gap-3">
@@ -91,7 +104,7 @@
     </div>
 
     <!-- Preview dialog -->
-    <el-dialog v-model="previewVisible" :title="uiZh ? '媒体预览' : 'Preview'" width="720px">
+    <el-dialog v-model="previewVisible" :title="t('mediaPreview')" width="720px">
       <div v-if="preview">
         <div class="flex items-center justify-center bg-black/60 rounded-lg min-h-48 max-h-[50vh] overflow-hidden">
           <img v-if="isImage(preview)" :src="preview.file_url" :alt="altOf(preview)" class="max-w-full max-h-[50vh] object-contain" />
@@ -108,7 +121,7 @@
             <div class="flex gap-2">
               <el-input :model-value="preview.file_url" readonly class="flex-1" />
               <el-button @click="copyUrl">
-                {{ copied ? '✓' : (uiZh ? '复制' : 'Copy') }}
+                {{ copied ? '✓' : (t('copy')) }}
               </el-button>
             </div>
           </div>
@@ -137,7 +150,7 @@
           <div class="flex-1" />
           <el-button @click="preview = null">{{ t('cancel') }}</el-button>
           <a :href="preview?.file_url" target="_blank">
-            <el-button type="primary">{{ uiZh ? '在新标签页打开' : 'Open' }}</el-button>
+            <el-button type="primary">{{ t('openInNewTab') }}</el-button>
           </a>
         </div>
       </template>
@@ -149,10 +162,15 @@
 import { i18nPick } from '~/utils/admin-resources'
 import { useAdminApi, adminAuthHeaders, adminErrorMessage } from '~/composables/useAdminApi'
 import { useAdminLocale } from '~/composables/useAdminLocale'
+import { upload } from '@vercel/blob/client'
 
 definePageMeta({ layout: 'admin' })
 
 const { t, locale, uiLang } = useAdminLocale()
+const dateLocale = computed(() => {
+  const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
+  return map[uiLang.value] || 'en-US'
+})
 const uiZh = computed(() => uiLang.value === 'zh-cn')
 const api = useAdminApi()
 const rows = ref<any[]>([])
@@ -171,21 +189,24 @@ const search = ref('')
 const preview = ref<any | null>(null)
 const copied = ref(false)
 
+const uploadDialogVisible = ref(false)
+const uploadRef = ref()
+const uploadProgress = ref(0)
 const previewVisible = computed({
   get: () => !!preview.value,
   set: (v: boolean) => { if (!v) preview.value = null },
 })
 
 const typeFilters = computed(() => [
-  { value: 'all', label: uiZh.value ? '全部' : 'All' },
-  { value: 'image', label: uiZh.value ? '图片' : 'Images' },
-  { value: 'video', label: uiZh.value ? '视频' : 'Videos' },
-  { value: 'other', label: uiZh.value ? '其他' : 'Other' },
+  { value: 'all', label: t('filterAll') },
+  { value: 'image', label: t('filterImages') },
+  { value: 'video', label: t('filterVideos') },
+  { value: 'other', label: t('filterOther') },
 ])
 
 function altOf(m: any) { return i18nPick(m.alt_text, locale.value) || '—' }
 function fmtDate(d: string) {
-  return d ? new Date(d).toLocaleString(uiLang.value === 'zh-cn' ? 'zh-CN' : 'en-US', { hour12: false }) : '—'
+  return d ? new Date(d).toLocaleString(dateLocale.value, { hour12: false }) : '—'
 }
 function fmtSize(b: any) {
   if (!b) return '—'
@@ -214,27 +235,45 @@ async function load() {
   rows.value = r.data || []
   total.value = r.pagination?.total || 0
 }
-function onFilePick(e: Event) {
-  const input = (e.target as HTMLInputElement) || fileInputEl()
-  const f = input?.files?.[0] || null
-  pickedFile.value = f
-  pickedName.value = f ? f.name : ''
-  pickedSize.value = f ? (f.size > 1048576 ? (f.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(f.size / 1024)) + ' KB') : ''
+function onFileChange(file: any) {
+  pickedFile.value = file.raw || null
+  pickedName.value = file.name || ''
+  const sz = file.size || 0
+  pickedSize.value = sz > 1048576 ? (sz / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(sz / 1024)) + ' KB'
+}
+function onFileRemove() {
+  pickedFile.value = null
+  pickedName.value = ''
+  pickedSize.value = ''
 }
 async function upload() {
   formError.value = ''
   if (!pickedFile.value) return
   saving.value = true
   try {
-    const fd = new FormData()
-    fd.append('file', pickedFile.value)
-    fd.append('alt', alt.value.trim())
-    fd.append('locale', locale.value)
-    await $fetch('/api/admin/media/upload', { method: 'POST', body: fd, headers: adminAuthHeaders() })
+    // Direct browser-to-Blob upload (bypasses server 4.5MB limit)
+    const filename = pickedFile.value.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    uploadProgress.value = 10
+    const blob = await upload(`media/${Date.now()}-${filename}`, pickedFile.value, {
+      access: 'public',
+      handleUploadUrl: '/api/admin/media/client-token',
+      headers: adminAuthHeaders(),
+    })
+    uploadProgress.value = 80
+    // Register metadata (tiny JSON payload, no 413)
+    await api.post('/api/admin/media/register', {
+      url: blob.url,
+      pathname: blob.pathname,
+      mime: pickedFile.value.type || null,
+      size: pickedFile.value.size || null,
+      alt: alt.value.trim(),
+      locale: locale.value,
+    })
     alt.value = ''
     pickedFile.value = null; pickedName.value = ''; pickedSize.value = ''
-    const el = fileInputEl()
-    if (el) el.value = ''
+    uploadProgress.value = 0
+    uploadRef.value?.clearFiles()
+    uploadDialogVisible.value = false
     await load()
   } catch (e: any) { formError.value = adminErrorMessage(e) }
   finally { saving.value = false }

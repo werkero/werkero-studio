@@ -1,51 +1,59 @@
 <template>
   <div>
-    <div class="adm-toolbar"><div class="spacer" />
-      <button class="adm-btn primary" @click="openNew">+ {{ t('createUser') }}</button>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+      <el-button type="primary" @click="openNew">+ {{ t('createUser') }}</el-button>
     </div>
-    <div class="adm-tablewrap">
-      <table class="adm-table">
-        <thead><tr><th>{{ t('username') }}</th><th>{{ t('email') }}</th><th>{{ t('role') }}</th><th>{{ t('active') }}</th><th>{{ t('lastLogin') }}</th><th>{{ t('actions') }}</th></tr></thead>
-        <tbody>
-          <tr v-for="u in rows" :key="u.id">
-            <td><b>{{ u.username }}</b></td><td>{{ u.email }}</td><td>{{ u.role }}</td>
-            <td><span class="adm-badge" :class="u.is_active ? 'green' : 'gray'">{{ u.is_active ? '✓' : '✗' }}</span></td>
-            <td>{{ fmtDate(u.last_login_at) }}</td>
-            <td><div class="adm-row-actions">
-              <button class="adm-btn sm" @click="openEdit(u)">{{ t('edit') }}</button>
-            </div></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <el-card>
+      <el-table :data="rows" style="width: 100%">
+        <el-table-column :label="t('username')" min-width="160">
+          <template #default="{ row }"><b>{{ row.username }}</b></template>
+        </el-table-column>
+        <el-table-column :label="t('email')" prop="email" min-width="200" />
+        <el-table-column :label="t('role')" prop="role" width="140" />
+        <el-table-column :label="t('active')" width="100">
+          <template #default="{ row }">
+            <el-tag :type="row.is_active ? 'success' : 'info'" size="small">{{ row.is_active ? '✓' : '✗' }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :label="t('lastLogin')" width="180">
+          <template #default="{ row }">{{ fmtDate(row.last_login_at) }}</template>
+        </el-table-column>
+        <el-table-column :label="t('actions')" width="120" fixed="right">
+          <template #default="{ row }"><el-button size="small" @click="openEdit(row)">{{ t('edit') }}</el-button></template>
+        </el-table-column>
+      </el-table>
+    </el-card>
 
-    <div v-if="editing" class="adm-modal-mask" @click.self="editing = null">
-      <div class="adm-modal" style="width:560px">
-        <h2>{{ editing.isNew ? t('createUser') : t('edit') }} — {{ editing.isNew ? '' : editing.row.username }}</h2>
-        <div v-if="formError" class="adm-error">{{ formError }}</div>
-        <div class="adm-form-grid">
-          <div v-if="editing.isNew" class="adm-field"><label>{{ t('username') }}<span class="req"> *</span></label>
-            <input v-model="form.username" class="adm-input" /></div>
-          <div v-if="editing.isNew" class="adm-field"><label>{{ t('email') }}<span class="req"> *</span></label>
-            <input v-model="form.email" type="email" class="adm-input" /></div>
-          <div class="adm-field"><label>{{ t('role') }}</label>
-            <select v-model="form.role" class="adm-select">
-              <option v-for="r in roles" :key="r.slug" :value="r.slug">{{ r.slug }} — {{ r.name }}</option>
-            </select></div>
-          <div class="adm-field"><label>{{ t('password') }}{{ editing.isNew ? ' *' : ` (${t('resetPassword')})` }}</label>
-            <input v-model="form.password" type="password" class="adm-input" autocomplete="new-password" placeholder="min 8 chars" /></div>
-          <div v-if="!editing.isNew" class="adm-field"><label>{{ t('active') }}</label>
-            <select v-model="form.is_active" class="adm-select">
-              <option :value="true">{{ t('activate') }}</option>
-              <option :value="false">{{ t('deactivate') }}</option>
-            </select></div>
-        </div>
-        <div class="adm-modal-foot">
-          <button class="adm-btn" @click="editing = null">{{ t('cancel') }}</button>
-          <button class="adm-btn primary" :disabled="saving" @click="save">{{ t('save') }}</button>
-        </div>
-      </div>
-    </div>
+    <el-dialog v-model="editing" :title="editing?.isNew ? t('createUser') : `${t('edit')} — ${editing?.row?.username || ''}`" width="560px">
+      <el-alert v-if="formError" type="error" :closable="false" :title="formError" style="margin-bottom: 16px;" />
+      <el-form label-width="120px" label-position="left">
+        <el-form-item v-if="editing?.isNew" :label="t('username')" required>
+          <el-input v-model="form.username" />
+        </el-form-item>
+        <el-form-item v-if="editing?.isNew" :label="t('email')" required>
+          <el-input v-model="form.email" type="email" />
+        </el-form-item>
+        <el-form-item :label="t('role')">
+          <el-select v-model="form.role" style="width: 100%;">
+            <el-option v-for="r in roles" :key="r.slug" :value="r.slug" :label="`${r.slug} — ${r.name}`" />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="t('password')" :required="editing?.isNew">
+          <el-input v-model="form.password" type="password" autocomplete="new-password" :placeholder="t('min8chars')" show-password />
+          <div v-if="!editing?.isNew" style="font-size: 12px; color: #909399; margin-top: 4px;">{{ t('resetPassword') }}</div>
+        </el-form-item>
+        <el-form-item v-if="!editing?.isNew" :label="t('active')">
+          <el-select v-model="form.is_active" style="width: 100%;">
+            <el-option :value="true" :label="t('activate')" />
+            <el-option :value="false" :label="t('deactivate')" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="editing = null">{{ t('cancel') }}</el-button>
+        <el-button type="primary" :loading="saving" @click="save">{{ t('save') }}</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -56,6 +64,10 @@ import { useAdminLocale } from '~/composables/useAdminLocale'
 definePageMeta({ layout: 'admin' })
 
 const { t, uiLang } = useAdminLocale()
+const dateLocale = computed(() => {
+  const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
+  return map[uiLang.value] || 'en-US'
+})
 const api = useAdminApi()
 const rows = ref<any[]>([])
 const roles = ref<any[]>([])
@@ -65,7 +77,7 @@ const formError = ref('')
 const saving = ref(false)
 
 function fmtDate(d: string) {
-  return d ? new Date(d).toLocaleString(uiLang.value === 'zh-cn' ? 'zh-CN' : 'en-US', { hour12: false }) : '—'
+  return d ? new Date(d).toLocaleString(dateLocale.value, { hour12: false }) : '—'
 }
 async function load() {
   const r: any = await api.get('/api/admin/users', { pageSize: 100 })
