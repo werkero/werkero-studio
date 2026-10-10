@@ -204,5 +204,7 @@
   "passwordMismatch": "Passwords do not match",
   "passwordTooShort": "Password must be at least 8 characters",
   "passwordChanged": "Password changed",
-  "fillAll": "Please fill all fields"
+  "fillAll": "Please fill all fields",
+  "confirmDeleteRole": "Delete role \"{name}\"?",
+  "nameRequired": "Name required"
 }

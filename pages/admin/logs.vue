@@ -13,7 +13,7 @@
         <el-table-column prop="username" :label="t('user')" min-width="140" />
         <el-table-column prop="ip_address" :label="t('ip')" min-width="140" />
         <el-table-column :label="t('success')" width="100">
-          <template #default="{ row }"><el-tag :type="row.success ? 'success' : 'danger'" size="small">{{ row.success ? '✓' : '✗' }}</el-tag></template>
+          <template #default="{ row }"><el-tag :type="row.status === 'success' ? 'success' : 'danger'" size="small">{{ row.status === 'success' ? '✓' : '✗' }}</el-tag></template>
         </el-table-column>
         <el-table-column :label="t('reason')" min-width="200">
           <template #default="{ row }">{{ row.failure_reason || '—' }}</template>

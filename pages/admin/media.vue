@@ -127,6 +127,9 @@
 
       <template #footer>
         <el-button @click="uploadDialogVisible = false">{{ t('close') }}</el-button>
+        <el-button type="primary" :loading="saving" :disabled="!pickedFile" @click="upload">
+          {{ t('upload') }}
+        </el-button>
       </template>
     </el-dialog>
 
@@ -273,7 +276,6 @@ function onFileChange(file: any) {
   pickedName.value = file.name || ''
   const sz = file.size || 0
   pickedSize.value = sz > 1048576 ? (sz / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(sz / 1024)) + ' KB'
-  if (pickedFile.value) upload()
 }
 function onFileRemove() {
   pickedFile.value = null

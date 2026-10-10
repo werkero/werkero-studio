@@ -204,5 +204,7 @@
   "passwordMismatch": "Пароли не совпадают",
   "passwordTooShort": "Пароль должен содержать не менее 8 символов",
   "passwordChanged": "Пароль изменён",
-  "fillAll": "Заполните все поля"
+  "fillAll": "Заполните все поля",
+  "confirmDeleteRole": "Удалить роль \"{name}\"?",
+  "nameRequired": "Требуется название"
 }

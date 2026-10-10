@@ -204,5 +204,7 @@
   "passwordMismatch": "パスワードが一致しません",
   "passwordTooShort": "パスワードは8文字以上である必要があります",
   "passwordChanged": "パスワードを変更しました",
-  "fillAll": "すべての項目を入力してください"
+  "fillAll": "すべての項目を入力してください",
+  "confirmDeleteRole": "ロール\"{name}\"を削除しますか？",
+  "nameRequired": "名前は必須です"
 }

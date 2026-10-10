@@ -204,5 +204,7 @@
   "passwordMismatch": "两次密码不一致",
   "passwordTooShort": "密码至少 8 位",
   "passwordChanged": "密码已修改",
-  "fillAll": "请填写所有字段"
+  "fillAll": "请填写所有字段",
+  "confirmDeleteRole": "删除角色\"{name}\"？",
+  "nameRequired": "名称必填"
 }

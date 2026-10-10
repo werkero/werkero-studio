@@ -25,3 +25,16 @@ export function paginated<T>(data: T[], total: number, page: number, pageSize: n
 export function apiError(statusCode: number, code: string, message: string): never {
   throw createError({ statusCode, data: { error: { code, message } } })
 }
+
+/** Get real client IP behind Vercel/proxy (checks x-forwarded-for first). */
+export function getRequestIP(event: any): string | null {
+  const h = event.node?.req?.headers || {}
+  const xff = h['x-forwarded-for'] as string | undefined
+  if (xff) {
+    const first = xff.split(',')[0].trim()
+    if (first) return first
+  }
+  const real = h['x-real-ip'] as string | undefined
+  if (real) return real.trim()
+  return (event.node?.req?.socket?.remoteAddress as string) || null
+}
