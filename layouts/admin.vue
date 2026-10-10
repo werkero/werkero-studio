@@ -759,6 +759,11 @@ watch(sidebarCollapsed, (v) => {
   overflow: hidden;
   min-height: 0;
 }
+/* Element Plus gives adjacent buttons margin-left:12px — reset it in vertical menus */
+.adm-ep-children-inner > .el-button + .el-button,
+.adm-ep-flyout > .el-button + .el-button {
+  margin-left: 0;
+}
 /* parent of the active route: subtle hint, the child keeps the active bar */
 .adm-ep-nav-btn.is-active-parent {
   color: #ffffff;
