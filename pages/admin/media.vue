@@ -43,8 +43,8 @@
         @click="toggleSelect(m)"
       >
         <div class="thumb">
-          <img v-if="isImage(m)" :src="m.file_url" :alt="altOf(m)" loading="lazy" />
-          <video v-else-if="isVideo(m)" :src="m.file_url" preload="metadata" />
+          <img v-if="isImage(m)" :src="m.url" :alt="altOf(m)" loading="lazy" />
+          <video v-else-if="isVideo(m)" :src="m.url" preload="metadata" />
           <div v-else class="file-glyph">{{ fileIcon(m) }}</div>
 
           <!-- video play overlay -->
@@ -68,7 +68,7 @@
         </div>
         <div class="meta">
           <div class="name" :title="fileName(m)">{{ fileName(m) }}</div>
-          <div class="sub">{{ fmtSize(m.size_bytes) }} · {{ fmtDate(m.created_at) }}</div>
+          <div class="sub">{{ fmtDate(m.created_at) }}</div>
         </div>
       </div>
     </div>
@@ -137,8 +137,8 @@
     <el-dialog v-model="previewVisible" :title="t('mediaPreview')" width="720px" class="media-dialog">
       <div v-if="preview">
         <div class="preview-stage">
-          <img v-if="isImage(preview)" :src="preview.file_url" :alt="altOf(preview)" />
-          <video v-else-if="isVideo(preview)" :src="preview.file_url" controls />
+          <img v-if="isImage(preview)" :src="preview.url" :alt="altOf(preview)" />
+          <video v-else-if="isVideo(preview)" :src="preview.url" controls />
           <div v-else class="preview-file">
             <span class="preview-glyph">{{ fileIcon(preview) }}</span>
             <p class="preview-name">{{ fileName(preview) }}</p>
@@ -149,7 +149,7 @@
           <div class="meta-row span-2">
             <label>URL</label>
             <div class="url-row">
-              <el-input :model-value="preview.file_url" readonly class="url-input" />
+              <el-input :model-value="preview.url" readonly class="url-input" />
               <el-button @click="copyUrl">{{ copied ? '✓' : t('copy') }}</el-button>
             </div>
           </div>
@@ -158,12 +158,8 @@
             <p>{{ altOf(preview) }}</p>
           </div>
           <div class="meta-row">
-            <label>Size</label>
-            <p>{{ fmtSize(preview.size_bytes) }}</p>
-          </div>
-          <div class="meta-row">
             <label>MIME</label>
-            <p>{{ preview.mime || '—' }}</p>
+            <p>{{ preview.mime_type || '—' }}</p>
           </div>
           <div class="meta-row">
             <label>{{ t('time') }}</label>
@@ -177,7 +173,7 @@
           <el-button type="danger" plain @click="delMedia">{{ t('delete') }}</el-button>
           <div class="footer-spacer" />
           <el-button @click="preview = null">{{ t('cancel') }}</el-button>
-          <a :href="preview?.file_url" target="_blank" rel="noopener">
+          <a :href="preview?.url" target="_blank" rel="noopener">
             <el-button type="primary">{{ t('openInNewTab') }}</el-button>
           </a>
         </div>
@@ -237,26 +233,21 @@ function altOf(m: any) { return i18nPick(m.alt_text, locale.value) || '—' }
 function fmtDate(d: string) {
   return d ? new Date(d).toLocaleString(dateLocale.value, { hour12: false }) : '—'
 }
-function fmtSize(b: any) {
-  if (!b) return '—'
-  const n = Number(b)
-  return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'
-}
 function fileName(m: any) {
   try {
-    const u = new URL(m.file_url)
-    return decodeURIComponent(u.pathname.split('/').pop() || m.file_url)
-  } catch { return m.file_url }
+    const u = new URL(m.url)
+    return decodeURIComponent(u.pathname.split('/').pop() || m.url)
+  } catch { return m.url }
 }
 function extOf(m: any) {
   const n = fileName(m)
   const i = n.lastIndexOf('.')
   return i > 0 ? n.slice(i + 1, i + 5).toUpperCase() : 'FILE'
 }
-function isImage(m: any) { return (m.mime || '').startsWith('image/') }
-function isVideo(m: any) { return (m.mime || '').startsWith('video/') }
+function isImage(m: any) { return (m.mime_type || '').startsWith('image/') }
+function isVideo(m: any) { return (m.mime_type || '').startsWith('video/') }
 function fileIcon(m: any) {
-  const mt = m.mime || ''
+  const mt = m.mime_type || ''
   if (mt.includes('pdf')) return '📄'
   if (mt.includes('zip') || mt.includes('archive')) return '📦'
   return '📁'
@@ -301,7 +292,6 @@ async function upload() {
       url: blob.url,
       pathname: blob.pathname,
       mime: pickedFile.value.type || null,
-      size: pickedFile.value.size || null,
       alt: alt.value.trim(),
       locale: locale.value,
     })
@@ -316,12 +306,12 @@ async function upload() {
 }
 function openPreview(m: any) { preview.value = m; copied.value = false }
 async function copyUrl() {
-  try { await navigator.clipboard.writeText(preview.value.file_url); copied.value = true } catch {}
+  try { await navigator.clipboard.writeText(preview.value.url); copied.value = true } catch {}
 }
 async function copyQuick(m: any, e: Event) {
   e.stopPropagation()
   try {
-    await navigator.clipboard.writeText(m.file_url)
+    await navigator.clipboard.writeText(m.url)
     copiedId.value = m.id
     setTimeout(() => { if (copiedId.value === m.id) copiedId.value = null }, 1500)
   } catch {}

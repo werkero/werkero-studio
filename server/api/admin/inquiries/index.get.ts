@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const { limit, offset, page, pageSize } = getPagination(event)
   const status = getQuery(event).status ? String(getQuery(event).status) : null
   const params: any[] = [s.brandId]
-  let where = `brand_id=$1 AND deleted_at IS NULL`
+  let where = `brand_id=$1` // no deleted_at on this table yet (arch §3.14 note)
   if (status) { params.push(status); where += ` AND status=$${params.length}` }
   const total = await useDb().query(`SELECT count(*)::int AS n FROM inquiries WHERE ${where}`, params)
   const { rows } = await useDb().query(
