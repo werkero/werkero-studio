@@ -7,7 +7,6 @@
           <div class="adm-ep-logo">W</div>
           <div v-show="!sidebarCollapsed" class="adm-ep-brand-text">
             <div class="adm-ep-brand-name">Werkero</div>
-            <div class="adm-ep-brand-sub">Admin Console</div>
           </div>
         </div>
 
@@ -91,14 +90,6 @@
           </div>
         </teleport>
 
-        <div class="adm-ep-side-foot">
-          <el-tooltip :content="t('backToSite')" placement="right" :disabled="!sidebarCollapsed" :show-after="300">
-            <el-button text class="adm-ep-nav-btn" @click="goSite">
-              <span class="adm-ep-nav-icon">←</span>
-              <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ t('backToSite') }}</span>
-            </el-button>
-          </el-tooltip>
-        </div>
       </aside>
 
       <!-- Main -->
@@ -128,6 +119,16 @@
           </el-select>
 
           <el-divider direction="vertical" class="adm-ep-div" />
+
+          <el-tooltip :content="t('backToSite')" placement="bottom" :show-after="300">
+            <el-button text class="adm-ep-top-iconbtn" @click="goSite">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </el-button>
+          </el-tooltip>
 
           <el-dropdown v-if="me" trigger="click" @command="onUserCommand">
             <el-avatar :size="32" class="adm-ep-avatar adm-ep-avatar-clickable">{{ avatarInitial }}</el-avatar>
@@ -443,7 +444,7 @@ watch(sidebarCollapsed, (v) => {
   gap: 12px;
   padding: 14px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  min-height: 65px;
+  min-height: 60px;
   overflow: hidden;
 }
 .adm-ep-logo {
@@ -608,6 +609,22 @@ watch(sidebarCollapsed, (v) => {
 }
 .adm-ep-collapse-icon.is-collapsed .adm-ep-collapse-chev {
   transform: rotate(180deg);
+}
+/* topbar icon buttons (collapse, back-to-site) */
+.adm-ep-top-iconbtn {
+  color: #a1a1aa;
+  padding: 8px;
+  border-radius: 8px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.adm-ep-top-iconbtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.adm-ep-top-iconbtn svg {
+  display: block;
+  width: 17px;
+  height: 17px;
 }
 .adm-ep-crumb :deep(.el-breadcrumb__inner) {
   color: #a1a1aa;
@@ -847,43 +864,81 @@ watch(sidebarCollapsed, (v) => {
   --el-text-color-regular: #a1a1aa;
   flex-wrap: wrap;
   row-gap: 10px;
+  column-gap: 10px;
+}
+.el-pagination .el-pager {
+  display: flex;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
 }
 .el-pagination .el-pager li,
 .el-pagination .btn-prev,
 .el-pagination .btn-next {
-  background-color: rgba(255, 255, 255, 0.045);
-  color: #a1a1aa;
+  background-color: transparent;
+  color: #8e8e96;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
-  min-width: 32px;
-  height: 32px;
-  line-height: 32px;
+  min-width: 30px;
+  height: 30px;
+  line-height: 28px;
+  padding: 0 6px;
   font-weight: 500;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  margin: 0;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .el-pagination .el-pager li:hover,
 .el-pagination .btn-prev:hover:not(:disabled),
-.el-pagination .btn-next:hover:not(:disabled) { color: #fff; }
+.el-pagination .btn-next:hover:not(:disabled) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.22);
+  background-color: rgba(255, 255, 255, 0.04);
+}
 .el-pagination .el-pager li.is-active {
   background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  border-color: transparent;
   color: #fff;
   font-weight: 600;
+  box-shadow: 0 2px 12px rgba(91, 140, 255, 0.4);
 }
 .el-pagination .btn-prev:disabled,
 .el-pagination .btn-next:disabled {
-  background-color: transparent;
   color: #3f3f46;
+  border-color: rgba(255, 255, 255, 0.05);
 }
 .el-pagination__total,
 .el-pagination__sizes,
 .el-pagination__jump { color: #8e8e96; }
 .el-pagination .el-select .el-input__wrapper,
 .el-pagination .el-input__wrapper {
-  background-color: rgba(255, 255, 255, 0.045);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  background-color: transparent;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
   border-radius: 8px;
+  transition: box-shadow 0.15s ease;
 }
 .el-pagination .el-input__inner { color: #e4e4e7; }
-.el-pagination .el-select .el-input__wrapper:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset; }
+.el-pagination .el-select .el-input__wrapper:hover,
+.el-pagination .el-input__wrapper:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24) inset; }
+.el-pagination .el-select .el-input__wrapper.is-focus,
+.el-pagination .el-input__wrapper.is-focus { box-shadow: 0 0 0 1px #5b8cff inset; }
+
+/* ---- pagination layout: total left, controls right ---- */
+.adm-ep-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.adm-ep-pager-total {
+  font-size: 13px;
+  color: #8e8e96;
+  white-space: nowrap;
+}
+.adm-ep-pager .el-pagination {
+  margin: 0;
+}
 
 /* ---- loading mask over dark tables ---- */
 .el-loading-mask { --el-mask-color: rgba(20, 20, 24, 0.72); }

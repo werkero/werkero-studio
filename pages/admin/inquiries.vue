@@ -2,10 +2,10 @@
   <div>
     <el-tabs v-model="filter" @tab-change="page = 1; load()">
       <el-tab-pane :label="t('all')" name="all" />
-      <el-tab-pane :label="t('new')" name="new" />
-      <el-tab-pane :label="t('stContacted')" name="contacted" />
-      <el-tab-pane :label="t('stClosed')" name="closed" />
-      <el-tab-pane :label="t('stSpam')" name="spam" />
+      <el-tab-pane :label="st('new')" name="new" />
+      <el-tab-pane :label="st('contacted')" name="contacted" />
+      <el-tab-pane :label="st('closed')" name="closed" />
+      <el-tab-pane :label="st('spam')" name="spam" />
     </el-tabs>
 
     <el-card>
@@ -36,8 +36,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="display: flex; justify-content: flex-end; margin-top: 16px">
-        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
+      <div class="adm-ep-pager">
+        <span class="adm-ep-pager-total">{{ t('total') }} {{ total }}</span>
+        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
       </div>
     </el-card>
   </div>
@@ -49,7 +50,7 @@ import { useAdminLocale } from '~/composables/useAdminLocale'
 
 definePageMeta({ layout: 'admin' })
 
-const { t, uiLang } = useAdminLocale()
+const { t, st, uiLang } = useAdminLocale()
 const dateLocale = computed(() => {
   const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
   return map[uiLang.value] || 'en-US'
@@ -65,7 +66,7 @@ function statusType(s: string) {
   return s === 'new' ? 'primary' : s === 'spam' ? 'danger' : s === 'closed' ? 'info' : 'warning'
 }
 function statusText(s: string) {
-  return s === 'new' ? t('new') : s === 'contacted' ? t('stContacted') : s === 'closed' ? t('stClosed') : s === 'spam' ? t('stSpam') : s
+  return st(s)
 }
 function fmtDate(d: string) {
   return d ? new Date(d).toLocaleString(dateLocale.value, { hour12: false }) : '—'

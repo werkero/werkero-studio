@@ -35,7 +35,18 @@ export function useAdminLocale() {
   const uiLang = computed(() => (DICT[locale.value] ? locale.value : 'en'))
   const t = (key: string): string => DICT[uiLang.value]?.[key] ?? DICT.en[key] ?? key
 
+  /**
+   * Translate a DB status value for display. The database keeps English
+   * values untouched — this only maps them to the UI language, falling
+   * back to the raw value when no translation exists.
+   */
+  const st = (s: string): string => {
+    if (!s) return s
+    const key = 'status.' + s
+    return DICT[uiLang.value]?.[key] ?? DICT.en[key] ?? s
+  }
+
   const current = computed(() => ADMIN_LOCALES.find((l) => l.code === locale.value) ?? ADMIN_LOCALES[0])
 
-  return { locale, setLocale, t, current, locales: ADMIN_LOCALES, uiLang }
+  return { locale, setLocale, t, st, current, locales: ADMIN_LOCALES, uiLang }
 }

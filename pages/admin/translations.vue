@@ -5,7 +5,7 @@
         <el-button v-for="s in ['all','pending','processing','done','failed','skipped']" :key="s"
           :type="filter === s ? 'primary' : 'default'"
           @click="filter = s; page = 1; load()">
-          {{ s === 'all' ? t('all') : t('status.' + s) }}
+          {{ s === 'all' ? t('all') : st(s) }}
         </el-button>
       </el-button-group>
       <div style="flex: 1;" />
@@ -29,7 +29,7 @@
           <template #default="{ row }">{{ row.source_locale }} → {{ row.target_locale }}</template>
         </el-table-column>
         <el-table-column :label="t('status')" width="120">
-          <template #default="{ row }"><el-tag :type="statusType(row.status)" size="small">{{ t('status.' + row.status) }}</el-tag></template>
+          <template #default="{ row }"><el-tag :type="statusType(row.status)" size="small">{{ st(row.status) }}</el-tag></template>
         </el-table-column>
         <el-table-column :label="t('attempts')" width="100" prop="attempts" />
         <el-table-column :label="t('error')" min-width="200">
@@ -43,8 +43,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
-        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
+      <div class="adm-ep-pager">
+        <span class="adm-ep-pager-total">{{ t('total') }} {{ total }}</span>
+        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
       </div>
     </el-card>
   </div>
@@ -56,7 +57,7 @@ import { useAdminLocale } from '~/composables/useAdminLocale'
 
 definePageMeta({ layout: 'admin' })
 
-const { t, uiLang } = useAdminLocale()
+const { t, st, uiLang } = useAdminLocale()
 const dateLocale = computed(() => {
   const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
   return map[uiLang.value] || 'en-US'

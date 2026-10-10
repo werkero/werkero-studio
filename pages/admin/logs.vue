@@ -43,8 +43,9 @@
       </el-table>
     </el-card>
 
-    <div style="display: flex; justify-content: flex-end; margin-top: 16px">
-      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
+    <div class="adm-ep-pager">
+        <span class="adm-ep-pager-total">{{ t('total') }} {{ total }}</span>
+      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
     </div>
   </div>
 </template>

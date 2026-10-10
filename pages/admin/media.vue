@@ -84,9 +84,9 @@
     </div>
 
     <!-- Pagination -->
-    <div v-if="rows.length" class="media-pagination">
-      <p class="total-line">{{ t('total') }} {{ total }}</p>
-      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[12, 24, 48, 96]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
+    <div v-if="rows.length" class="adm-ep-pager">
+      <span class="adm-ep-pager-total">{{ t('total') }} {{ total }}</span>
+      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[12, 24, 48, 96]" layout="sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
     </div>
 
     <!-- Upload dialog -->
@@ -538,17 +538,6 @@ onMounted(load)
 .empty-icon { font-size: 60px; margin-bottom: 18px; filter: drop-shadow(0 6px 16px rgba(0,0,0,.4)); }
 .empty-title { font-size: 17px; font-weight: 600; color: #e8eaed; margin: 0 0 8px; }
 .empty-hint { font-size: 13.5px; color: #8b8f98; margin: 0 0 22px; }
-
-/* ---------- Pagination ---------- */
-.media-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 22px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.total-line { font-size: 13px; color: #8b8f98; margin: 0; }
 
 /* ---------- Upload dialog ---------- */
 .dialog-alert { margin-bottom: 16px; }

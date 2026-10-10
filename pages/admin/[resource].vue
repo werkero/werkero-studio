@@ -18,7 +18,7 @@
           </el-table-column>
           <el-table-column :label="t('status')" width="120">
             <template #default="{ row }">
-              <el-tag v-if="row.status" :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status" :type="statusType(row.status)" size="small">{{ st(row.status) }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column :label="t('updated')" width="170">
@@ -37,8 +37,9 @@
             </template>
           </el-table-column>
         </el-table>
-        <div style="display: flex; justify-content: center; margin-top: 16px;">
-          <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
+        <div class="adm-ep-pager">
+          <span class="adm-ep-pager-total">{{ t('total') }} {{ total }}</span>
+          <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
         </div>
       </el-card>
 
@@ -102,7 +103,7 @@ import { useAdminLocale } from '~/composables/useAdminLocale'
 definePageMeta({ layout: 'admin' })
 
 const route = useRoute()
-const { t, locale, uiLang } = useAdminLocale()
+const { t, st, locale, uiLang } = useAdminLocale()
 const uiZh = computed(() => uiLang.value === 'zh-cn')
 const dateLocale = computed(() => {
   const map: Record<string, string> = { 'en': 'en-US', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW', 'fr': 'fr-FR', 'de': 'de-DE', 'ru': 'ru-RU', 'ja': 'ja-JP' }
