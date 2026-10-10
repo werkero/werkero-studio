@@ -4,9 +4,6 @@
       <el-card><p>Unknown resource.</p></el-card>
     </div>
     <div v-else>
-      <p style="margin-bottom: 16px; color: #909399; font-size: 13px;">
-        {{ t('currentLocaleOnly') }} <el-tag type="info" size="small">[{{ locale }}]</el-tag>
-      </p>
       <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
         <el-button v-if="canEdit" type="primary" @click="openNew">+ {{ t('new') }}</el-button>
       </div>
@@ -57,9 +54,6 @@
         :title="`${editing?.id ? t('edit') : t('new')} — ${t('res.' + res.slug)}`"
         width="720px"
       >
-        <p style="color: #909399; font-size: 13px; margin-bottom: 12px;">
-          {{ t('currentLocaleOnly') }} <el-tag type="info" size="small">[{{ locale }}]</el-tag>
-        </p>
         <el-alert v-if="formError" type="error" :closable="false" :title="formError" style="margin-bottom: 16px;" />
         <el-form label-position="top">
           <el-row :gutter="16">
@@ -125,7 +119,7 @@ const api = useAdminApi()
 const res = computed(() => ADMIN_RESOURCES[route.params.resource as string])
 const me = useState<any>('admin-me')
 const can = (p: string) => (me.value?.permissions || []).includes(p)
-const canEdit = computed(() => res.value && can(`${res.value.perm}.edit`))
+const canEdit = computed(() => res.value && (can(`${res.value.perm}.edit`) || can(`${res.value.perm}.moderate`) || can(`${res.value.perm}.create`)))
 const canPublish = computed(() => res.value && (can(`${res.value.perm}.publish`) || can(`${res.value.perm}.moderate`)))
 const canDelete = computed(() => res.value && can(`${res.value.perm}.delete`))
 

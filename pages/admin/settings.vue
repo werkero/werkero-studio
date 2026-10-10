@@ -185,8 +185,7 @@ function fmtDate(d: string) {
 }
 async function load() {
   settings.value = await api.get('/api/admin/settings')
-  creds.value = await api.get('/api/admin/credentials')
-  // Populate basic form from settings
+  // Populate basic form from settings (independent of credentials load)
   const map: Record<string, string> = {}
   for (const s of settings.value) {
     if (BASIC_KEYS.includes(s.key)) {
@@ -195,6 +194,11 @@ async function load() {
   }
   for (const k of BASIC_KEYS) if (!(k in map)) map[k] = ''
   basicForm.value = map
+  try {
+    creds.value = await api.get('/api/admin/credentials')
+  } catch {
+    creds.value = []
+  }
 }
 async function saveBasic() {
   basicError.value = ''

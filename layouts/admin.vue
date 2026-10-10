@@ -85,20 +85,48 @@
 
           <el-divider direction="vertical" class="adm-ep-div" />
 
-          <template v-if="me">
-            <el-avatar :size="30" class="adm-ep-avatar">{{ avatarInitial }}</el-avatar>
-            <div class="adm-ep-user-meta">
-              <span class="adm-ep-username">{{ me.username }}</span>
-              <el-tag size="small" type="info" effect="plain" class="adm-ep-role">{{ me.role }}</el-tag>
-            </div>
-          </template>
-
-          <el-button text type="danger" class="adm-ep-logout" @click="logout">{{ t('logout') }}</el-button>
+          <el-dropdown v-if="me" trigger="click" @command="onUserCommand">
+            <el-avatar :size="32" class="adm-ep-avatar adm-ep-avatar-clickable">{{ avatarInitial }}</el-avatar>
+            <template #dropdown>
+              <div class="adm-ep-user-card">
+                <div class="adm-ep-user-name">{{ me.username }}</div>
+                <el-tag size="small" type="info" effect="plain">{{ me.role }}</el-tag>
+              </div>
+              <el-dropdown-menu>
+                <el-dropdown-item command="password">
+                  <span>🔑</span> {{ t('changePassword') }}
+                </el-dropdown-item>
+                <el-dropdown-item command="logout" divided>
+                  <span>🚪</span> {{ t('logout') }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </header>
 
         <main class="adm-ep-body">
           <slot />
         </main>
+
+        <!-- Change password dialog -->
+        <el-dialog v-model="pwDialogVisible" :title="t('changePassword')" width="420px">
+          <el-alert v-if="pwError" :title="pwError" type="error" :closable="false" show-icon style="margin-bottom: 16px;" />
+          <el-form label-position="top">
+            <el-form-item :label="t('currentPassword')">
+              <el-input v-model="pwForm.current" type="password" show-password />
+            </el-form-item>
+            <el-form-item :label="t('newPassword')">
+              <el-input v-model="pwForm.new" type="password" show-password />
+            </el-form-item>
+            <el-form-item :label="t('confirmPassword')">
+              <el-input v-model="pwForm.confirm" type="password" show-password />
+            </el-form-item>
+          </el-form>
+          <template #footer>
+            <el-button @click="pwDialogVisible = false">{{ t('cancel') }}</el-button>
+            <el-button type="primary" :loading="pwSaving" @click="changePassword">{{ t('save') }}</el-button>
+          </template>
+        </el-dialog>
       </div>
     </div>
   </div>
@@ -227,6 +255,38 @@ async function loadMe() {
   } catch { /* middleware/api will redirect on 401 */ }
 }
 
+const pwDialogVisible = ref(false)
+const pwError = ref('')
+const pwSaving = ref(false)
+const pwForm = ref({ current: '', new: '', confirm: '' })
+
+function onUserCommand(cmd: string) {
+  if (cmd === 'logout') logout()
+  else if (cmd === 'password') {
+    pwForm.value = { current: '', new: '', confirm: '' }
+    pwError.value = ''
+    pwDialogVisible.value = true
+  }
+}
+async function changePassword() {
+  pwError.value = ''
+  if (!pwForm.value.current || !pwForm.value.new) { pwError.value = t('fillAll'); return }
+  if (pwForm.value.new !== pwForm.value.confirm) { pwError.value = t('passwordMismatch'); return }
+  if (pwForm.value.new.length < 8) { pwError.value = t('passwordTooShort'); return }
+  pwSaving.value = true
+  try {
+    await api.post('/api/admin/password/change', {
+      currentPassword: pwForm.value.current,
+      newPassword: pwForm.value.new,
+    })
+    pwDialogVisible.value = false
+    ElMessage.success(t('passwordChanged'))
+  } catch (e: any) {
+    pwError.value = adminErrorMessage(e)
+  } finally {
+    pwSaving.value = false
+  }
+}
 function logout() {
   setAdminToken(null)
   me.value = null
@@ -464,6 +524,25 @@ watch(sidebarCollapsed, (v) => {
   border-color: rgba(255, 255, 255, 0.1);
   height: 22px;
 }
+.adm-ep-user-card {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 4px;
+}
+.adm-ep-user-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #e5e7eb;
+}
+.adm-ep-avatar-clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.adm-ep-avatar-clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.4);
+}
 .adm-ep-avatar {
   background: linear-gradient(135deg, #5b8cff, #8b5cf6);
   color: #fff;
@@ -485,7 +564,7 @@ watch(sidebarCollapsed, (v) => {
 .adm-ep-role {
   text-transform: capitalize;
 }
-.adm-ep-logout {
+.adm-ep-logout-unused {
   padding: 8px 10px;
   border-radius: 8px;
   transition: background-color 0.2s ease;
