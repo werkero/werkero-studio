@@ -86,13 +86,7 @@
     <!-- Pagination -->
     <div v-if="rows.length" class="media-pagination">
       <p class="total-line">{{ t('total') }} {{ total }}</p>
-      <el-pagination
-        v-model:current-page="page"
-        :page-size="pageSize"
-        :total="total"
-        layout="prev, pager, next"
-        @current-change="load"
-      />
+      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[12, 24, 48, 96]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
     </div>
 
     <!-- Upload dialog -->
@@ -198,7 +192,7 @@ const dateLocale = computed(() => {
 const api = useAdminApi()
 const rows = ref<any[]>([])
 const page = ref(1)
-const pageSize = 24
+const pageSize = ref(24)
 const total = ref(0)
 const alt = ref('')
 const saving = ref(false)
@@ -253,10 +247,16 @@ function fileIcon(m: any) {
   return '📁'
 }
 async function load() {
-  const r: any = await api.get('/api/admin/media', { page: page.value, pageSize, type: typeFilter.value, q: search.value || undefined })
+  const r: any = await api.get('/api/admin/media', { page: page.value, pageSize: pageSize.value, type: typeFilter.value, q: search.value || undefined })
   rows.value = r.data || []
   total.value = r.pagination?.total || 0
 }
+function onSizeChange(v: number) {
+  pageSize.value = v
+  page.value = 1
+  load()
+}
+
 function toggleSelect(m: any) {
   const s = selected.value
   if (s.has(m.id)) s.delete(m.id)

@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const role = await useDb().query(`SELECT id, is_system, slug FROM roles WHERE id=$1`, [id])
   if (!role.rows.length) apiError(404, 'NOT_FOUND', 'not found')
-  if (role.rows[0].is_system) apiError(400, 'VALIDATION', 'system roles cannot be modified')
   const permSlugs: string[] = Array.isArray(body.permissions) ? body.permissions : []
   const perms = permSlugs.length
     ? (await useDb().query(`SELECT id FROM permissions WHERE slug = ANY($1)`, [permSlugs])).rows

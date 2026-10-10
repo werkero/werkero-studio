@@ -44,7 +44,7 @@
     </el-card>
 
     <div style="display: flex; justify-content: flex-end; margin-top: 16px">
-      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" layout="prev, pager, next" @current-change="load" />
+      <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
     </div>
   </div>
 </template>
@@ -64,7 +64,7 @@ const api = useAdminApi()
 const tab = ref('logins')
 const rows = ref<any[]>([])
 const page = ref(1)
-const pageSize = 20
+const pageSize = ref(20)
 const total = ref(0)
 
 function fmtDate(d: string) {
@@ -77,9 +77,15 @@ function detailOf(l: any) {
 }
 async function load() {
   const path = tab.value === 'logins' ? '/api/admin/logs/logins' : '/api/admin/logs/operations'
-  const r: any = await api.get(path, { page: page.value, pageSize })
+  const r: any = await api.get(path, { page: page.value, pageSize: pageSize.value })
   rows.value = r.data || []
   total.value = r.pagination?.total || 0
 }
+function onSizeChange(v: number) {
+  pageSize.value = v
+  page.value = 1
+  load()
+}
+
 onMounted(load)
 </script>

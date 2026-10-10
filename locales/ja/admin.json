@@ -48,6 +48,7 @@
   "permissions": "権限",
   "savePermissions": "権限を保存",
   "systemRole": "システムロール",
+  "systemRoleDeleteTip": "システムロールは削除できません",
   "provider": "プロバイダー",
   "label": "ラベル",
   "masked": "マスク値",

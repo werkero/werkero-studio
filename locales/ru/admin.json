@@ -48,6 +48,7 @@
   "permissions": "Разрешения",
   "savePermissions": "Сохранить разрешения",
   "systemRole": "Системная роль",
+  "systemRoleDeleteTip": "Системные роли нельзя удалить",
   "provider": "Провайдер",
   "label": "Метка",
   "masked": "Скрытое значение",

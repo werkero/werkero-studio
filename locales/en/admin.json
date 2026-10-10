@@ -48,6 +48,7 @@
   "permissions": "Permissions",
   "savePermissions": "Save permissions",
   "systemRole": "System role",
+  "systemRoleDeleteTip": "System roles cannot be deleted",
   "provider": "Provider",
   "label": "Label",
   "masked": "Masked value",

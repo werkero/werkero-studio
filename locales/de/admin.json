@@ -48,6 +48,7 @@
   "permissions": "Berechtigungen",
   "savePermissions": "Berechtigungen speichern",
   "systemRole": "Systemrolle",
+  "systemRoleDeleteTip": "Systemrollen können nicht gelöscht werden",
   "provider": "Anbieter",
   "label": "Bezeichnung",
   "masked": "Maskierter Wert",

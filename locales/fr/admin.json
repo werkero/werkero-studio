@@ -48,6 +48,7 @@
   "permissions": "Permissions",
   "savePermissions": "Enregistrer les permissions",
   "systemRole": "Rôle système",
+  "systemRoleDeleteTip": "Les rôles système ne peuvent pas être supprimés",
   "provider": "Fournisseur",
   "label": "Libellé",
   "masked": "Valeur masquée",

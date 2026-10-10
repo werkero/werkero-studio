@@ -48,6 +48,7 @@
   "permissions": "權限",
   "savePermissions": "保存權限",
   "systemRole": "系統角色",
+  "systemRoleDeleteTip": "系統角色不可刪除",
   "provider": "服務商",
   "label": "備註",
   "masked": "掩碼值",

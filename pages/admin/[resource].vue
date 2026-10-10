@@ -38,13 +38,7 @@
           </el-table-column>
         </el-table>
         <div style="display: flex; justify-content: center; margin-top: 16px;">
-          <el-pagination
-            v-model:current-page="page"
-            :page-size="pageSize"
-            :total="total"
-            layout="prev, pager, next"
-            @current-change="load"
-          />
+          <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
         </div>
       </el-card>
 
@@ -125,7 +119,7 @@ const canDelete = computed(() => res.value && can(`${res.value.perm}.delete`))
 
 const rows = ref<any[]>([])
 const page = ref(1)
-const pageSize = 20
+const pageSize = ref(20)
 const total = ref(0)
 
 const editing = ref<any | null>(null)
@@ -159,10 +153,16 @@ function fmtDate(d: string) {
 
 async function load() {
   if (!res.value) return
-  const r: any = await api.get(`/api/admin/${res.value.slug}`, { page: page.value, pageSize, locale: locale.value })
+  const r: any = await api.get(`/api/admin/${res.value.slug}`, { page: page.value, pageSize: pageSize.value, locale: locale.value })
   rows.value = r.data || []
   total.value = r.pagination?.total || 0
 }
+function onSizeChange(v: number) {
+  pageSize.value = v
+  page.value = 1
+  load()
+}
+
 
 /** Convert a stored value into an editable string for the form. */
 function toForm(f: AdminField, row: any): string {

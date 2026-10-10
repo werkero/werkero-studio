@@ -1,24 +1,38 @@
 <template>
   <div>
-    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+    <div class="roles-toolbar">
+      <span class="roles-count">{{ t('roles') }} · {{ rows.length }}</span>
+      <div style="flex: 1;" />
       <el-button type="primary" @click="openNewRole">+ {{ t('new') }}</el-button>
     </div>
     <el-card>
-      <el-table :data="rows" style="width: 100%">
-        <el-table-column :label="t('slug')" width="180">
+      <el-table v-loading="loading" :data="rows" style="width: 100%" :empty-text="t('noData')">
+        <el-table-column :label="t('slug')" min-width="210">
           <template #default="{ row }">
             <code>{{ row.slug }}</code>
-            <el-tag v-if="row.is_system" type="info" size="small" style="margin-left: 8px;">{{ t('systemRole') }}</el-tag>
+            <el-tag v-if="row.is_system" size="small" style="margin-left: 8px;">{{ t('systemRole') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column :label="t('name')" prop="name" min-width="160" />
-        <el-table-column :label="t('permissions')" prop="perm_count" width="140" />
-        <el-table-column :label="t('users')" prop="user_count" width="120" />
-        <el-table-column :label="t('actions')" width="220" fixed="right">
+        <el-table-column :label="t('name')" prop="name" min-width="150" />
+        <el-table-column :label="t('permissions')" width="110" align="center">
           <template #default="{ row }">
-            <el-button :disabled="row.is_system" size="small" @click="openEdit(row)">{{ t('permissions') }}</el-button>
-            <el-button :disabled="row.is_system" size="small" @click="openRename(row)">{{ t('edit') }}</el-button>
-            <el-button :disabled="row.is_system" size="small" type="danger" @click="doDelete(row)">{{ t('delete') }}</el-button>
+            <el-tag round size="small" type="info">{{ row.perm_count }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :label="t('users')" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag round size="small">{{ row.user_count }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column :label="t('actions')" width="210" fixed="right" align="right">
+          <template #default="{ row }">
+            <el-button link type="primary" size="small" @click="openEdit(row)">{{ t('permissions') }}</el-button>
+            <el-button link type="primary" size="small" @click="openRename(row)">{{ t('edit') }}</el-button>
+            <el-tooltip :content="t('systemRoleDeleteTip')" placement="top" :disabled="!row.is_system">
+              <span class="roles-del-wrap">
+                <el-button link type="danger" size="small" :disabled="row.is_system" @click="doDelete(row)">{{ t('delete') }}</el-button>
+              </span>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -83,6 +97,7 @@ definePageMeta({ layout: 'admin' })
 const { t } = useAdminLocale()
 const api = useAdminApi()
 const rows = ref<any[]>([])
+const loading = ref(false)
 const editing = ref<any | null>(null)
 const selected = ref<string[]>([])
 const permError = ref('')
@@ -118,7 +133,12 @@ function defaultPerms(slug: string): string[] {
 }
 
 async function load() {
-  rows.value = await api.get('/api/admin/roles')
+  loading.value = true
+  try {
+    rows.value = await api.get('/api/admin/roles')
+  } finally {
+    loading.value = false
+  }
 }
 function openNewRole() { newRole.value = true; nr.value = { slug: '', name: '' }; nrError.value = '' }
 async function createRole() {
@@ -175,3 +195,27 @@ async function savePerms() {
 }
 onMounted(load)
 </script>
+
+<style scoped>
+.roles-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.roles-count {
+  font-size: 13px;
+  color: #8e8e96;
+  font-weight: 500;
+}
+.roles-del-wrap {
+  display: inline-block;
+  margin-left: 12px;
+}
+/* keep link-button spacing consistent inside the actions column */
+:deep(.el-table .cell .el-button + .el-button) {
+  margin-left: 12px;
+}
+:deep(.el-table .cell .el-button.is-link) {
+  padding: 2px 0;
+}
+</style>

@@ -12,46 +12,84 @@
         </div>
 
         <nav class="adm-ep-nav">
-          <div v-show="!sidebarCollapsed" class="adm-ep-nav-group">{{ t('content') }}</div>
-          <el-tooltip
-            v-for="item in contentItems"
-            :key="item.slug"
-            :content="item.label"
-            placement="right"
-            :disabled="!sidebarCollapsed"
-            :show-after="300"
-          >
-            <el-button
-              text
-              class="adm-ep-nav-btn"
-              :class="{ 'is-active': isActive(item.path) }"
-              @click="navigateTo(item.path)"
+          <template v-for="m in navMenus" :key="m.slug">
+            <!-- leaf item -->
+            <el-tooltip
+              v-if="!m.children"
+              :content="m.label"
+              placement="right"
+              :disabled="!sidebarCollapsed"
+              :show-after="300"
             >
-              <span class="adm-ep-nav-icon">{{ item.icon }}</span>
-              <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ item.label }}</span>
-            </el-button>
-          </el-tooltip>
-
-          <div v-show="!sidebarCollapsed" class="adm-ep-nav-group">{{ t('system') }}</div>
-          <el-tooltip
-            v-for="item in systemItems"
-            :key="item.slug"
-            :content="item.label"
-            placement="right"
-            :disabled="!sidebarCollapsed"
-            :show-after="300"
-          >
-            <el-button
-              text
-              class="adm-ep-nav-btn"
-              :class="{ 'is-active': isActive(item.path) }"
-              @click="navigateTo(item.path)"
-            >
-              <span class="adm-ep-nav-icon">{{ item.icon }}</span>
-              <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ item.label }}</span>
-            </el-button>
-          </el-tooltip>
+              <el-button
+                text
+                class="adm-ep-nav-btn"
+                :class="{ 'is-active': isActive(m.path!) }"
+                @click="navigateTo(m.path!)"
+              >
+                <span class="adm-ep-nav-icon">{{ m.icon }}</span>
+                <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ m.label }}</span>
+              </el-button>
+            </el-tooltip>
+            <!-- parent with submenu -->
+            <div v-else class="adm-ep-submenu">
+              <el-tooltip
+                :content="m.label"
+                placement="right"
+                :disabled="!sidebarCollapsed"
+                :show-after="300"
+              >
+                <el-button
+                  text
+                  class="adm-ep-nav-btn"
+                  :class="{ 'is-active': isChildActive(m) }"
+                  @click="onParentClick(m, $event)"
+                >
+                  <span class="adm-ep-nav-icon">{{ m.icon }}</span>
+                  <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ m.label }}</span>
+                  <span v-show="!sidebarCollapsed" class="adm-ep-caret" :class="{ 'is-open': isOpen(m.slug) }">▾</span>
+                </el-button>
+              </el-tooltip>
+              <!-- inline children (expanded sidebar) -->
+              <div v-if="!sidebarCollapsed" class="adm-ep-children" :class="{ 'is-open': isOpen(m.slug) }">
+                <div class="adm-ep-children-inner">
+                  <el-button
+                    v-for="c in m.children"
+                    :key="c.slug"
+                    text
+                    class="adm-ep-nav-btn adm-ep-child-btn"
+                    :class="{ 'is-active': isActive(c.path) }"
+                    @click="navigateTo(c.path)"
+                  >
+                    <span class="adm-ep-nav-label">{{ c.label }}</span>
+                  </el-button>
+                </div>
+              </div>
+            </div>
+          </template>
         </nav>
+        <!-- flyout submenu (collapsed sidebar) -->
+        <teleport to="body">
+          <div v-if="flyout" class="adm-ep-flyout-mask" @click="flyout = null" />
+          <div
+            v-if="flyout"
+            class="adm-ep-flyout"
+            :style="{ top: flyoutPos.top + 'px', left: flyoutPos.left + 'px' }"
+          >
+            <div class="adm-ep-flyout-title">{{ flyoutMenu?.label }}</div>
+            <el-button
+              v-for="c in flyoutMenu?.children || []"
+              :key="c.slug"
+              text
+              class="adm-ep-nav-btn"
+              :class="{ 'is-active': isActive(c.path) }"
+              @click="goFlyout(c.path)"
+            >
+              <span class="adm-ep-nav-icon">{{ c.icon }}</span>
+              <span class="adm-ep-nav-label">{{ c.label }}</span>
+            </el-button>
+          </div>
+        </teleport>
 
         <div class="adm-ep-side-foot">
           <el-tooltip :content="t('backToSite')" placement="right" :disabled="!sidebarCollapsed" :show-after="300">
@@ -66,8 +104,14 @@
       <!-- Main -->
       <div class="adm-ep-main">
         <header class="adm-ep-top">
-          <el-button text class="adm-ep-collapse" :title="t('content')" @click="sidebarCollapsed = !sidebarCollapsed">
-            <span class="adm-ep-nav-icon" style="margin: 0">{{ sidebarCollapsed ? '→' : '←' }}</span>
+          <el-button text class="adm-ep-collapse" @click="sidebarCollapsed = !sidebarCollapsed">
+            <span class="adm-ep-collapse-icon" :class="{ 'is-collapsed': sidebarCollapsed }">
+              <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="14" height="12" rx="2.5" />
+                <line x1="7" y1="3" x2="7" y2="15" />
+                <polyline class="adm-ep-collapse-chev" points="11,7.5 9.5,9 11,10.5" />
+              </svg>
+            </span>
           </el-button>
 
           <el-breadcrumb separator="/" class="adm-ep-crumb">
@@ -180,40 +224,87 @@ const NAV_ICONS: Record<string, string> = {
   logs: '▤',
 }
 
-interface NavItem {
+interface NavChild {
   slug: string
   label: string
   path: string
   icon: string
 }
 
+interface NavEntry {
+  slug: string
+  label: string
+  icon: string
+  path?: string
+  children?: NavChild[]
+}
+
 const contentNav = computed(() => ADMIN_RESOURCE_LIST)
 
-const contentItems = computed<NavItem[]>(() => {
-  const items: NavItem[] = [
+/** Two-level sidebar menu. Parents reuse the legacy content/system grouping. */
+const navMenus = computed<NavEntry[]>(() => {
+  const menus: NavEntry[] = [
     { slug: 'dashboard', label: t('dashboard'), path: '/admin', icon: NAV_ICONS.dashboard },
   ]
+  const contentChildren: NavChild[] = []
   for (const r of contentNav.value) {
     if (!can(r.perm + '.view')) continue
-    items.push({ slug: r.slug, label: t('res.' + r.slug), path: `/admin/${r.slug}`, icon: NAV_ICONS[r.slug] || '•' })
+    contentChildren.push({ slug: r.slug, label: t('res.' + r.slug), path: `/admin/${r.slug}`, icon: NAV_ICONS[r.slug] || '•' })
   }
-  if (can('inquiries.view')) items.push({ slug: 'inquiries', label: t('inquiries'), path: '/admin/inquiries', icon: NAV_ICONS.inquiries })
-  if (can('media.view')) items.push({ slug: 'media', label: t('media'), path: '/admin/media', icon: NAV_ICONS.media })
-  if (can('translation.trigger')) items.push({ slug: 'translations', label: t('translations'), path: '/admin/translations', icon: NAV_ICONS.translations })
-  return items
-})
+  if (can('media.view')) contentChildren.push({ slug: 'media', label: t('media'), path: '/admin/media', icon: NAV_ICONS.media })
+  if (can('inquiries.view')) contentChildren.push({ slug: 'inquiries', label: t('inquiries'), path: '/admin/inquiries', icon: NAV_ICONS.inquiries })
+  if (can('translation.trigger')) contentChildren.push({ slug: 'translations', label: t('translations'), path: '/admin/translations', icon: NAV_ICONS.translations })
+  if (contentChildren.length) menus.push({ slug: 'content', label: t('content'), icon: '◩', children: contentChildren })
 
-const systemItems = computed<NavItem[]>(() => {
-  const defs: Array<[string, string, string, string]> = [
+  const systemDefs: Array<[string, string, string, string]> = [
     ['settings', t('settings'), '/admin/settings', 'settings.view'],
     ['users', t('users'), '/admin/users', 'users.view'],
     ['roles', t('roles'), '/admin/roles', 'roles.view'],
     ['logs', t('logs'), '/admin/logs', 'logs.view'],
   ]
-  return defs
+  const systemChildren: NavChild[] = systemDefs
     .filter(([, , , perm]) => can(perm))
     .map(([slug, label, path]) => ({ slug, label, path, icon: NAV_ICONS[slug] || '•' }))
+  if (systemChildren.length) menus.push({ slug: 'system', label: t('system'), icon: '◪', children: systemChildren })
+
+  return menus
 })
+
+/** Expanded submenu slugs (accordion: at most one open). */
+const openMenus = ref<string[]>([])
+const isOpen = (slug: string) => openMenus.value.includes(slug)
+function toggleMenu(slug: string) {
+  openMenus.value = isOpen(slug) ? [] : [slug]
+}
+const isChildActive = (m: NavEntry) => !!m.children?.some((c) => isActive(c.path))
+
+/** Auto-expand the parent of the active route (also after permissions load). */
+watch([() => route.path, navMenus], ([p, menus]) => {
+  const parent = (menus as NavEntry[]).find((m) => m.children?.some((c) => c.path === p))
+  if (parent && !isOpen(parent.slug)) openMenus.value = [parent.slug]
+}, { immediate: true })
+
+/** Flyout submenu for the collapsed sidebar (teleported to body). */
+const flyout = ref<string | null>(null)
+const flyoutPos = ref({ top: 0, left: 0 })
+const flyoutMenu = computed(() => navMenus.value.find((m) => m.slug === flyout.value))
+function onParentClick(m: NavEntry, ev: MouseEvent) {
+  if (!sidebarCollapsed.value) { toggleMenu(m.slug); return }
+  if (flyout.value === m.slug) { flyout.value = null; return }
+  const r = (ev.currentTarget as HTMLElement).getBoundingClientRect()
+  const estH = (m.children?.length || 0) * 40 + 52
+  flyoutPos.value = {
+    top: Math.max(8, Math.min(r.top - 4, window.innerHeight - estH - 8)),
+    left: r.right + 10,
+  }
+  flyout.value = m.slug
+}
+function goFlyout(path: string) {
+  flyout.value = null
+  navigateTo(path)
+}
+watch(() => route.path, () => { flyout.value = null })
+watch(sidebarCollapsed, () => { flyout.value = null })
 
 const isActive = (p: string) => route.path === p
 
@@ -302,7 +393,14 @@ onMounted(() => {
   try {
     sidebarCollapsed.value = localStorage.getItem(SIDEBAR_KEY) === '1'
   } catch { /* ignore */ }
+  document.addEventListener('keydown', closeFlyoutOnEsc)
 })
+onUnmounted(() => {
+  document.removeEventListener('keydown', closeFlyoutOnEsc)
+})
+function closeFlyoutOnEsc(e: KeyboardEvent) {
+  if (e.key === 'Escape') flyout.value = null
+}
 
 watch(sidebarCollapsed, (v) => {
   try {
@@ -333,7 +431,7 @@ watch(sidebarCollapsed, (v) => {
   height: 100vh;
   position: sticky;
   top: 0;
-  transition: width 0.2s ease;
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 20;
 }
 .adm-ep-side.is-collapsed {
@@ -494,6 +592,23 @@ watch(sidebarCollapsed, (v) => {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.06);
 }
+.adm-ep-collapse-icon {
+  display: inline-flex;
+  color: inherit;
+}
+.adm-ep-collapse-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+.adm-ep-collapse-chev {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.adm-ep-collapse-icon.is-collapsed .adm-ep-collapse-chev {
+  transform: rotate(180deg);
+}
 .adm-ep-crumb :deep(.el-breadcrumb__inner) {
   color: #a1a1aa;
   font-weight: 400;
@@ -577,6 +692,113 @@ watch(sidebarCollapsed, (v) => {
   flex: 1;
 }
 
+/* ---------- Two-level submenu ---------- */
+.adm-ep-submenu {
+  margin-bottom: 2px;
+}
+.adm-ep-caret {
+  margin-left: auto;
+  font-size: 11px;
+  color: #63636b;
+  transition: transform 0.24s ease;
+  flex-shrink: 0;
+}
+.adm-ep-caret.is-open {
+  transform: rotate(180deg);
+}
+.adm-ep-nav-btn .adm-ep-caret {
+  margin-right: 2px;
+}
+/* inline children: smooth height animation */
+.adm-ep-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.adm-ep-children.is-open {
+  grid-template-rows: 1fr;
+}
+.adm-ep-children-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.adm-ep-child-btn {
+  padding-left: 44px;
+  font-size: 13px;
+  color: #8e8e96;
+  margin-bottom: 1px;
+}
+.adm-ep-child-btn:hover {
+  color: #ffffff;
+}
+.adm-ep-child-btn .adm-ep-nav-label {
+  position: relative;
+}
+.adm-ep-child-btn .adm-ep-nav-label::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #52525b;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease;
+}
+.adm-ep-child-btn:hover .adm-ep-nav-label::before {
+  background: #a1a1aa;
+}
+.adm-ep-child-btn.is-active .adm-ep-nav-label::before {
+  background: #8b5cf6;
+}
+/* label fade-in when expanding the sidebar */
+.adm-ep-side:not(.is-collapsed) .adm-ep-nav-label,
+.adm-ep-side:not(.is-collapsed) .adm-ep-brand-text,
+.adm-ep-side:not(.is-collapsed) .adm-ep-caret {
+  animation: admNavIn 0.22s ease;
+}
+@keyframes admNavIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Collapsed flyout submenu ---------- */
+.adm-ep-flyout-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: transparent;
+}
+.adm-ep-flyout {
+  position: fixed;
+  z-index: 61;
+  min-width: 212px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: #1c1c21;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  animation: admFlyIn 0.16s ease;
+}
+@keyframes admFlyIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.adm-ep-flyout-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #63636b;
+  padding: 8px 12px 6px;
+}
+.adm-ep-flyout .adm-ep-nav-btn {
+  margin-bottom: 2px;
+}
+
 /* Layered card surface to match the refined dark theme */
 .adm-ep-body :deep(.el-card) {
   background: #1a1a1e;
@@ -584,5 +806,102 @@ watch(sidebarCollapsed, (v) => {
 }
 .adm-ep-body :deep(.el-card__header) {
   border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+</style>
+
+<style>
+/* ===== Werkero admin: Element Plus dark polish =====
+   el-table / el-pagination / el-loading are only rendered by /admin pages
+   (verified 2026-10-10 — the public site uses none of them), so these
+   global rules cannot leak into the storefront. */
+
+/* ---- table ---- */
+.el-table {
+  --el-table-border-color: rgba(255, 255, 255, 0.07);
+  --el-table-header-bg-color: rgba(255, 255, 255, 0.025);
+  --el-table-header-text-color: #8e8e96;
+  --el-table-text-color: #d4d4d8;
+  --el-table-row-hover-bg-color: rgba(255, 255, 255, 0.035);
+  --el-table-current-row-bg-color: rgba(91, 140, 255, 0.08);
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  font-size: 13.5px;
+}
+.el-table th.el-table__cell > .cell {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.el-table .cell { line-height: 1.55; }
+.el-table td.el-table__cell { padding: 12px 0; }
+.el-table__empty-text { color: #63636b; }
+.el-table__body tr:last-child td.el-table__cell { border-bottom: 0; }
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: rgba(255, 255, 255, 0.018);
+}
+
+/* ---- pagination ---- */
+.el-pagination {
+  --el-pagination-font-size: 13px;
+  --el-text-color-regular: #a1a1aa;
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+.el-pagination .el-pager li,
+.el-pagination .btn-prev,
+.el-pagination .btn-next {
+  background-color: rgba(255, 255, 255, 0.045);
+  color: #a1a1aa;
+  border-radius: 8px;
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-weight: 500;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.el-pagination .el-pager li:hover,
+.el-pagination .btn-prev:hover:not(:disabled),
+.el-pagination .btn-next:hover:not(:disabled) { color: #fff; }
+.el-pagination .el-pager li.is-active {
+  background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  color: #fff;
+  font-weight: 600;
+}
+.el-pagination .btn-prev:disabled,
+.el-pagination .btn-next:disabled {
+  background-color: transparent;
+  color: #3f3f46;
+}
+.el-pagination__total,
+.el-pagination__sizes,
+.el-pagination__jump { color: #8e8e96; }
+.el-pagination .el-select .el-input__wrapper,
+.el-pagination .el-input__wrapper {
+  background-color: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border-radius: 8px;
+}
+.el-pagination .el-input__inner { color: #e4e4e7; }
+.el-pagination .el-select .el-input__wrapper:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset; }
+
+/* ---- loading mask over dark tables ---- */
+.el-loading-mask { --el-mask-color: rgba(20, 20, 24, 0.72); }
+.el-loading-spinner .path { stroke: #5b8cff; }
+.el-loading-spinner .el-loading-text { color: #a1a1aa; }
+
+/* ---- tags / code inside dark tables ---- */
+.el-table .el-tag--info {
+  --el-tag-bg-color: rgba(255, 255, 255, 0.06);
+  --el-tag-border-color: rgba(255, 255, 255, 0.1);
+  --el-tag-text-color: #a1a1aa;
+}
+.el-table code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  background: rgba(165, 180, 252, 0.1);
+  color: #a5b4fc;
+  padding: 2px 8px;
+  border-radius: 6px;
 }
 </style>

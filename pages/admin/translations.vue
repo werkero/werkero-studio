@@ -44,12 +44,7 @@
         </el-table-column>
       </el-table>
       <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
-        <el-pagination
-          v-model:current-page="page"
-          :page-size="pageSize"
-          :total="total"
-          layout="prev, pager, next"
-          @current-change="load" />
+        <el-pagination v-model:current-page="page" :page-size="pageSize" :total="total" :page-sizes="[10, 20, 50, 100]" layout="total, sizes, prev, pager, next, jumper" background @current-change="load" @size-change="onSizeChange" />
       </div>
     </el-card>
   </div>
@@ -69,7 +64,7 @@ const dateLocale = computed(() => {
 const api = useAdminApi()
 const rows = ref<any[]>([])
 const page = ref(1)
-const pageSize = 20
+const pageSize = ref(20)
 const total = ref(0)
 const filter = ref('all')
 const processing = ref(false)
@@ -82,12 +77,18 @@ function fmtDate(d: string) {
 }
 function shortId(id: string) { return id ? String(id).slice(0, 8) : '' }
 async function load() {
-  const q: any = { page: page.value, pageSize }
+  const q: any = { page: page.value, pageSize: pageSize.value }
   if (filter.value !== 'all') q.status = filter.value
   const r: any = await api.get('/api/admin/translation-jobs', q)
   rows.value = r.data || []
   total.value = r.pagination?.total || 0
 }
+function onSizeChange(v: number) {
+  pageSize.value = v
+  page.value = 1
+  load()
+}
+
 async function processNow() {
   processing.value = true
   try {
