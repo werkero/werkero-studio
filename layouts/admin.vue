@@ -26,7 +26,7 @@
                 :class="{ 'is-active': isActive(m.path!) }"
                 @click="navigateTo(m.path!)"
               >
-                <span class="adm-ep-nav-icon">{{ m.icon }}</span>
+                <span class="adm-ep-nav-icon"><AdminNavIcon :name="m.icon" /></span>
                 <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ m.label }}</span>
               </el-button>
             </el-tooltip>
@@ -41,10 +41,10 @@
                 <el-button
                   text
                   class="adm-ep-nav-btn"
-                  :class="{ 'is-active': isChildActive(m) }"
+                  :class="{ 'is-active-parent': isChildActive(m) }"
                   @click="onParentClick(m, $event)"
                 >
-                  <span class="adm-ep-nav-icon">{{ m.icon }}</span>
+                  <span class="adm-ep-nav-icon"><AdminNavIcon :name="m.icon" /></span>
                   <span v-show="!sidebarCollapsed" class="adm-ep-nav-label">{{ m.label }}</span>
                   <span v-show="!sidebarCollapsed" class="adm-ep-caret" :class="{ 'is-open': isOpen(m.slug) }">▾</span>
                 </el-button>
@@ -60,6 +60,7 @@
                     :class="{ 'is-active': isActive(c.path) }"
                     @click="navigateTo(c.path)"
                   >
+                    <span class="adm-ep-nav-icon adm-ep-child-icon"><AdminNavIcon :name="c.icon" /></span>
                     <span class="adm-ep-nav-label">{{ c.label }}</span>
                   </el-button>
                 </div>
@@ -84,7 +85,7 @@
               :class="{ 'is-active': isActive(c.path) }"
               @click="goFlyout(c.path)"
             >
-              <span class="adm-ep-nav-icon">{{ c.icon }}</span>
+              <span class="adm-ep-nav-icon"><AdminNavIcon :name="c.icon" /></span>
               <span class="adm-ep-nav-label">{{ c.label }}</span>
             </el-button>
           </div>
@@ -207,22 +208,22 @@ const can = (perm: string) => {
 }
 
 const NAV_ICONS: Record<string, string> = {
-  dashboard: '▦',
-  works: '◈',
-  products: '⬢',
-  services: '✦',
-  faqs: '?',
-  testimonials: '❝',
-  'process-steps': '☰',
-  'position-principles': '◎',
-  seo: '⌕',
-  inquiries: '✉',
-  media: '◫',
-  translations: '⇄',
-  settings: '⚙',
-  users: '●',
-  roles: '⬣',
-  logs: '▤',
+  dashboard: 'dashboard',
+  works: 'works',
+  products: 'products',
+  services: 'services',
+  faqs: 'faqs',
+  testimonials: 'testimonials',
+  'process-steps': 'process-steps',
+  'position-principles': 'position-principles',
+  seo: 'seo',
+  inquiries: 'inquiries',
+  media: 'media',
+  translations: 'translations',
+  settings: 'settings',
+  users: 'users',
+  roles: 'roles',
+  logs: 'logs',
 }
 
 interface NavChild {
@@ -242,31 +243,45 @@ interface NavEntry {
 
 const contentNav = computed(() => ADMIN_RESOURCE_LIST)
 
-/** Two-level sidebar menu. Parents reuse the legacy content/system grouping. */
+/** Two-level sidebar menu. */
 const navMenus = computed<NavEntry[]>(() => {
   const menus: NavEntry[] = [
     { slug: 'dashboard', label: t('dashboard'), path: '/admin', icon: NAV_ICONS.dashboard },
   ]
+  // 内容管理： resources (except seo) + media + translations
   const contentChildren: NavChild[] = []
   for (const r of contentNav.value) {
+    if (r.slug === 'seo') continue
     if (!can(r.perm + '.view')) continue
     contentChildren.push({ slug: r.slug, label: t('res.' + r.slug), path: `/admin/${r.slug}`, icon: NAV_ICONS[r.slug] || '•' })
   }
   if (can('media.view')) contentChildren.push({ slug: 'media', label: t('media'), path: '/admin/media', icon: NAV_ICONS.media })
-  if (can('inquiries.view')) contentChildren.push({ slug: 'inquiries', label: t('inquiries'), path: '/admin/inquiries', icon: NAV_ICONS.inquiries })
   if (can('translation.trigger')) contentChildren.push({ slug: 'translations', label: t('translations'), path: '/admin/translations', icon: NAV_ICONS.translations })
-  if (contentChildren.length) menus.push({ slug: 'content', label: t('content'), icon: '◩', children: contentChildren })
+  if (contentChildren.length) menus.push({ slug: 'content', label: t('content'), icon: 'folder', children: contentChildren })
 
-  const systemDefs: Array<[string, string, string, string]> = [
-    ['settings', t('settings'), '/admin/settings', 'settings.view'],
+  // 客户询盘：一级菜单
+  if (can('inquiries.view')) menus.push({ slug: 'inquiries', label: t('inquiries'), path: '/admin/inquiries', icon: NAV_ICONS.inquiries })
+
+  // 用户管理： users + roles
+  const userDefs: Array<[string, string, string, string]> = [
     ['users', t('users'), '/admin/users', 'users.view'],
     ['roles', t('roles'), '/admin/roles', 'roles.view'],
+  ]
+  const userChildren: NavChild[] = userDefs
+    .filter(([, , , perm]) => can(perm))
+    .map(([slug, label, path]) => ({ slug, label, path, icon: NAV_ICONS[slug] || 'dot' }))
+  if (userChildren.length) menus.push({ slug: 'userManagement', label: t('userManagement'), icon: 'user', children: userChildren })
+
+  // 系统管理： settings + seo + logs
+  const systemDefs: Array<[string, string, string, string]> = [
+    ['settings', t('settings'), '/admin/settings', 'settings.view'],
+    ['seo', t('res.seo'), '/admin/seo', 'seo.view'],
     ['logs', t('logs'), '/admin/logs', 'logs.view'],
   ]
   const systemChildren: NavChild[] = systemDefs
     .filter(([, , , perm]) => can(perm))
-    .map(([slug, label, path]) => ({ slug, label, path, icon: NAV_ICONS[slug] || '•' }))
-  if (systemChildren.length) menus.push({ slug: 'system', label: t('system'), icon: '◪', children: systemChildren })
+    .map(([slug, label, path]) => ({ slug, label, path, icon: NAV_ICONS[slug] || 'dot' }))
+  if (systemChildren.length) menus.push({ slug: 'system', label: t('system'), icon: 'sliders', children: systemChildren })
 
   return menus
 })
@@ -325,15 +340,20 @@ const breadcrumbs = computed(() => {
   const seg = route.path.split('/').filter(Boolean).pop() || ''
   const crumbs: Array<{ label: string; path: string }> = [{ label: t('dashboard'), path: '/admin' }]
   if (!seg || seg === 'admin') return crumbs
+  if (seg === 'inquiries') return [...crumbs, { label: t('inquiries'), path: '' }]
   const r = ADMIN_RESOURCE_LIST.find((x) => x.slug === seg)
-  if (r) return [...crumbs, { label: t('content'), path: '' }, { label: t('res.' + r.slug), path: '' }]
+  if (r && r.slug !== 'seo') return [...crumbs, { label: t('content'), path: '' }, { label: t('res.' + r.slug), path: '' }]
   const contentMap: Record<string, string> = {
-    inquiries: t('inquiries'), media: t('media'), translations: t('translations'),
+    media: t('media'), translations: t('translations'),
+  }
+  const userMap: Record<string, string> = {
+    users: t('users'), roles: t('roles'),
   }
   const systemMap: Record<string, string> = {
-    settings: t('settings'), users: t('users'), roles: t('roles'), logs: t('logs'),
+    settings: t('settings'), seo: t('res.seo'), logs: t('logs'),
   }
   if (contentMap[seg]) return [...crumbs, { label: t('content'), path: '' }, { label: contentMap[seg], path: '' }]
+  if (userMap[seg]) return [...crumbs, { label: t('userManagement'), path: '' }, { label: userMap[seg], path: '' }]
   if (systemMap[seg]) return [...crumbs, { label: t('system'), path: '' }, { label: systemMap[seg], path: '' }]
   return [...crumbs, { label: seg, path: '' }]
 })
@@ -531,9 +551,9 @@ watch(sidebarCollapsed, (v) => {
 }
 .adm-ep-nav-icon {
   width: 22px;
-  font-size: 15px;
-  line-height: 1;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   margin-right: 10px;
 }
@@ -739,35 +759,28 @@ watch(sidebarCollapsed, (v) => {
   overflow: hidden;
   min-height: 0;
 }
+/* parent of the active route: subtle hint, the child keeps the active bar */
+.adm-ep-nav-btn.is-active-parent {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+.adm-ep-nav-btn.is-active-parent .adm-ep-caret {
+  color: #a1a1aa;
+}
 .adm-ep-child-btn {
-  padding-left: 44px;
   font-size: 13px;
   color: #8e8e96;
   margin-bottom: 1px;
 }
-.adm-ep-child-btn:hover {
-  color: #ffffff;
+.adm-ep-child-icon {
+  color: #63636b;
+  transition: color 0.2s ease;
 }
-.adm-ep-child-btn .adm-ep-nav-label {
-  position: relative;
+.adm-ep-child-btn:hover .adm-ep-child-icon {
+  color: #a1a1aa;
 }
-.adm-ep-child-btn .adm-ep-nav-label::before {
-  content: '';
-  position: absolute;
-  left: -14px;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #52525b;
-  transform: translateY(-50%);
-  transition: background-color 0.2s ease;
-}
-.adm-ep-child-btn:hover .adm-ep-nav-label::before {
-  background: #a1a1aa;
-}
-.adm-ep-child-btn.is-active .adm-ep-nav-label::before {
-  background: #8b5cf6;
+.adm-ep-child-btn.is-active .adm-ep-child-icon {
+  color: #a5b4fc;
 }
 /* label fade-in when expanding the sidebar */
 .adm-ep-side:not(.is-collapsed) .adm-ep-nav-label,
@@ -938,6 +951,80 @@ watch(sidebarCollapsed, (v) => {
 }
 .adm-ep-pager .el-pagination {
   margin: 0;
+}
+
+/* ---- tabs (logs / inquiries / settings) ---- */
+.el-tabs__header {
+  margin-bottom: 18px;
+}
+.el-tabs__nav-wrap::after {
+  background-color: rgba(255, 255, 255, 0.07);
+  height: 1px;
+}
+.el-tabs__item {
+  color: #8e8e96;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 0 18px;
+  height: 42px;
+  line-height: 42px;
+  transition: color 0.18s ease;
+}
+.el-tabs__item:hover {
+  color: #e4e4e7;
+}
+.el-tabs__item.is-active {
+  color: #ffffff;
+  font-weight: 600;
+}
+.el-tabs__active-bar {
+  background: linear-gradient(90deg, #5b8cff, #8b5cf6);
+  height: 2px;
+  border-radius: 2px;
+}
+.el-tabs__nav-next,
+.el-tabs__nav-prev {
+  color: #8e8e96;
+  line-height: 42px;
+}
+.el-tabs__nav-next:hover,
+.el-tabs__nav-prev:hover {
+  color: #fff;
+}
+
+/* ---- filter controls: button group (translations) / radio buttons (media) ---- */
+.el-button-group .el-button--default {
+  --el-button-bg-color: transparent;
+  --el-button-border-color: rgba(255, 255, 255, 0.1);
+  --el-button-text-color: #8e8e96;
+  --el-button-hover-bg-color: rgba(255, 255, 255, 0.05);
+  --el-button-hover-border-color: rgba(255, 255, 255, 0.22);
+  --el-button-hover-text-color: #ffffff;
+}
+.el-button-group .el-button--primary {
+  background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(91, 140, 255, 0.35);
+}
+.el-radio-button .el-radio-button__inner {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #8e8e96;
+  box-shadow: none;
+  font-weight: 500;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.el-radio-button .el-radio-button__inner:hover {
+  color: #ffffff;
+}
+.el-radio-button.is-active .el-radio-button__inner {
+  background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(91, 140, 255, 0.35);
 }
 
 /* ---- loading mask over dark tables ---- */

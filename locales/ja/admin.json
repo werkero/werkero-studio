@@ -1,10 +1,11 @@
 {
   "dashboard": "ダッシュボード",
-  "inquiries": "問い合わせ",
+  "inquiries": "顧客問い合わせ",
   "media": "メディア",
   "translations": "翻訳",
   "settings": "設定",
   "users": "ユーザー",
+  "userManagement": "ユーザー管理",
   "roles": "ロール",
   "logs": "ログ",
   "logout": "ログアウト",

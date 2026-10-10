@@ -1,10 +1,11 @@
 {
   "dashboard": "Панель",
-  "inquiries": "Запросы",
+  "inquiries": "Запросы клиентов",
   "media": "Медиатека",
   "translations": "Переводы",
   "settings": "Настройки",
   "users": "Пользователи",
+  "userManagement": "Пользователи",
   "roles": "Роли",
   "logs": "Журналы",
   "logout": "Выйти",

@@ -1,10 +1,11 @@
 {
   "dashboard": "Dashboard",
-  "inquiries": "Inquiries",
+  "inquiries": "Customer Inquiries",
   "media": "Media",
   "translations": "Translations",
   "settings": "Settings",
   "users": "Users",
+  "userManagement": "User Management",
   "roles": "Roles",
   "logs": "Logs",
   "logout": "Logout",

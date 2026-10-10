@@ -1,10 +1,11 @@
 {
   "dashboard": "Tableau de bord",
-  "inquiries": "Demandes",
+  "inquiries": "Demandes clients",
   "media": "Médiathèque",
   "translations": "Traductions",
   "settings": "Paramètres",
   "users": "Utilisateurs",
+  "userManagement": "Utilisateurs",
   "roles": "Rôles",
   "logs": "Journaux",
   "logout": "Déconnexion",

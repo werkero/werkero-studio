@@ -1,10 +1,11 @@
 {
   "dashboard": "仪表盘",
-  "inquiries": "询盘",
+  "inquiries": "客户询盘",
   "media": "媒体库",
   "translations": "翻译任务",
   "settings": "设置",
   "users": "用户",
+  "userManagement": "用户管理",
   "roles": "角色",
   "logs": "日志",
   "logout": "退出登录",

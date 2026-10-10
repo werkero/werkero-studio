@@ -1,10 +1,11 @@
 {
   "dashboard": "儀表板",
-  "inquiries": "詢盤",
+  "inquiries": "客戶詢盤",
   "media": "媒體庫",
   "translations": "翻譯任務",
   "settings": "設定",
   "users": "用戶",
+  "userManagement": "用戶管理",
   "roles": "角色",
   "logs": "日誌",
   "logout": "登出",
