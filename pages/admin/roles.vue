@@ -16,9 +16,9 @@
         <el-table-column :label="t('users')" prop="user_count" width="120" />
         <el-table-column :label="t('actions')" width="220" fixed="right">
           <template #default="{ row }">
-            <el-button v-if="!row.is_system" size="small" @click="openEdit(row)">{{ t('permissions') }}</el-button>
-            <el-button v-if="!row.is_system" size="small" @click="openRename(row)">{{ t('edit') }}</el-button>
-            <el-button v-if="!row.is_system" size="small" type="danger" @click="doDelete(row)">{{ t('delete') }}</el-button>
+            <el-button :disabled="row.is_system" size="small" @click="openEdit(row)">{{ t('permissions') }}</el-button>
+            <el-button :disabled="row.is_system" size="small" @click="openRename(row)">{{ t('edit') }}</el-button>
+            <el-button :disabled="row.is_system" size="small" type="danger" @click="doDelete(row)">{{ t('delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -159,7 +159,7 @@ async function doDelete(r: any) {
     await ElMessageBox.confirm(t('confirmDeleteRole', { name: r.name }), t('delete'), { type: 'warning' })
   } catch { return }
   try {
-    await api.delete(`/api/admin/roles/${r.id}`)
+    await api.del(`/api/admin/roles/${r.id}`)
     await load()
   } catch (e: any) { ElMessage.error(adminErrorMessage(e)) }
 }
