@@ -21,7 +21,7 @@
             <p class="contact-addr">{{ address }}</p>
             <p class="contact-mail">
               <span class="contact-label">{{ t.emailLabel }}</span><br />
-              <a :href="`mailto:${page.footer.email}`">{{ page.footer.email }}</a>
+              <a :href="`mailto:${email}`">{{ email }}</a>
             </p>
           </Reveal>
           <Reveal :delay="120">
@@ -83,6 +83,8 @@
 <script setup lang="ts">
 const { locale, page } = useSiteContent()
 const { settings } = await useSiteSettings()
+// Brand contact email (brands.contact_email), editable in admin Settings → Brand tab.
+const { data: brand } = await useFetch('/api/brand', { key: 'brand-contact' })
 const t = computed(() => page.value.contact ?? {})
 
 // site_settings JSONB values: { en: '…', 'zh-cn': '…' } — pick current locale
@@ -94,6 +96,8 @@ const pickSetting = (key: string) => {
 }
 const address = computed(() => pickSetting('contact.address'))
 const teamIntro = computed(() => pickSetting('contact.team_intro'))
+// Brand contact email first; falls back to the footer email from locale JSON.
+const email = computed(() => (brand.value as any)?.contact_email || page.value.footer.email)
 
 const form = reactive({ name: '', email: '', company: '', budget: '', message: '', company_website: '' })
 const sending = ref(false)

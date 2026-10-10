@@ -2,6 +2,7 @@
   <div>
     <el-tabs v-model="tab">
       <el-tab-pane :label="t('settings')" name="settings" />
+      <el-tab-pane :label="t('brand')" name="brand" />
       <el-tab-pane :label="`${t('provider')} / API`" name="credentials" />
     </el-tabs>
 
@@ -88,6 +89,41 @@
           <el-button type="primary" :loading="saving" @click="saveSetting">{{ t('save') }}</el-button>
         </template>
       </el-dialog>
+    </template>
+
+    <!-- brand -->
+    <template v-if="tab === 'brand'">
+      <el-card>
+        <template #header>
+          <span style="font-weight: 600">{{ t('brand') }}</span>
+        </template>
+        <el-alert v-if="brandError" type="error" :title="brandError" show-icon style="margin-bottom: 16px" />
+        <el-form label-position="top">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px">
+            <el-form-item :label="t('brandName')" required>
+              <el-input v-model="brandForm.name" style="width: 100%" />
+            </el-form-item>
+            <el-form-item :label="t('contactEmail')">
+              <el-input v-model="brandForm.contact_email" type="email" placeholder="hello@…" style="width: 100%" />
+            </el-form-item>
+            <el-form-item :label="t('domain')">
+              <el-input v-model="brandForm.domain" placeholder="https://…" style="width: 100%" />
+            </el-form-item>
+            <el-form-item :label="t('defaultLocale')">
+              <el-select v-model="brandForm.default_locale" style="width: 100%">
+                <el-option v-for="l in localeOptions" :key="l" :label="l" :value="l" />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="t('tagline')" style="grid-column: span 2">
+              <el-input v-model="brandForm.tagline" type="textarea" :rows="3" placeholder='{"en": "…", "zh-cn": "…"}' style="font-family: monospace; width: 100%" />
+            </el-form-item>
+            <el-form-item :label="t('socialLinks')" style="grid-column: span 2">
+              <el-input v-model="brandForm.social_links" type="textarea" :rows="3" placeholder='{"github": "https://…", "x": "https://…"}' style="font-family: monospace; width: 100%" />
+            </el-form-item>
+          </div>
+        </el-form>
+        <el-button type="primary" :loading="brandSaving" @click="saveBrand">{{ t('save') }}</el-button>
+      </el-card>
     </template>
 
     <!-- credentials -->
@@ -245,5 +281,48 @@ async function saveCred() {
   } catch (e: any) { credError.value = adminErrorMessage(e) }
   finally { credSaving.value = false }
 }
-onMounted(load)
+// Brand tab (brands table)
+const brandForm = ref({ name: '', contact_email: '', domain: '', default_locale: 'en', tagline: '', social_links: '' })
+const brandError = ref('')
+const brandSaving = ref(false)
+const localeOptions = ['en', 'zh-cn', 'zh-tw', 'fr', 'de', 'ru', 'ja']
+async function loadBrand() {
+  try {
+    const b = await api.get('/api/admin/brand')
+    if (b) {
+      brandForm.value = {
+        name: b.name || '',
+        contact_email: b.contact_email || '',
+        domain: b.domain || '',
+        default_locale: b.default_locale || 'en',
+        tagline: b.tagline ? JSON.stringify(b.tagline, null, 2) : '',
+        social_links: b.social_links ? JSON.stringify(b.social_links, null, 2) : '',
+      }
+    }
+  } catch { /* keep form empty; save will surface errors */ }
+}
+function parseJsonField(s: string, label: string) {
+  const t = s.trim()
+  if (!t) return {}
+  try { return JSON.parse(t) } catch { throw new Error(`${label}: invalid JSON`) }
+}
+async function saveBrand() {
+  brandError.value = ''
+  if (!brandForm.value.name.trim()) { brandError.value = `${t('brandName')} ${t('required')}`; return }
+  brandSaving.value = true
+  try {
+    await api.put('/api/admin/brand', {
+      name: brandForm.value.name.trim(),
+      contact_email: brandForm.value.contact_email.trim(),
+      domain: brandForm.value.domain.trim(),
+      default_locale: brandForm.value.default_locale,
+      tagline: parseJsonField(brandForm.value.tagline, t('tagline')),
+      social_links: parseJsonField(brandForm.value.social_links, t('socialLinks')),
+    })
+    await loadBrand()
+  } catch (e: any) {
+    brandError.value = e?.message && !String(e.message).startsWith('[') ? e.message : adminErrorMessage(e)
+  } finally { brandSaving.value = false }
+}
+onMounted(() => { load(); loadBrand() })
 </script>

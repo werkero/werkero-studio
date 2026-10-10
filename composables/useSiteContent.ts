@@ -30,7 +30,7 @@ export function useSiteContent() {
   const cta = computed(() => getL1(loc.value, 'cta'))
   const footer = computed(() => {
     const f = getL1(loc.value, 'footer')
-    return { ...f, email: f?.links?.email ?? '' }
+    return { ...f, email: f?.links?.email ?? f?.email ?? '' }
   })
   const workDetail = computed(() => getL1(loc.value, 'workDetail'))
   const worksUi = computed(() => getL1(loc.value, 'works'))
