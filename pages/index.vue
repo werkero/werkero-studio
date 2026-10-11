@@ -5,16 +5,14 @@
       <div class="glow glow-red hero-glow-r" aria-hidden="true" />
       <div class="glow glow-blue hero-glow-b" aria-hidden="true" />
       <div class="glow glow-purple hero-glow-p" aria-hidden="true" />
-      <div class="wrap hero-grid">
-        <div>
-          <p class="kicker on-dark-k rise in"><span class="ast lime">✳</span> {{ page.hero.eyebrow }}</p>
-          <h1 class="hero-title">
-            <span class="rise in" style="transition-delay: 120ms">{{ page.hero.line1 }}</span>
-            <span class="rise in" style="transition-delay: 240ms">{{ page.hero.line2a }} <em class="acc">{{ page.hero.line2b }}</em></span>
-          </h1>
-        </div>
-        <div class="hero-side rise in" style="transition-delay: 380ms">
-          <p>{{ page.hero.description }}</p>
+      <div class="wrap hero-inner">
+        <p class="kicker on-dark-k rise in"><span class="ast lime">✳</span> {{ page.hero.eyebrow }}</p>
+        <h1 class="hero-title">
+          <span class="rise in" style="transition-delay: 120ms">{{ page.hero.line1 }}</span>
+          <span class="rise in" style="transition-delay: 240ms">{{ page.hero.line2a }} <em class="acc">{{ page.hero.line2b }}</em></span>
+        </h1>
+        <div class="hero-bottom rise in" style="transition-delay: 380ms">
+          <p class="hero-desc">{{ page.hero.description }}</p>
           <div class="hero-cta">
             <a :href="anchor('#work')" class="btn-lime">
               {{ page.hero.ctaPrimary }}
@@ -239,17 +237,18 @@ useHead({
 
 <style scoped>
 /* ---------- HERO (dark) ---------- */
-.hero-dark { position: relative; background: #0a0a0e; color: var(--paper); padding: 10rem 0 0; overflow: hidden; }
+.hero-dark { position: relative; background: #0a0a0e; color: var(--paper); padding: 10rem 0 7rem; overflow: hidden; }
 .hero-glow-r { width: 52vw; height: 52vw; left: -14vw; top: -10vw; opacity: 0.55; }
 .hero-glow-b { width: 46vw; height: 46vw; right: -12vw; top: 6vw; opacity: 0.5; }
 .hero-glow-p { width: 40vw; height: 40vw; left: 30vw; bottom: -16vw; opacity: 0.4; }
-.hero-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 3rem; align-items: end; position: relative; z-index: 1; }
+.hero-inner { position: relative; z-index: 1; }
 .kicker.on-dark-k { color: rgba(250, 247, 240, 0.72); }
 .kicker .ast.lime { color: var(--lime); }
 .hero-title { font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: 1.02; letter-spacing: -0.01em; margin: 1.4rem 0 0; color: #faf7f0; font-weight: 500; }
 .hero-title span { display: block; }
-.hero-side p { color: rgba(250, 247, 240, 0.72); line-height: 1.65; margin: 0 0 1.8rem; max-width: 38ch; }
-.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+.hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 2.5rem; margin-top: 3rem; }
+.hero-desc { color: rgba(250, 247, 240, 0.72); line-height: 1.65; margin: 0; max-width: 52ch; font-size: 1.05rem; }
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; flex-shrink: 0; }
 
 /* ---------- POSITION ---------- */
 .pos-headline { max-width: 20ch; }
@@ -348,7 +347,7 @@ useHead({
 
 /* ---------- responsive ---------- */
 @media (max-width: 1000px) {
-  .hero-grid { grid-template-columns: 1fr; }
+  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.8rem; }
   .pos-grid { grid-template-columns: 1fr; }
   .svc-grid { grid-template-columns: 1fr; }
   .svc-wide { grid-template-columns: 1fr; }

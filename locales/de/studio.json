@@ -1,20 +1,8 @@
 {
-  "eyebrow": "Über uns",
-  "title": "Studio",
-  "p1": "Werkero ist ein unabhängiges Studio aus Shenzhen, China, mit Fokus auf digitale Markenerlebnisse.",
-  "p2": "Wir vereinen Design und Engineering in einem Team und arbeiten Seite an Seite mit unseren Kunden, um vage Ideen in klare, starke Arbeiten zu verwandeln — von der Markenidentität bis zu digitalen Produkten und Websites.",
-  "facts": [
-    {
-      "label": "Standort",
-      "value": "Shenzhen, China"
-    },
-    {
-      "label": "Fokus",
-      "value": "Digitale Markenerlebnisse"
-    },
-    {
-      "label": "Ansatz",
-      "value": "Design × Engineering"
-    }
-  ]
+  "heroTitle": "Studio",
+  "heroIntro": "Ein unabhängiges Studio aus Shenzhen — wir verwandeln Ideen in fertige digitale Arbeiten.",
+  "aboutLabel": "Über uns",
+  "aboutP1": "Werkero ist ein unabhängiges Studio aus Shenzhen, China, mit Fokus auf digitale Markenerlebnisse.",
+  "aboutP2": "Wir vereinen Design und Engineering in einem Team und arbeiten Seite an Seite mit unseren Kunden, um vage Ideen in klare, starke Arbeiten zu verwandeln — von der Markenidentität bis zu digitalen Produkten und Websites.",
+  "introEyebrow": "Wer wir sind"
 }
