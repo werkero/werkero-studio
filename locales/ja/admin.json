@@ -222,5 +222,34 @@
   "passwordChanged": "パスワードを変更しました",
   "fillAll": "すべての項目を入力してください",
   "confirmDeleteRole": "ロール\"{name}\"を削除しますか？",
-  "nameRequired": "名前は必須です"
+  "nameRequired": "名前は必須です",
+  "permModules": {
+    "works": "作品",
+    "products": "製品",
+    "services": "サービス",
+    "faqs": "よくある質問",
+    "process_steps": "工程ステップ",
+    "position_principles": "ポジショニング原則",
+    "testimonials": "お客様の声",
+    "media": "メディア",
+    "inquiries": "問い合わせ",
+    "translation": "翻訳",
+    "settings": "設定",
+    "seo": "SEO",
+    "credentials": "認証情報",
+    "users": "ユーザー",
+    "roles": "ロール"
+  },
+  "permActions": {
+    "view": "表示",
+    "create": "作成",
+    "edit": "編集",
+    "delete": "削除",
+    "publish": "公開",
+    "moderate": "審査",
+    "upload": "アップロード",
+    "update": "更新",
+    "trigger": "実行",
+    "retry": "再試行"
+  }
 }

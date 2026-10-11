@@ -33,7 +33,9 @@ export function useAdminLocale() {
 
   /** UI chrome language: use the working locale directly; t() falls back to en for missing keys. */
   const uiLang = computed(() => (DICT[locale.value] ? locale.value : 'en'))
-  const t = (key: string): string => DICT[uiLang.value]?.[key] ?? DICT.en[key] ?? key
+  const getNested = (dict: any, key: string) =>
+    dict?.[key] ?? key.split('.').reduce((o, k) => o?.[k], dict)
+  const t = (key: string): string => getNested(DICT[uiLang.value], key) ?? getNested(DICT.en, key) ?? key
 
   /**
    * Translate a DB status value for display. The database keeps English

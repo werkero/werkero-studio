@@ -222,5 +222,34 @@
   "passwordChanged": "Mot de passe modifié",
   "fillAll": "Veuillez remplir tous les champs",
   "confirmDeleteRole": "Supprimer le rôle \"{name}\" ?",
-  "nameRequired": "Nom requis"
+  "nameRequired": "Nom requis",
+  "permModules": {
+    "works": "Réalisations",
+    "products": "Produits",
+    "services": "Services",
+    "faqs": "FAQ",
+    "process_steps": "Étapes",
+    "position_principles": "Principes de positionnement",
+    "testimonials": "Témoignages",
+    "media": "Médias",
+    "inquiries": "Demandes",
+    "translation": "Traduction",
+    "settings": "Paramètres",
+    "seo": "SEO",
+    "credentials": "Identifiants",
+    "users": "Utilisateurs",
+    "roles": "Rôles"
+  },
+  "permActions": {
+    "view": "Voir",
+    "create": "Créer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "publish": "Publier",
+    "moderate": "Modérer",
+    "upload": "Téléverser",
+    "update": "Mettre à jour",
+    "trigger": "Déclencher",
+    "retry": "Réessayer"
+  }
 }

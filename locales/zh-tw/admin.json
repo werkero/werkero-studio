@@ -222,5 +222,34 @@
   "passwordChanged": "密碼已修改",
   "fillAll": "請填寫所有字段",
   "confirmDeleteRole": "刪除角色\"{name}\"？",
-  "nameRequired": "名稱必填"
+  "nameRequired": "名稱必填",
+  "permModules": {
+    "works": "作品",
+    "products": "產品",
+    "services": "服務",
+    "faqs": "常見問題",
+    "process_steps": "工序步驟",
+    "position_principles": "定位原則",
+    "testimonials": "評價",
+    "media": "媒體",
+    "inquiries": "詢盤",
+    "translation": "翻譯",
+    "settings": "設置",
+    "seo": "SEO",
+    "credentials": "憑證",
+    "users": "用戶",
+    "roles": "角色"
+  },
+  "permActions": {
+    "view": "查看",
+    "create": "新建",
+    "edit": "編輯",
+    "delete": "刪除",
+    "publish": "發布",
+    "moderate": "審核",
+    "upload": "上傳",
+    "update": "更新",
+    "trigger": "觸發",
+    "retry": "重試"
+  }
 }

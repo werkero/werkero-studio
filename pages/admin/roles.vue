@@ -75,8 +75,8 @@
       <el-alert v-if="permError" type="error" :closable="false" :title="permError" style="margin-bottom: 16px;" />
       <el-checkbox-group v-model="selected">
         <div v-for="g in PERMISSION_CATALOG" :key="g.module" style="margin-bottom: 16px;">
-          <div style="font-weight: 600; font-size: 13px; color: #909399; margin-bottom: 8px; text-transform: uppercase;">{{ g.module }}</div>
-          <el-checkbox v-for="p in g.perms" :key="p" :label="p" style="margin-right: 16px; margin-bottom: 8px;" />
+          <div style="font-weight: 600; font-size: 13px; color: #909399; margin-bottom: 8px;">{{ permModuleLabel(g.module) }}</div>
+          <el-checkbox v-for="p in g.perms" :key="p" :label="p" style="margin-right: 16px; margin-bottom: 8px;">{{ permLabel(p) }}</el-checkbox>
         </div>
       </el-checkbox-group>
       <template #footer>
@@ -94,7 +94,7 @@ import { useAdminLocale } from '~/composables/useAdminLocale'
 
 definePageMeta({ layout: 'admin' })
 
-const { t } = useAdminLocale()
+const { t, uiLang } = useAdminLocale()
 const api = useAdminApi()
 const rows = ref<any[]>([])
 const loading = ref(false)
@@ -105,6 +105,24 @@ const saving = ref(false)
 const newRole = ref(false)
 const nr = ref({ slug: '', name: '' })
 const nrError = ref('')
+
+/** Module display name in current admin language, e.g. works → 作品. */
+function permModuleLabel(module: string): string {
+  const label = t(`permModules.${module}`)
+  return label === `permModules.${module}` ? module : label
+}
+
+/** Permission display label, e.g. works.view → 查看作品 / View Works. */
+function permLabel(perm: string): string {
+  const [module, action] = perm.split('.')
+  const modLabel = permModuleLabel(module)
+  const actLabel = t(`permActions.${action}`)
+  if (actLabel === `permActions.${action}`) return perm
+  // CJK: no space (查看作品); others: space (View Works)
+  const lang = uiLang.value
+  const sep = ['zh-cn', 'zh-tw', 'ja'].includes(lang) ? '' : ' '
+  return `${actLabel}${sep}${modLabel}`
+}
 
 /** Controls the permission editor dialog visibility (editing holds the role object). */
 const permDialogVisible = computed({
