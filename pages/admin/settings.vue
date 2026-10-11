@@ -114,12 +114,21 @@
                 <el-option v-for="l in localeOptions" :key="l" :label="l" :value="l" />
               </el-select>
             </el-form-item>
-            <el-form-item :label="t('tagline')" style="grid-column: span 2">
-              <el-input v-model="brandForm.tagline" type="textarea" :rows="3" placeholder='{"en": "…", "zh-cn": "…"}' style="font-family: monospace; width: 100%" />
+            <el-form-item :label="`${t('tagline')} (${uiLang})`" style="grid-column: span 2">
+              <el-input v-model="taglineCurrent" style="width: 100%" />
             </el-form-item>
-            <el-form-item :label="t('socialLinks')" style="grid-column: span 2">
-              <el-input v-model="brandForm.social_links" type="textarea" :rows="3" placeholder='{"github": "https://…", "x": "https://…"}' style="font-family: monospace; width: 100%" />
-            </el-form-item>
+            <div style="grid-column: span 2; margin-bottom: 18px">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px">
+                <span style="font-size: 14px; color: #606266">{{ t('socialLinks') }}</span>
+                <el-button size="small" @click="addSocialLink">+ {{ t('add') }}</el-button>
+              </div>
+              <div v-if="!socialLinks.length" style="font-size: 13px; color: #909399; margin-bottom: 8px">—</div>
+              <div v-for="(link, i) in socialLinks" :key="i" style="display: flex; gap: 8px; margin-bottom: 8px">
+                <el-input v-model="link.name" :placeholder="t('linkName')" style="width: 200px" />
+                <el-input v-model="link.url" :placeholder="t('linkUrl')" style="flex: 1" />
+                <el-button size="small" type="danger" plain @click="removeSocialLink(i)">{{ t('delete') }}</el-button>
+              </div>
+            </div>
           </div>
         </el-form>
         <el-button type="primary" :loading="brandSaving" @click="saveBrand">{{ t('save') }}</el-button>
@@ -282,10 +291,19 @@ async function saveCred() {
   finally { credSaving.value = false }
 }
 // Brand tab (brands table)
-const brandForm = ref({ name: '', contact_email: '', domain: '', default_locale: 'en', tagline: '', social_links: '' })
+const brandForm = ref({ name: '', contact_email: '', domain: '', default_locale: 'en' })
+const taglineObj = ref<Record<string, string>>({})
+const socialLinks = ref<{ name: string; url: string }[]>([])
 const brandError = ref('')
 const brandSaving = ref(false)
 const localeOptions = ['en', 'zh-cn', 'zh-tw', 'fr', 'de', 'ru', 'ja']
+// Tagline: only edit the current admin UI language; other languages are preserved.
+const taglineCurrent = computed({
+  get: () => taglineObj.value[uiLang.value] ?? '',
+  set: (v: string) => { taglineObj.value = { ...taglineObj.value, [uiLang.value]: v } },
+})
+function addSocialLink() { socialLinks.value.push({ name: '', url: '' }) }
+function removeSocialLink(i: number) { socialLinks.value.splice(i, 1) }
 async function loadBrand() {
   try {
     const b = await api.get('/api/admin/brand')
@@ -295,33 +313,33 @@ async function loadBrand() {
         contact_email: b.contact_email || '',
         domain: b.domain || '',
         default_locale: b.default_locale || 'en',
-        tagline: b.tagline ? JSON.stringify(b.tagline, null, 2) : '',
-        social_links: b.social_links ? JSON.stringify(b.social_links, null, 2) : '',
       }
+      taglineObj.value = (b.tagline && typeof b.tagline === 'object') ? { ...b.tagline } : {}
+      const sl = b.social_links && typeof b.social_links === 'object' ? b.social_links : {}
+      socialLinks.value = Object.entries(sl).map(([name, url]) => ({ name, url: String(url ?? '') }))
     }
   } catch { /* keep form empty; save will surface errors */ }
-}
-function parseJsonField(s: string, label: string) {
-  const t = s.trim()
-  if (!t) return {}
-  try { return JSON.parse(t) } catch { throw new Error(`${label}: invalid JSON`) }
 }
 async function saveBrand() {
   brandError.value = ''
   if (!brandForm.value.name.trim()) { brandError.value = `${t('brandName')} ${t('required')}`; return }
   brandSaving.value = true
   try {
+    const sl: Record<string, string> = {}
+    for (const l of socialLinks.value) {
+      if (l.name.trim()) sl[l.name.trim()] = l.url.trim()
+    }
     await api.put('/api/admin/brand', {
       name: brandForm.value.name.trim(),
       contact_email: brandForm.value.contact_email.trim(),
       domain: brandForm.value.domain.trim(),
       default_locale: brandForm.value.default_locale,
-      tagline: parseJsonField(brandForm.value.tagline, t('tagline')),
-      social_links: parseJsonField(brandForm.value.social_links, t('socialLinks')),
+      tagline: taglineObj.value,
+      social_links: sl,
     })
     await loadBrand()
   } catch (e: any) {
-    brandError.value = e?.message && !String(e.message).startsWith('[') ? e.message : adminErrorMessage(e)
+    brandError.value = adminErrorMessage(e)
   } finally { brandSaving.value = false }
 }
 onMounted(() => { load(); loadBrand() })
