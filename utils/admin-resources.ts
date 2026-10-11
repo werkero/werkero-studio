@@ -160,7 +160,7 @@ export const PERMISSION_CATALOG: { module: string; perms: string[] }[] = [
   { module: 'faqs', perms: ['faqs.view', 'faqs.create', 'faqs.edit', 'faqs.delete', 'faqs.publish'] },
   { module: 'process_steps', perms: ['process_steps.view', 'process_steps.create', 'process_steps.edit', 'process_steps.delete', 'process_steps.publish'] },
   { module: 'position_principles', perms: ['position_principles.view', 'position_principles.create', 'position_principles.edit', 'position_principles.delete', 'position_principles.publish'] },
-  { module: 'testimonials', perms: ['testimonials.view', 'testimonials.moderate', 'testimonials.delete'] },
+  { module: 'testimonials', perms: ['testimonials.view', 'testimonials.create', 'testimonials.edit', 'testimonials.moderate', 'testimonials.delete'] },
   { module: 'media', perms: ['media.view', 'media.upload', 'media.delete'] },
   { module: 'inquiries', perms: ['inquiries.view', 'inquiries.update'] },
   { module: 'translation', perms: ['translation.trigger', 'translation.retry'] },

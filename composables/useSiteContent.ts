@@ -41,6 +41,7 @@ export function useSiteContent() {
   const aboutUi = computed(() => getL1(loc.value, 'about'))
   const commonUi = computed(() => getL1(loc.value, 'common'))
   const contactUi = computed(() => getL1(loc.value, 'contact'))
+  const testimonialsUi = computed(() => getL1(loc.value, 'testimonials'))
 
   // L3: dynamic content from API
   const { data: allWorks } = useAsyncData(`works-${loc.value}`, () =>
@@ -49,6 +50,8 @@ export function useSiteContent() {
     $fetch('/api/services', { query: { locale: loc.value } }) as Promise<any[]>)
   const { data: allFaqs } = useAsyncData(`faqs-${loc.value}`, () =>
     $fetch('/api/faqs', { query: { locale: loc.value } }) as Promise<any[]>)
+  const { data: allTestimonials } = useAsyncData(`testimonials-${loc.value}`, () =>
+    $fetch('/api/testimonials', { query: { locale: loc.value } }) as Promise<any[]>)
 
   const page = computed(() => ({
     nav: nav.value,
@@ -84,6 +87,7 @@ export function useSiteContent() {
     about: aboutUi.value,
     common: commonUi.value,
     contact: contactUi.value,
+    testimonials: testimonialsUi.value,
   }))
 
   const works = computed(() => allWorks.value ?? [])
@@ -108,5 +112,5 @@ export function useSiteContent() {
     return Object.keys(items).slice(0, 4).map((slug) => ({ slug, ...items[slug] }))
   })
 
-  return { locale: loc, nav, footer, page, works, showcaseWorks }
+  return { locale: loc, nav, footer, page, works, showcaseWorks, testimonials: allTestimonials }
 }

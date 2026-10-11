@@ -410,6 +410,8 @@ INSERT INTO permissions (slug, name, module) VALUES
   ('position_principles.delete','删除定位原则','position_principles'),
   ('position_principles.publish','发布定位原则','position_principles'),
   ('testimonials.view','查看评价','testimonials'),
+  ('testimonials.create','新建评价','testimonials'),
+  ('testimonials.edit','编辑评价','testimonials'),
   ('testimonials.moderate','审核评价','testimonials'),
   ('testimonials.delete','删除评价','testimonials'),
   ('media.view','查看媒体','media'),('media.upload','上传媒体','media'),

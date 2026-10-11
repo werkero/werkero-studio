@@ -1,8 +1,10 @@
 <template>
   <main>
-    <!-- Header -->
-    <section class="section works-head">
-      <div class="wrap works-head-inner">
+    <!-- Header (dark, like contact page) -->
+    <section class="works-hero glow-wrap">
+      <div class="glow glow-blue hero-glow-b" aria-hidden="true" />
+      <div class="glow glow-purple hero-glow-p" aria-hidden="true" />
+      <div class="wrap works-hero-inner">
         <Reveal><h1 class="serif works-title">{{ page.works.listTitle }}</h1></Reveal>
         <Reveal :delay="120"><p class="works-sub">{{ page.works.listSubtitle }}</p></Reveal>
       </div>
@@ -58,10 +60,12 @@ useHead({ title: () => `${page.value.works.listTitle} — Werkero Studio` })
 </script>
 
 <style scoped>
-.works-head { padding-bottom: 0; }
-.works-head-inner { text-align: center; max-width: 720px; }
-.works-title { font-size: clamp(3rem, 7vw, 5.5rem); letter-spacing: -0.01em; margin: 0 0 1.2rem; font-weight: 500; }
-.works-sub { font-size: clamp(1.05rem, 1.6vw, 1.3rem); opacity: 0.72; margin: 0; line-height: 1.6; }
+.works-hero { position: relative; background: #0a0a0e; color: var(--paper); padding: 10rem 0 6rem; overflow: hidden; }
+.works-hero .hero-glow-b { width: 46vw; height: 46vw; right: -12vw; top: -8vw; opacity: 0.5; }
+.works-hero .hero-glow-p { width: 40vw; height: 40vw; left: 28vw; bottom: -18vw; opacity: 0.4; }
+.works-hero-inner { text-align: center; position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding-top: 2rem; }
+.works-title { font-size: clamp(3.4rem, 9vw, 7rem); line-height: 1.02; letter-spacing: -0.01em; color: #faf7f0; margin: 0 0 1.4rem; font-weight: 500; }
+.works-sub { color: rgba(250, 247, 240, 0.72); font-size: clamp(1.05rem, 1.6vw, 1.3rem); margin: 0; line-height: 1.6; }
 
 .works-grid-sec { padding-top: clamp(2.5rem, 5vw, 4rem); }
 .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.4rem, 3vw, 2.4rem); }

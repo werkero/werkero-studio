@@ -5,7 +5,7 @@
         <a :href="anchor('#services')">{{ nav.services }}</a>
         <NuxtLink :to="localePath('/works')">{{ nav.work }}</NuxtLink>
         <a :href="anchor('#process')">{{ nav.workflow }}</a>
-        <a :href="anchor('#about')">{{ nav.about }}</a>
+        <NuxtLink :to="localePath('/testimonials')">{{ nav.testimonials }}</NuxtLink>
       </nav>
       <NuxtLink :to="localePath('/')" class="brand" aria-label="Werkero Studio home">
         <LogoMark :size="30" />
