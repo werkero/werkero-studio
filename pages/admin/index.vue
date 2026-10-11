@@ -7,7 +7,19 @@
           <div class="dash-hero-title">{{ t('welcomeBack') }}{{ userName ? ', ' + userName : '' }} 👋</div>
           <div class="dash-hero-sub">{{ todayStr }}</div>
         </div>
-        <el-button type="primary" @click="navigateTo('/admin/works')">+ {{ t('newWork') }}</el-button>
+        <div class="dash-hero-actions">
+          <el-button type="primary" @click="navigateTo('/admin/works')">+ {{ t('newWork') }}</el-button>
+          <el-dropdown trigger="click" @command="(cmd: string) => navigateTo(cmd)">
+            <el-button plain>{{ t('quickActions') }}<el-icon class="el-icon--right"><ArrowDown /></el-icon></el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="/admin/services">+ {{ t('newService') }}</el-dropdown-item>
+                <el-dropdown-item command="/admin/media">⤴ {{ t('uploadMedia') }}</el-dropdown-item>
+                <el-dropdown-item command="/admin/inquiries">📨 {{ t('viewInquiries') }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
       </div>
     </el-card>
 
@@ -27,19 +39,6 @@
         </NuxtLink>
       </el-col>
     </el-row>
-
-    <!-- Quick actions -->
-    <el-card shadow="never" style="margin-bottom: 16px;">
-      <template #header>
-        <span style="font-weight: 600;">{{ t('quickActions') }}</span>
-      </template>
-      <div class="dash-actions">
-        <el-button type="primary" plain @click="navigateTo('/admin/works')">+ {{ t('newWork') }}</el-button>
-        <el-button plain @click="navigateTo('/admin/services')">+ {{ t('newService') }}</el-button>
-        <el-button plain @click="navigateTo('/admin/media')">⤴ {{ t('uploadMedia') }}</el-button>
-        <el-button plain @click="navigateTo('/admin/inquiries')">📨 {{ t('viewInquiries') }}</el-button>
-      </div>
-    </el-card>
 
     <el-row :gutter="16">
       <!-- Recent inquiries (2/3) -->
@@ -113,6 +112,7 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowDown } from '@element-plus/icons-vue'
 import { ADMIN_RESOURCE_LIST } from '~/utils/admin-resources'
 import { useAdminApi } from '~/composables/useAdminApi'
 import { useAdminLocale } from '~/composables/useAdminLocale'
@@ -238,6 +238,12 @@ onMounted(async () => {
   gap: 16px;
   flex-wrap: wrap;
 }
+.dash-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .dash-hero-title {
   font-size: 22px;
   font-weight: 700;
@@ -284,11 +290,6 @@ onMounted(async () => {
   color: #e6a23c;
   margin-top: 6px;
   font-weight: 600;
-}
-.dash-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
 }
 .dash-card-head {
   display: flex;

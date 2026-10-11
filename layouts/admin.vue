@@ -758,6 +758,7 @@ watch(sidebarCollapsed, (v) => {
 .adm-ep-children-inner {
   overflow: hidden;
   min-height: 0;
+  padding-left: 12px;
 }
 /* Element Plus gives adjacent buttons margin-left:12px — reset it in vertical menus */
 .adm-ep-children-inner > .el-button + .el-button,

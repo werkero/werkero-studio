@@ -88,20 +88,24 @@ export function useSiteContent() {
 
   const works = computed(() => allWorks.value ?? [])
 
-  // Homepage showcase: curated editorial copy from L1 (artifact parity),
-  // ordered like the artifact: featured Laurero, then the other five.
-  const showcaseOrder = ['laurero', 'ai-archives', 'awarely', 'aether', 'arkhyx-blog', 'kyvero']
+  // Homepage showcase: real data first (API ordered by sort_order), top 4.
+  // L1 curated copy supplies display-only fields (category/bg/doodle).
   const showcaseWorks = computed(() => {
     const items = worksUi.value?.items ?? {}
     const api = allWorks.value ?? []
-    return showcaseOrder
-      .map((slug) => {
-        const curated = items[slug]
-        if (!curated) return null
-        const fromApi = api.find((w: any) => w.slug === slug) ?? {}
-        return { slug, title: fromApi.title ?? curated.title, ...curated }
-      })
-      .filter(Boolean)
+    if (api.length) {
+      return api.slice(0, 4).map((w: any) => {
+        const curated = items[w.slug] ?? {}
+        return {
+          slug: w.slug,
+          ...curated,
+          title: w.title ?? curated.title,
+          tagline: w.tagline ?? curated.tagline,
+        }
+      }).filter((w: any) => w.title)
+    }
+    // Fallback when API is unreachable: L1 curated order.
+    return Object.keys(items).slice(0, 4).map((slug) => ({ slug, ...items[slug] }))
   })
 
   return { locale: loc, nav, footer, page, works, showcaseWorks }
