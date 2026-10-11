@@ -1,0 +1,20 @@
+{
+  "eyebrow": "About us",
+  "title": "Studio",
+  "p1": "Werkero is an independent studio based in Shenzhen, China, focused on digital brand experiences.",
+  "p2": "We bring design and engineering together in one team, working alongside clients to turn vague ideas into clear, compelling work — from brand identity to digital products and websites.",
+  "facts": [
+    {
+      "label": "Base",
+      "value": "Shenzhen, China"
+    },
+    {
+      "label": "Focus",
+      "value": "Digital brand experiences"
+    },
+    {
+      "label": "Practice",
+      "value": "Design × Engineering"
+    }
+  ]
+}

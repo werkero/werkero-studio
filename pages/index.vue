@@ -24,18 +24,6 @@
           </div>
         </div>
       </div>
-      <div class="wrap hero-strip rise in" style="transition-delay: 520ms">
-        <NuxtLink
-          v-for="(w, i) in showcaseWorks"
-          :key="w.slug"
-          :to="localePath(`/works/${w.slug}`)"
-          class="strip-cell"
-        >
-          <span class="strip-n">{{ String(i + 1).padStart(2, '0') }}</span>
-          <span class="strip-t">{{ w.title }}</span>
-          <span class="strip-d">{{ w.tagline }}</span>
-        </NuxtLink>
-      </div>
     </section>
 
     <!-- TICKER -->
@@ -199,33 +187,6 @@
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="section" style="padding-top: 0">
-      <div class="wrap">
-        <Reveal><p class="kicker"><span class="ast">✳</span> {{ page.about.eyebrow }}</p></Reveal>
-        <Reveal :delay="80"><h2 class="display">{{ page.about.title }}</h2></Reveal>
-        <div class="about-grid">
-          <Reveal :delay="120">
-            <div class="about-bio">
-              <h3 class="serif about-name">{{ page.about.name }}</h3>
-              <p class="about-role"><em>{{ page.about.role }}</em></p>
-              <p class="about-p" v-html="rich(page.about.p1)" />
-              <p class="about-p" v-html="rich(page.about.p2)" />
-            </div>
-          </Reveal>
-          <div class="about-cards">
-            <Reveal v-for="(c, i) in page.about.cards" :key="i" :delay="140 + i * 90">
-              <div class="card-white about-card">
-                <p class="tag">{{ c.label }}</p>
-                <h3 class="serif" :class="{ 'stack-list': c.compact }">{{ c.title }}</h3>
-                <p v-if="c.text" class="about-card-t">{{ c.text }}</p>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- FAQ -->
     <section class="section" style="padding-top: 0">
       <div class="wrap narrow">
@@ -289,17 +250,6 @@ useHead({
 .hero-title span { display: block; }
 .hero-side p { color: rgba(250, 247, 240, 0.72); line-height: 1.65; margin: 0 0 1.8rem; max-width: 38ch; }
 .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-.hero-strip {
-  position: relative; z-index: 1;
-  display: grid; grid-template-columns: repeat(6, 1fr);
-  margin-top: 5rem; border-top: 1px solid var(--line-dark);
-}
-.strip-cell { display: block; text-decoration: none; padding: 1.4rem 1.2rem 2rem; border-left: 1px solid var(--line-dark); transition: background 0.3s; }
-.strip-cell:first-child { border-left: none; }
-.strip-cell:hover { background: rgba(250, 247, 240, 0.05); }
-.strip-n { display: block; font-size: 0.72rem; letter-spacing: 0.14em; color: var(--lime); font-weight: 700; margin-bottom: 0.6rem; }
-.strip-t { display: block; font-weight: 700; color: var(--paper); font-size: 0.95rem; margin-bottom: 0.4rem; }
-.strip-d { display: block; font-size: 0.8rem; line-height: 1.5; color: rgba(250, 247, 240, 0.55); }
 
 /* ---------- POSITION ---------- */
 .pos-headline { max-width: 20ch; }
@@ -382,18 +332,6 @@ useHead({
 .proc-text { color: #4a463d; line-height: 1.7; max-width: 62ch; margin: 0 0 1.2rem; grid-column: 2; }
 .proc-out { grid-column: 2; display: flex; gap: 1.2rem; align-items: baseline; margin: 0; color: var(--muted); font-size: 0.95rem; }
 
-/* ---------- ABOUT ---------- */
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; align-items: start; }
-.about-name { font-size: 1.4rem; margin: 0 0 0.3rem; font-weight: 600; }
-.about-role { color: var(--muted); margin: 0 0 2rem; }
-.about-p { font-size: 1.12rem; line-height: 1.75; color: #3d3a33; max-width: 52ch; }
-.about-p strong { color: var(--ink); }
-.about-cards { display: grid; gap: 1.2rem; }
-.about-card { padding: 1.8rem 2rem; }
-.about-card h3 { font-size: 1.5rem; margin: 0.7rem 0 0.4rem; font-weight: 600; }
-.about-card h3.stack-list { font-size: 1.02rem; line-height: 1.7; font-weight: 500; font-family: var(--font-sans); }
-.about-card-t { color: var(--muted); margin: 0; font-size: 0.95rem; }
-
 /* ---------- FAQ ---------- */
 .narrow { max-width: 860px; }
 .faq-list { margin-top: 2.4rem; border-top: 1px solid var(--line); }
@@ -411,10 +349,6 @@ useHead({
 /* ---------- responsive ---------- */
 @media (max-width: 1000px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .hero-strip { grid-template-columns: repeat(3, 1fr); }
-  .strip-cell:nth-child(4) { border-left: none; }
-  .strip-cell { border-top: 1px solid var(--line-dark); }
-  .strip-cell:nth-child(-n+3) { border-top: none; }
   .pos-grid { grid-template-columns: 1fr; }
   .svc-grid { grid-template-columns: 1fr; }
   .svc-wide { grid-template-columns: 1fr; }
@@ -424,10 +358,5 @@ useHead({
   .proc-tag { display: none; }
   .proc-detail { grid-template-columns: 1fr; }
   .proc-text, .proc-out { grid-column: 1; }
-  .feat-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 640px) {
-  .work-grid { grid-template-columns: 1fr; }
-  .hero-strip { grid-template-columns: 1fr 1fr; }
 }
 </style>

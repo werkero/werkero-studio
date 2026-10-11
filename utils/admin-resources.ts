@@ -113,7 +113,8 @@ export const ADMIN_RESOURCES: Record<string, AdminResource> = {
     fields: [
       { key: 'title', type: 'text', label: 'Title', i18n: true, required: true, list: true },
       { key: 'description', type: 'textarea', label: 'Description', i18n: true },
-      { key: 'step_no', type: 'number', label: 'Step no.', i18n: false },
+      { key: 'icon', type: 'text', label: 'Icon', i18n: false },
+      { key: 'output_tag', type: 'text', label: 'Output tag', i18n: true },
       { key: 'sort_order', type: 'number', label: 'Sort order', i18n: false },
       { key: 'status', type: 'select', label: 'Status', i18n: false, list: true, options: STATUS.map((s) => ({ value: s, label: s })) },
     ],

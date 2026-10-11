@@ -42,6 +42,7 @@ export function useSiteContent() {
   const commonUi = computed(() => getL1(loc.value, 'common'))
   const contactUi = computed(() => getL1(loc.value, 'contact'))
   const testimonialsUi = computed(() => getL1(loc.value, 'testimonials'))
+  const studioUi = computed(() => getL1(loc.value, 'studio'))
 
   // L3: dynamic content from API
   const { data: allWorks } = useAsyncData(`works-${loc.value}`, () =>
@@ -52,6 +53,10 @@ export function useSiteContent() {
     $fetch('/api/faqs', { query: { locale: loc.value } }) as Promise<any[]>)
   const { data: allTestimonials } = useAsyncData(`testimonials-${loc.value}`, () =>
     $fetch('/api/testimonials', { query: { locale: loc.value } }) as Promise<any[]>)
+  const { data: allProcessSteps } = useAsyncData(`process-steps-${loc.value}`, () =>
+    $fetch('/api/process-steps', { query: { locale: loc.value } }) as Promise<any[]>)
+  const { data: allPrinciples } = useAsyncData(`position-principles-${loc.value}`, () =>
+    $fetch('/api/position-principles', { query: { locale: loc.value } }) as Promise<any[]>)
 
   const page = computed(() => ({
     nav: nav.value,
@@ -82,12 +87,27 @@ export function useSiteContent() {
     cta: cta.value,
     footer: footer.value,
     work_detail: workDetail.value,
-    position: positionUi.value,
-    process: processUi.value,
+    position: {
+      ...positionUi.value,
+      principles: (allPrinciples.value?.length ? allPrinciples.value : (positionUi.value?.principles ?? [])).map((p: any, i: number) => ({
+        n: p.n ?? String(i + 1).padStart(2, '0'),
+        title: p.title, text: p.description ?? p.text,
+      })),
+    },
+    process: {
+      ...processUi.value,
+      steps: (allProcessSteps.value?.length ? allProcessSteps.value : (processUi.value?.steps ?? [])).map((s: any, i: number) => ({
+        n: s.n ?? String(i + 1).padStart(2, '0'),
+        title: s.title, text: s.description ?? s.text,
+        tag: s.tag ?? '', output: s.output_tag ?? s.output,
+        icon: s.icon ?? '',
+      })),
+    },
     about: aboutUi.value,
     common: commonUi.value,
     contact: contactUi.value,
     testimonials: testimonialsUi.value,
+    studio: studioUi.value,
   }))
 
   const works = computed(() => allWorks.value ?? [])
