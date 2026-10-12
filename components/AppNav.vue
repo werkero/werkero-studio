@@ -2,9 +2,9 @@
   <header class="nav" :class="{ scrolled }">
     <div class="nav-inner">
       <nav class="nav-links">
+        <NuxtLink :to="localePath('/studio')">{{ nav.studio }}</NuxtLink>
         <NuxtLink :to="localePath('/works')">{{ nav.work }}</NuxtLink>
         <NuxtLink :to="localePath('/testimonials')">{{ nav.testimonials }}</NuxtLink>
-        <NuxtLink :to="localePath('/studio')">{{ nav.studio }}</NuxtLink>
       </nav>
       <NuxtLink :to="localePath('/')" class="brand" aria-label="Werkero Studio home">
         <LogoMark :size="30" />
