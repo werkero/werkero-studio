@@ -2,9 +2,12 @@
   <div class="adm-ep">
     <div class="adm-ep-shell">
       <!-- Sidebar -->
-      <aside class="adm-ep-side" :class="{ 'is-collapsed': sidebarCollapsed }">
+      <aside class="adm-ep-side" :class="{ 'is-collapsed': sidebarCollapsed, 'is-drawer-open': drawerOpen }">
         <div class="adm-ep-brand">
-          <div class="adm-ep-logo">W</div>
+          <div class="adm-ep-logo">
+            <img v-if="adminLogoUrl" :src="adminLogoUrl" alt="Logo" />
+            <span v-else>W</span>
+          </div>
           <div v-show="!sidebarCollapsed" class="adm-ep-brand-text">
             <div class="adm-ep-brand-name">Werkero</div>
           </div>
@@ -95,8 +98,9 @@
 
       <!-- Main -->
       <div class="adm-ep-main">
+        <div v-if="drawerOpen" class="adm-ep-drawer-mask" @click="drawerOpen = false" />
         <header class="adm-ep-top">
-          <el-button text class="adm-ep-collapse" @click="sidebarCollapsed = !sidebarCollapsed">
+          <el-button text class="adm-ep-collapse" @click="onCollapseClick">
             <span class="adm-ep-collapse-icon" :class="{ 'is-collapsed': sidebarCollapsed }">
               <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="14" height="12" rx="2.5" />
@@ -196,6 +200,36 @@ const api = useAdminApi()
 
 const SIDEBAR_KEY = 'werkero_admin_sidebar'
 const sidebarCollapsed = ref(false)
+const drawerOpen = ref(false)
+const isMobile = ref(false)
+
+function onCollapseClick() {
+  if (isMobile.value) drawerOpen.value = !drawerOpen.value
+  else sidebarCollapsed.value = !sidebarCollapsed.value
+}
+
+onMounted(() => {
+  const mq = window.matchMedia('(max-width: 900px)')
+  const sync = () => { isMobile.value = mq.matches; if (!mq.matches) drawerOpen.value = false }
+  sync()
+  mq.addEventListener('change', sync)
+  loadAdminLogo()
+})
+
+const adminLogoUrl = ref('')
+async function loadAdminLogo() {
+  try {
+    const settings = await $fetch('/api/admin/settings')
+    const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
+    if (logo && typeof logo.value === 'string' && logo.value) {
+      // logo.value is a media asset ID; fetch its URL
+      try {
+        const m = await $fetch(`/api/admin/media/${logo.value}`)
+        adminLogoUrl.value = m.url || ''
+      } catch { /* keep default */ }
+    }
+  } catch { /* keep default */ }
+}
 
 const localeModel = computed({
   get: () => locale.value,
@@ -319,7 +353,7 @@ function goFlyout(path: string) {
   flyout.value = null
   navigateTo(path)
 }
-watch(() => route.path, () => { flyout.value = null })
+watch(() => route.path, () => { flyout.value = null; drawerOpen.value = false })
 watch(sidebarCollapsed, () => { flyout.value = null })
 
 const isActive = (p: string) => route.path === p
@@ -480,6 +514,12 @@ watch(sidebarCollapsed, (v) => {
   font-size: 18px;
   color: #fff;
   box-shadow: 0 2px 12px rgba(91, 140, 255, 0.35);
+  overflow: hidden;
+}
+.adm-ep-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .adm-ep-brand-text {
   overflow: hidden;
@@ -1051,5 +1091,47 @@ watch(sidebarCollapsed, (v) => {
   color: #a5b4fc;
   padding: 2px 8px;
   border-radius: 6px;
+}
+
+/* ---------- responsive ---------- */
+.adm-ep-drawer-mask {
+  display: none;
+}
+@media (max-width: 900px) {
+  /* sidebar becomes overlay drawer */
+  .adm-ep-side {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 260px !important;
+    z-index: 100;
+  }
+  .adm-ep-side.is-drawer-open {
+    transform: translateX(0);
+  }
+  .adm-ep-drawer-mask {
+    display: block;
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 99;
+  }
+  .adm-ep-top { padding: 0 12px; gap: 8px; }
+  .adm-ep-crumb { display: none; }
+  .adm-ep-locale { width: 110px; }
+  /* page content padding */
+  .adm-ep-body { padding: 14px !important; }
+  /* tables scroll horizontally */
+  .el-table { font-size: 13px; }
+  .el-table .cell { padding-left: 8px; padding-right: 8px; }
+  /* dialogs full width */
+  .el-dialog { width: calc(100vw - 24px) !important; margin: 12px auto; }
+  .el-dialog__body { padding: 14px 16px; }
+}
+@media (max-width: 640px) {
+  /* forms single column */
+  .el-row .el-col-12 { max-width: 100%; flex: 0 0 100%; }
+  .adm-ep-top-iconbtn { display: none; }
+  .el-pagination { justify-content: center; }
 }
 </style>

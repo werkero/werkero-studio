@@ -124,6 +124,9 @@
             <el-form-item :label="`${t('aboutStudio')} (${uiLang})`" style="grid-column: span 2">
               <el-input v-model="aboutCurrent" type="textarea" :rows="6" style="width: 100%" />
             </el-form-item>
+            <el-form-item label="Logo" style="grid-column: span 2">
+              <AdminMediaPicker v-model="adminLogo" />
+            </el-form-item>
             <div style="grid-column: span 2; margin-bottom: 18px">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px">
                 <span style="font-size: 14px; color: #606266">{{ t('socialLinks') }}</span>
@@ -302,6 +305,7 @@ const brandForm = ref({ name: '', contact_email: '', domain: '', default_locale:
 const taglineObj = ref<Record<string, string>>({})
 const aboutObj = ref<Record<string, string>>({})
 const socialLinks = ref<{ name: string; url: string }[]>([])
+const adminLogo = ref('')
 const brandError = ref('')
 const brandSaving = ref(false)
 const localeOptions = ['en', 'zh-cn', 'zh-tw', 'fr', 'de', 'ru', 'ja']
@@ -337,6 +341,11 @@ async function loadBrand() {
     if (about && about.value && typeof about.value === 'object') {
       aboutObj.value = { ...about.value }
     }
+    // Load admin logo from site_settings
+    const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
+    if (logo && typeof logo.value === 'string') {
+      adminLogo.value = logo.value
+    }
   } catch { /* keep form empty; save will surface errors */ }
 }
 async function saveBrand() {
@@ -358,6 +367,8 @@ async function saveBrand() {
     })
     // Save studio about text to site_settings
     await api.put('/api/admin/settings', { key: 'studio.about_p1', value: aboutObj.value })
+    // Save admin logo to site_settings
+    await api.put('/api/admin/settings', { key: 'admin.logo', value: adminLogo.value })
     await loadBrand()
   } catch (e: any) {
     brandError.value = adminErrorMessage(e)
