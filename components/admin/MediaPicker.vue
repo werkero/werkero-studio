@@ -138,10 +138,10 @@ async function load() {
   loading.value = true
   try {
     const r = await api.get<any>('/api/admin/media', {
-      page: page.value, pageSize, search: search.value || undefined,
+      page: page.value, pageSize, q: search.value || undefined,
     })
-    rows.value = r.items || r.rows || []
-    total.value = r.total || 0
+    rows.value = r.data || r.items || r.rows || []
+    total.value = r.pagination?.total ?? r.total ?? 0
   } catch { rows.value = [] } finally { loading.value = false }
 }
 watch(pickerOpen, (v) => { if (v) { picked.value = props.modelValue; page.value = 1; load() } })

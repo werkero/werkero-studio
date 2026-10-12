@@ -2,7 +2,7 @@
   <div class="adm-ep">
     <div class="adm-ep-shell">
       <!-- Sidebar -->
-      <aside class="adm-ep-side" :class="{ 'is-collapsed': sidebarCollapsed, 'is-drawer-open': drawerOpen }">
+      <aside class="adm-ep-side" :class="{ 'is-collapsed': sidebarCollapsed }">
         <div class="adm-ep-brand">
           <div class="adm-ep-logo">
             <img v-if="adminLogoUrl" :src="adminLogoUrl" alt="Logo" />
@@ -98,9 +98,8 @@
 
       <!-- Main -->
       <div class="adm-ep-main">
-        <div v-if="drawerOpen" class="adm-ep-drawer-mask" @click="drawerOpen = false" />
         <header class="adm-ep-top">
-          <el-button text class="adm-ep-collapse" @click="onCollapseClick">
+          <el-button text class="adm-ep-collapse" @click="sidebarCollapsed = !sidebarCollapsed">
             <span class="adm-ep-collapse-icon" :class="{ 'is-collapsed': sidebarCollapsed }">
               <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="14" height="12" rx="2.5" />
@@ -200,21 +199,6 @@ const api = useAdminApi()
 
 const SIDEBAR_KEY = 'werkero_admin_sidebar'
 const sidebarCollapsed = ref(false)
-const drawerOpen = ref(false)
-const isMobile = ref(false)
-
-function onCollapseClick() {
-  if (isMobile.value) drawerOpen.value = !drawerOpen.value
-  else sidebarCollapsed.value = !sidebarCollapsed.value
-}
-
-onMounted(() => {
-  const mq = window.matchMedia('(max-width: 900px)')
-  const sync = () => { isMobile.value = mq.matches; if (!mq.matches) drawerOpen.value = false }
-  sync()
-  mq.addEventListener('change', sync)
-  loadAdminLogo()
-})
 
 const adminLogoUrl = ref('')
 async function loadAdminLogo() {
@@ -353,7 +337,7 @@ function goFlyout(path: string) {
   flyout.value = null
   navigateTo(path)
 }
-watch(() => route.path, () => { flyout.value = null; drawerOpen.value = false })
+watch(() => route.path, () => { flyout.value = null })
 watch(sidebarCollapsed, () => { flyout.value = null })
 
 const isActive = (p: string) => route.path === p
@@ -445,6 +429,7 @@ function goSite() {
 
 onMounted(() => {
   loadMe()
+  loadAdminLogo()
   try {
     sidebarCollapsed.value = localStorage.getItem(SIDEBAR_KEY) === '1'
   } catch { /* ignore */ }
@@ -1094,44 +1079,23 @@ watch(sidebarCollapsed, (v) => {
 }
 
 /* ---------- responsive ---------- */
-.adm-ep-drawer-mask {
-  display: none;
-}
 @media (max-width: 900px) {
-  /* sidebar becomes overlay drawer */
-  .adm-ep-side {
-    position: fixed;
-    left: 0; top: 0; bottom: 0;
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 260px !important;
-    z-index: 100;
-  }
-  .adm-ep-side.is-drawer-open {
-    transform: translateX(0);
-  }
-  .adm-ep-drawer-mask {
-    display: block;
-    position: fixed; inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    z-index: 99;
-  }
+  /* sidebar auto-collapses to icon bar on small screens */
+  .adm-ep-side { width: 68px !important; }
+  .adm-ep-side .adm-ep-nav-label,
+  .adm-ep-side .adm-ep-brand-text,
+  .adm-ep-side .adm-ep-caret { display: none !important; }
   .adm-ep-top { padding: 0 12px; gap: 8px; }
   .adm-ep-crumb { display: none; }
   .adm-ep-locale { width: 110px; }
-  /* page content padding */
   .adm-ep-body { padding: 14px !important; }
-  /* tables scroll horizontally */
   .el-table { font-size: 13px; }
   .el-table .cell { padding-left: 8px; padding-right: 8px; }
-  /* dialogs full width */
   .el-dialog { width: calc(100vw - 24px) !important; margin: 12px auto; }
   .el-dialog__body { padding: 14px 16px; }
 }
 @media (max-width: 640px) {
-  /* forms single column */
   .el-row .el-col-12 { max-width: 100%; flex: 0 0 100%; }
-  .adm-ep-top-iconbtn { display: none; }
   .el-pagination { justify-content: center; }
 }
 </style>
