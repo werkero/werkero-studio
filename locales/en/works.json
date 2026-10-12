@@ -57,5 +57,9 @@
     }
   },
   "listTitle": "Works",
-  "listSubtitle": "A selection of projects we're proud to have designed and built."
+  "listSubtitle": "A selection of projects we're proud to have designed and built.",
+  "brandWall": {
+    "eyebrow": "Brand Wall",
+    "title": "Brands we've built"
+  }
 }

@@ -46,36 +46,22 @@
       </div>
     </section>
 
-    <!-- SERVICES -->
-    <section id="services" class="section" style="padding-top: 0">
+    <!-- BRAND WALL -->
+    <section id="brands" class="section" style="padding-top: 0">
       <div class="wrap">
-        <Reveal><p class="kicker"><span class="ast">✳</span> {{ page.services.eyebrow }}</p></Reveal>
+        <Reveal><p class="kicker"><span class="ast">✳</span> {{ page.works.brandWall.eyebrow }}</p></Reveal>
         <div class="sec-head">
           <Reveal :delay="80">
-            <h2 class="display">{{ page.services.title }} <Doodle type="smile" :size="44" class="inline-doodle" /></h2>
+            <h2 class="display">{{ page.works.brandWall.title }}</h2>
           </Reveal>
-          <Reveal :delay="140"><p class="side-note">{{ page.services.sideNote }}</p></Reveal>
         </div>
-        <div class="svc-grid">
-          <Reveal v-for="(s, i) in page.services.items.filter((x: any) => !x.wide)" :key="i" :delay="i * 90">
-            <div class="card-white svc-card">
-              <div class="svc-stage"><WorkArt :type="s.doodle" class="svc-doodle" /></div>
-              <h3 class="serif">{{ s.title }}</h3>
-              <p class="svc-t">{{ s.text }}</p>
-              <button class="svc-details" type="button"><span class="svc-arrow">↓</span> {{ page.services.details }}</button>
+        <div class="brand-wall">
+          <Reveal v-for="(w, i) in brandWallWorks" :key="w.slug" :delay="i * 60">
+            <div class="brand-wall-item">
+              <span class="brand-wall-name">{{ w.title }}</span>
             </div>
           </Reveal>
         </div>
-        <Reveal :delay="120">
-          <div class="card-white svc-wide" v-if="wideService">
-            <WorkArt :type="wideService.doodle" class="svc-doodle" />
-            <div>
-              <h3 class="serif">{{ wideService.title }}</h3>
-              <p class="svc-t">{{ wideService.text }}</p>
-              <button class="svc-details" type="button"><span class="svc-arrow">↓</span> {{ page.services.details }}</button>
-            </div>
-          </div>
-        </Reveal>
       </div>
     </section>
 
@@ -227,8 +213,11 @@ const anchor = (hash: string) => localePath({ path: '/', hash })
 const openStep = ref(0)
 
 const featured = computed(() => showcaseWorks.value[0] ?? null)
+const brandWallWorks = computed(() => (showcaseWorks.value ?? []).slice(0, 6).map((w: any) => ({
+  slug: w.slug,
+  title: typeof w.title === 'string' ? w.title : (w.title?.[locale.value] ?? w.title?.en ?? w.slug),
+})))
 const rest = computed(() => showcaseWorks.value.slice(1))
-const wideService = computed(() => (page.value as any)?.services?.items?.find((x: any) => x.wide) ?? null)
 
 useHead({
   title: () => 'Werkero Studio',
@@ -260,21 +249,10 @@ useHead({
 .pos-cell h3 { font-size: 1.5rem; margin: 0 0 0.8rem; font-weight: 600; }
 .pos-t { color: var(--muted); line-height: 1.65; margin: 0; font-size: 0.98rem; }
 
-/* ---------- SERVICES ---------- */
-.inline-doodle { display: inline-block; vertical-align: -8px; margin-left: 0.5rem; }
-.svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 3rem; align-items: stretch; }
-.svc-grid > div { display: flex; flex-direction: column; }
-.svc-card { padding: 2.2rem; display: flex; flex-direction: column; flex: 1; }
-/* fixed doodle stage: identical box for every card */
-.svc-stage { height: 96px; display: flex; align-items: center; margin-bottom: 1.6rem; }
-.svc-doodle { width: 120px; height: 90px; flex: none; }
-.svc-card h3, .svc-wide h3 { font-size: 1.6rem; margin: 0 0 0.8rem; font-weight: 600; }
-.svc-t { color: var(--muted); line-height: 1.65; margin: 0 0 1.8rem; flex: 1; }
-.svc-details { display: inline-flex; align-items: center; gap: 0.8rem; background: none; border: none; cursor: pointer; font: inherit; font-weight: 600; color: var(--ink); padding: 0; align-self: flex-start; }
-.svc-arrow { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1.5px solid var(--ink); border-radius: 50%; font-size: 1.1rem; transition: background 0.3s, color 0.3s; }
-.svc-details:hover .svc-arrow { background: var(--lime); border-color: var(--lime); }
-.svc-wide { margin-top: 1.4rem; padding: 2.2rem; display: grid; grid-template-columns: 200px 1fr; gap: 2.4rem; align-items: center; }
-.svc-wide .svc-doodle { margin-bottom: 0; width: 190px; }
+/* ---------- BRAND WALL ---------- */
+.brand-wall { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.2rem; margin-top: 3rem; }
+.brand-wall-item { display: flex; align-items: center; justify-content: center; padding: 2.6rem 1rem; background: #fff; border-radius: 1.4rem; border: 1px solid rgba(0, 0, 0, 0.06); }
+.brand-wall-name { font-size: 1.35rem; font-weight: 700; color: #0a0a0e; letter-spacing: 0.01em; white-space: nowrap; }
 .ast-star { color: var(--ink); font-size: 0.7em; vertical-align: 0.35em; }
 
 /* ---------- WORKS ---------- */
@@ -349,8 +327,7 @@ useHead({
 @media (max-width: 1000px) {
   .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.8rem; }
   .pos-grid { grid-template-columns: 1fr; }
-  .svc-grid { grid-template-columns: 1fr; }
-  .svc-wide { grid-template-columns: 1fr; }
+  .brand-wall { grid-template-columns: repeat(3, 1fr); }
   .work-grid { grid-template-columns: 1fr 1fr; }
   .about-grid { grid-template-columns: 1fr; }
   .proc-head { grid-template-columns: 56px 1fr 52px; }

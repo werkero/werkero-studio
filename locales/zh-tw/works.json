@@ -57,5 +57,9 @@
     }
   },
   "listTitle": "作品",
-  "listSubtitle": "以下是我們引以為豪地設計和建造的部分項目。"
+  "listSubtitle": "以下是我們引以為豪地設計和建造的部分項目。",
+  "brandWall": {
+    "eyebrow": "品牌牆",
+    "title": "我們製作的一些品牌項目"
+  }
 }

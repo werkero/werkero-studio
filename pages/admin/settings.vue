@@ -121,6 +121,9 @@
             <el-form-item :label="`${t('tagline')} (${uiLang})`" style="grid-column: span 2">
               <el-input v-model="taglineCurrent" style="width: 100%" />
             </el-form-item>
+            <el-form-item :label="`${t('aboutStudio')} (${uiLang})`" style="grid-column: span 2">
+              <el-input v-model="aboutCurrent" type="textarea" :rows="6" style="width: 100%" />
+            </el-form-item>
             <div style="grid-column: span 2; margin-bottom: 18px">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px">
                 <span style="font-size: 14px; color: #606266">{{ t('socialLinks') }}</span>
@@ -297,6 +300,7 @@ async function saveCred() {
 // Brand tab (brands table)
 const brandForm = ref({ name: '', contact_email: '', domain: '', default_locale: 'en' })
 const taglineObj = ref<Record<string, string>>({})
+const aboutObj = ref<Record<string, string>>({})
 const socialLinks = ref<{ name: string; url: string }[]>([])
 const brandError = ref('')
 const brandSaving = ref(false)
@@ -305,6 +309,11 @@ const localeOptions = ['en', 'zh-cn', 'zh-tw', 'fr', 'de', 'ru', 'ja']
 const taglineCurrent = computed({
   get: () => taglineObj.value[uiLang.value] ?? '',
   set: (v: string) => { taglineObj.value = { ...taglineObj.value, [uiLang.value]: v } },
+})
+// About studio: only edit the current admin UI language; other languages are preserved.
+const aboutCurrent = computed({
+  get: () => aboutObj.value[uiLang.value] ?? '',
+  set: (v: string) => { aboutObj.value = { ...aboutObj.value, [uiLang.value]: v } },
 })
 function addSocialLink() { socialLinks.value.push({ name: '', url: '' }) }
 function removeSocialLink(i: number) { socialLinks.value.splice(i, 1) }
@@ -321,6 +330,12 @@ async function loadBrand() {
       taglineObj.value = (b.tagline && typeof b.tagline === 'object') ? { ...b.tagline } : {}
       const sl = b.social_links && typeof b.social_links === 'object' ? b.social_links : {}
       socialLinks.value = Object.entries(sl).map(([name, url]) => ({ name, url: String(url ?? '') }))
+    }
+    // Load studio about text from site_settings
+    const settings = await api.get('/api/admin/settings')
+    const about = (settings || []).find((s: any) => s.key === 'studio.about_p1')
+    if (about && about.value && typeof about.value === 'object') {
+      aboutObj.value = { ...about.value }
     }
   } catch { /* keep form empty; save will surface errors */ }
 }
@@ -341,6 +356,8 @@ async function saveBrand() {
       tagline: taglineObj.value,
       social_links: sl,
     })
+    // Save studio about text to site_settings
+    await api.put('/api/admin/settings', { key: 'studio.about_p1', value: aboutObj.value })
     await loadBrand()
   } catch (e: any) {
     brandError.value = adminErrorMessage(e)

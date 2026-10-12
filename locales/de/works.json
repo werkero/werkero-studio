@@ -57,5 +57,9 @@
     }
   },
   "listTitle": "Arbeiten",
-  "listSubtitle": "Eine Auswahl von Projekten, die wir mit Stolz entworfen und umgesetzt haben."
+  "listSubtitle": "Eine Auswahl von Projekten, die wir mit Stolz entworfen und umgesetzt haben.",
+  "brandWall": {
+    "eyebrow": "Markenwand",
+    "title": "Von uns geschaffene Marken"
+  }
 }

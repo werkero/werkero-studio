@@ -44,11 +44,43 @@ export function useAdminApi() {
       throw e
     }
   }
+  // Cached GET via Pinia (3 min TTL). Mutations auto-invalidate related cache.
+  const cacheKey = (path: string, query?: Record<string, any>) =>
+    query && Object.keys(query).length ? `${path}:${JSON.stringify(query)}` : path
+  async function cachedGet<T>(path: string, query?: Record<string, any>): Promise<T> {
+    // Pinia store only exists client-side after setup; fall back to direct fetch on server
+    try {
+      const { useAdminCacheStore } = await import('~/stores/adminCache')
+      const cache = useAdminCacheStore()
+      const key = cacheKey(path, query)
+      const hit = cache.get(key)
+      if (hit !== undefined) return hit as T
+      const data = await req<T>(path, { query })
+      cache.set(key, data)
+      return data
+    } catch {
+      return req<T>(path, { query })
+    }
+  }
+  function invalidateCache(path?: string) {
+    try {
+      // dynamic import to avoid SSR issues
+      import('~/stores/adminCache').then(({ useAdminCacheStore }) => {
+        useAdminCacheStore().invalidate(path)
+      })
+    } catch { /* noop */ }
+  }
+  async function mut<T>(method: string, path: string, body?: any): Promise<T> {
+    const data = await req<T>(path, { method, body })
+    // invalidate cache for this resource path (e.g. /api/admin/works)
+    invalidateCache(path.split('?')[0])
+    return data
+  }
   return {
-    get: <T>(path: string, query?: Record<string, any>) => req<T>(path, { query }),
-    post: <T>(path: string, body?: any) => req<T>(path, { method: 'POST', body }),
-    put: <T>(path: string, body?: any) => req<T>(path, { method: 'PUT', body }),
-    patch: <T>(path: string, body?: any) => req<T>(path, { method: 'PATCH', body }),
-    del: <T>(path: string) => req<T>(path, { method: 'DELETE' }),
+    get: cachedGet,
+    post: <T>(path: string, body?: any) => mut<T>('POST', path, body),
+    put: <T>(path: string, body?: any) => mut<T>('PUT', path, body),
+    patch: <T>(path: string, body?: any) => mut<T>('PATCH', path, body),
+    del: <T>(path: string) => mut<T>('DELETE', path),
   }
 }

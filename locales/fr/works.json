@@ -57,5 +57,9 @@
     }
   },
   "listTitle": "Réalisations",
-  "listSubtitle": "Voici une sélection de projets que nous sommes fiers d'avoir conçus et réalisés."
+  "listSubtitle": "Voici une sélection de projets que nous sommes fiers d'avoir conçus et réalisés.",
+  "brandWall": {
+    "eyebrow": "Mur de marques",
+    "title": "Les marques que nous avons créées"
+  }
 }

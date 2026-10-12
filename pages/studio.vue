@@ -12,9 +12,11 @@
         <Reveal :delay="140">
           <p class="hero-intro">{{ heroIntro }}</p>
         </Reveal>
-        <div class="hero-dots" aria-hidden="true"><i v-for="n in 5" :key="n" /></div>
       </div>
-      <div class="scroll-line" aria-hidden="true"><span /></div>
+      <div class="scroll-line" aria-hidden="true">
+        <svg class="clover" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="12" cy="8" rx="3.2" ry="4"/><ellipse cx="12" cy="15" rx="3.2" ry="4"/><ellipse cx="8" cy="11.5" rx="4" ry="3.2"/><ellipse cx="16" cy="11.5" rx="4" ry="3.2"/><path d="M12 18.5c0 2-.8 3.2-2.2 4.5" stroke-linecap="round"/></svg>
+        <span />
+      </div>
     </section>
 
     <!-- 2. About — illustration left, text right -->
@@ -34,8 +36,7 @@
         </Reveal>
         <div class="about-text">
           <Reveal><h2 class="serif about-title">{{ t.aboutLabel }}</h2></Reveal>
-          <Reveal :delay="100"><p class="about-p">{{ aboutP1 }}</p></Reveal>
-          <Reveal :delay="160"><p class="about-p">{{ aboutP2 }}</p></Reveal>
+          <Reveal :delay="100"><p class="about-p" v-html="aboutText"></p></Reveal>
         </div>
       </div>
     </section>
@@ -91,8 +92,10 @@ const t = computed(() => page.value.studio ?? {})
 const { data: brand } = await useFetch('/api/brand', { key: 'brand-studio', query: { locale } })
 const heroScript = computed(() => (brand.value as any)?.name || t.value.heroScript || 'Werkero')
 const heroIntro = computed(() => (brand.value as any)?.tagline || t.value.heroIntro || '')
-const aboutP1 = computed(() => pickSetting('studio.about_p1', t.value.aboutP1))
-const aboutP2 = computed(() => pickSetting('studio.about_p2', t.value.aboutP2))
+const aboutText = computed(() => {
+  const v = pickSetting('studio.about_p1', t.value.aboutP1 || '')
+  return String(v).replace(/\n/g, '<br><br>')
+})
 const servicesTitle = computed(() => page.value.services?.title ?? '')
 const services = computed(() => (page.value.services?.items ?? []).slice(0, 3))
 const ctaTitle = computed(() => page.value.cta?.title ?? '')
@@ -144,10 +147,8 @@ useHead({ title: () => `Studio — Werkero Studio` })
   margin: 2.2rem auto 0; max-width: 52ch;
   color: rgba(250, 247, 240, 0.72); font-size: 1.12rem; line-height: 1.75;
 }
-.hero-dots { display: flex; gap: 8px; justify-content: center; margin-top: 2.6rem; }
-.hero-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(250, 247, 240, 0.4); }
-.hero-dots i:nth-child(3) { background: var(--lime); }
-.scroll-line { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1; }
+.scroll-line { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
+.scroll-line .clover { color: var(--lime); }
 .scroll-line span { display: block; width: 1px; height: 48px; background: rgba(250, 247, 240, 0.35); }
 
 /* ---------- 2. about ---------- */
