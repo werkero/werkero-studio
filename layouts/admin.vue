@@ -124,6 +124,15 @@
 
           <el-divider direction="vertical" class="adm-ep-div" />
 
+          <el-tooltip :content="t('clearCache')" placement="bottom" :show-after="300">
+            <el-button text class="adm-ep-top-iconbtn" @click="clearAllCache">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+            </el-button>
+          </el-tooltip>
+
           <el-tooltip :content="t('backToSite')" placement="bottom" :show-after="300">
             <el-button text class="adm-ep-top-iconbtn" @click="goSite">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -205,12 +214,9 @@ async function loadAdminLogo() {
   try {
     const settings = await $fetch('/api/admin/settings')
     const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
+    // logo.value is now the URL directly
     if (logo && typeof logo.value === 'string' && logo.value) {
-      // logo.value is a media asset ID; fetch its URL
-      try {
-        const m = await $fetch(`/api/admin/media/${logo.value}`)
-        adminLogoUrl.value = m.url || ''
-      } catch { /* keep default */ }
+      adminLogoUrl.value = logo.value
     }
   } catch { /* keep default */ }
 }
@@ -425,6 +431,35 @@ function logout() {
 
 function goSite() {
   navigateTo('/')
+}
+
+function clearAllCache() {
+  // 1. Clear Pinia admin API cache
+  try {
+    const nuxtApp = useNuxtApp()
+    // @ts-ignore
+    const pinia = nuxtApp.$pinia
+    if (pinia) {
+      // @ts-ignore
+      const store = pinia._s?.get('adminCache')
+      if (store && typeof store.invalidate === 'function') store.invalidate()
+    }
+  } catch {}
+  // 2. Clear browser storages (keep auth token)
+  try {
+    const keepKeys = ['werkero_admin_token', 'werkero_admin_sidebar']
+    const lsKeep: Record<string, string> = {}
+    for (const k of keepKeys) {
+      const v = localStorage.getItem(k)
+      if (v !== null) lsKeep[k] = v
+    }
+    localStorage.clear()
+    sessionStorage.clear()
+    for (const [k, v] of Object.entries(lsKeep)) localStorage.setItem(k, v)
+  } catch {}
+  // 3. Reload to fetch fresh data
+  ElMessage.success(t('cacheCleared'))
+  setTimeout(() => window.location.reload(), 600)
 }
 
 onMounted(() => {

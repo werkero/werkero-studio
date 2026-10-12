@@ -125,12 +125,15 @@ const isVid = (m: any) => kindOf(m) === 'video'
 const nameOf = (m: any) => m.filename || m.url?.split('/').pop() || m.id
 
 async function loadPreview() {
-  if (!props.modelValue) { previewUrl.value = ''; return }
-  try {
-    const m = await api.get<any>(`/api/admin/media/${props.modelValue}`)
-    previewUrl.value = m.url || ''
-    previewKind.value = kindOf(m)
-  } catch { previewUrl.value = ''; previewKind.value = '' }
+  // modelValue is now the URL directly
+  const url = props.modelValue || ''
+  previewUrl.value = url
+  if (!url) { previewKind.value = ''; return }
+  // guess kind from extension
+  const ext = url.split('.').pop()?.toLowerCase() || ''
+  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) previewKind.value = 'image'
+  else if (['mp4', 'webm', 'mov'].includes(ext)) previewKind.value = 'video'
+  else previewKind.value = 'file'
 }
 watch(() => props.modelValue, loadPreview, { immediate: true })
 
@@ -147,7 +150,8 @@ async function load() {
 watch(pickerOpen, (v) => { if (v) { picked.value = props.modelValue; page.value = 1; load() } })
 
 function confirm() {
-  emit('update:modelValue', picked.value)
+  const m = rows.value.find((x: any) => x.id === picked.value)
+  emit('update:modelValue', m?.url || picked.value)
   pickerOpen.value = false
 }
 </script>

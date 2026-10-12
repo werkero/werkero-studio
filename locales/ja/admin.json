@@ -258,5 +258,7 @@
   "changeMedia": "変更",
   "noMediaSelected": "未選択",
   "clear": "クリア",
-  "viewMedia": "表示"
+  "viewMedia": "表示",
+  "clearCache": "キャッシュをクリア",
+  "cacheCleared": "キャッシュをクリアしました"
 }

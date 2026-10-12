@@ -258,5 +258,7 @@
   "changeMedia": "更换",
   "noMediaSelected": "未选择媒体",
   "clear": "清除",
-  "viewMedia": "查看"
+  "viewMedia": "查看",
+  "clearCache": "清除缓存",
+  "cacheCleared": "缓存已清除"
 }

@@ -317,27 +317,93 @@ useHead({
 .work-tagline { color: var(--muted); font-size: 0.95rem; margin: 0 0 1rem; }
 .work-desc { color: #4a463d; line-height: 1.65; font-size: 0.95rem; margin: 0 0 1.6rem; flex: 1; }
 
-/* ---------- WORKS responsive ---------- */
+/* ---------- WORKS responsive (rewritten) ---------- */
+/* Tablet: 2 columns */
 @media (max-width: 1024px) {
-  .work-grid { grid-template-columns: repeat(2, 1fr); }
+  .work-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.4rem;
+  }
 }
+/* Phone: 1 column, compact cards */
 @media (max-width: 640px) {
-  .work-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-  .work-art { min-height: 180px; padding: 1.6rem; }
-  .work-body { padding: 1.4rem 1.4rem 1.6rem; }
-  .work-body h3 { font-size: 1.4rem; }
-  /* featured card */
-  .feat-card { border-radius: 22px; margin-top: 2rem; }
-  .feat-dash { padding: 1.4rem 1.4rem 0; }
-  .feat-grid { grid-template-columns: 1fr; padding: 1rem; gap: 0.8rem; }
-  .feat-panel { padding: 1rem; }
-  .feat-banner { font-size: 1.15rem; padding: 1.1rem 1.4rem; border-radius: 12px; }
-  .feat-badge { width: 72px; height: 72px; top: 0.8rem; right: 2rem; }
-  .feat-badge-star { font-size: 1.3rem; }
-  .feat-body { padding: 1.6rem; }
-  .feat-body h3 { font-size: 1.8rem; }
-  .feat-rms { font-size: 1.15rem; }
-  .feat-cap { font-size: 0.7rem; }
+  .work-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .work-art {
+    min-height: 170px !important;
+    padding: 1.4rem !important;
+  }
+  .work-doodle {
+    max-width: 180px !important;
+  }
+  .work-body {
+    padding: 1.3rem 1.3rem 1.5rem !important;
+  }
+  .work-body h3 {
+    font-size: 1.35rem !important;
+  }
+  .work-tagline, .work-desc {
+    font-size: 0.88rem !important;
+  }
+  /* Featured card: stack everything */
+  .feat-card {
+    border-radius: 20px !important;
+    margin-top: 2rem !important;
+  }
+  .feat-dash {
+    padding: 1.2rem 1.2rem 0 !important;
+  }
+  .feat-browser {
+    padding: 0.8rem 1rem !important;
+  }
+  .feat-grid {
+    grid-template-columns: 1fr !important;
+    padding: 1rem !important;
+    gap: 0.8rem !important;
+  }
+  .feat-panel {
+    padding: 1rem !important;
+  }
+  .feat-banner {
+    font-size: 1.05rem !important;
+    padding: 1rem 1.2rem !important;
+    border-radius: 12px !important;
+    margin-top: 0.8rem !important;
+  }
+  .feat-banner svg {
+    width: 32px !important;
+    height: auto !important;
+  }
+  .feat-badge {
+    width: 64px !important;
+    height: 64px !important;
+    top: 0.6rem !important;
+    right: 1.8rem !important;
+  }
+  .feat-badge-star {
+    font-size: 1.2rem !important;
+  }
+  .feat-body {
+    padding: 1.4rem !important;
+  }
+  .feat-body h3 {
+    font-size: 1.7rem !important;
+  }
+  .feat-tagline {
+    font-size: 0.9rem !important;
+  }
+  .feat-desc {
+    font-size: 0.9rem !important;
+  }
+  .feat-rms {
+    font-size: 1.1rem !important;
+  }
+  .feat-cap {
+    font-size: 0.68rem !important;
+  }
 }
 
 /* ---------- PROCESS ---------- */

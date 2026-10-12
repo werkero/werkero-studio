@@ -258,5 +258,7 @@
   "changeMedia": "更換",
   "noMediaSelected": "未選擇媒體",
   "clear": "清除",
-  "viewMedia": "查看"
+  "viewMedia": "查看",
+  "clearCache": "清除快取",
+  "cacheCleared": "快取已清除"
 }

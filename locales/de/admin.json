@@ -258,5 +258,7 @@
   "changeMedia": "Ändern",
   "noMediaSelected": "Keine Auswahl",
   "clear": "Löschen",
-  "viewMedia": "Ansehen"
+  "viewMedia": "Ansehen",
+  "clearCache": "Cache leeren",
+  "cacheCleared": "Cache geleert"
 }

@@ -258,5 +258,7 @@
   "changeMedia": "Changer",
   "noMediaSelected": "Aucun média",
   "clear": "Effacer",
-  "viewMedia": "Voir"
+  "viewMedia": "Voir",
+  "clearCache": "Vider le cache",
+  "cacheCleared": "Cache vidé"
 }

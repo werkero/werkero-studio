@@ -258,5 +258,7 @@
   "changeMedia": "Заменить",
   "noMediaSelected": "Не выбрано",
   "clear": "Очистить",
-  "viewMedia": "Просмотр"
+  "viewMedia": "Просмотр",
+  "clearCache": "Очистить кэш",
+  "cacheCleared": "Кэш очищен"
 }
