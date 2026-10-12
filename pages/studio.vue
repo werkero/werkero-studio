@@ -6,7 +6,6 @@
       <div class="hero-content">
         <Reveal>
           <h1 class="hero-title">
-            <span class="serif hero-line1">{{ heroTitle }}</span>
             <span class="script hero-line2">{{ heroScript }}</span>
           </h1>
         </Reveal>
@@ -34,7 +33,7 @@
           </svg>
         </Reveal>
         <div class="about-text">
-          <Reveal><h2 class="serif about-title">{{ aboutLabel }}</h2></Reveal>
+          <Reveal><h2 class="serif about-title">{{ t.aboutLabel }}</h2></Reveal>
           <Reveal :delay="100"><p class="about-p">{{ aboutP1 }}</p></Reveal>
           <Reveal :delay="160"><p class="about-p">{{ aboutP2 }}</p></Reveal>
         </div>
@@ -88,10 +87,10 @@ const pickSetting = (key: string, fallback = '') => {
 }
 const t = computed(() => page.value.studio ?? {})
 
-const heroTitle = computed(() => pickSetting('studio.hero_title', t.value.heroTitle))
-const heroScript = computed(() => pickSetting('studio.hero_script', t.value.heroScript ?? 'Studio'))
-const heroIntro = computed(() => pickSetting('studio.hero_intro', t.value.heroIntro))
-const aboutLabel = computed(() => pickSetting('studio.about_label', t.value.aboutLabel))
+// Brand name/tagline from brands table (editable in admin Settings → Brand tab)
+const { data: brand } = await useFetch('/api/brand', { key: 'brand-studio' })
+const heroScript = computed(() => (brand.value as any)?.name || t.value.heroScript || 'Werkero')
+const heroIntro = computed(() => (brand.value as any)?.tagline || t.value.heroIntro || '')
 const aboutP1 = computed(() => pickSetting('studio.about_p1', t.value.aboutP1))
 const aboutP2 = computed(() => pickSetting('studio.about_p2', t.value.aboutP2))
 const servicesTitle = computed(() => page.value.services?.title ?? '')
@@ -107,7 +106,7 @@ const svcArt = [
   `<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2"><circle cx="100" cy="80" r="40"/><path d="M100 40 v80 M60 80 h80 M72 52 l56 56 M128 52 l-56 56"/><text x="100" y="145" text-anchor="middle" font-size="20" fill="currentColor" stroke="none">01</text></svg>`,
 ]
 
-useHead({ title: () => `${heroTitle.value} — Werkero Studio` })
+useHead({ title: () => `Studio — Werkero Studio` })
 </script>
 
 <style scoped>
