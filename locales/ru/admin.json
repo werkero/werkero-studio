@@ -208,7 +208,7 @@
   "confirmDeleteFolder": "Удалить эту папку?",
   "noParent": "Верхний уровень",
   "itemsSelected": "выбрано",
-  "confirm": "Подтвердить",
+  "confirm": "ОК",
   "selectedItems": "выбрано",
   "batchDelete": "Удалить выбранное",
   "clearSelection": "Очистить",
@@ -253,5 +253,9 @@
     "update": "Обновление",
     "trigger": "Запуск",
     "retry": "Повтор"
-  }
+  },
+  "selectMedia": "Выбрать из библиотеки",
+  "changeMedia": "Заменить",
+  "noMediaSelected": "Не выбрано",
+  "clear": "Очистить"
 }

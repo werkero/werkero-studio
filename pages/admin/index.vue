@@ -151,8 +151,9 @@ const COLORS: Record<string, string> = {
   seo: '#ff9800', inquiries: '#409eff',
 }
 
+const HIDDEN_CARDS = ['process-steps', 'position-principles']
 const cards = computed(() =>
-  ADMIN_RESOURCE_LIST.map((r) => ({
+  ADMIN_RESOURCE_LIST.filter((r) => !HIDDEN_CARDS.includes(r.slug)).map((r) => ({
     key: r.slug,
     label: t('res.' + r.slug),
     to: `/admin/${r.slug}`,

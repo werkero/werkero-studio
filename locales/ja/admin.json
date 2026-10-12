@@ -208,7 +208,7 @@
   "confirmDeleteFolder": "このフォルダを削除しますか？",
   "noParent": "トップレベル",
   "itemsSelected": "選択中",
-  "confirm": "確認",
+  "confirm": "確定",
   "selectedItems": "選択中",
   "batchDelete": "選択を削除",
   "clearSelection": "クリア",
@@ -253,5 +253,9 @@
     "update": "更新",
     "trigger": "実行",
     "retry": "再試行"
-  }
+  },
+  "selectMedia": "ライブラリから選択",
+  "changeMedia": "変更",
+  "noMediaSelected": "未選択",
+  "clear": "クリア"
 }

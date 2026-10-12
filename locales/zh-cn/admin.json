@@ -253,5 +253,9 @@
     "update": "更新",
     "trigger": "触发",
     "retry": "重试"
-  }
+  },
+  "selectMedia": "从媒体库选择",
+  "changeMedia": "更换",
+  "noMediaSelected": "未选择媒体",
+  "clear": "清除"
 }

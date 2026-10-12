@@ -208,7 +208,7 @@
   "confirmDeleteFolder": "Diesen Ordner löschen?",
   "noParent": "Oberste Ebene",
   "itemsSelected": "ausgewählt",
-  "confirm": "Bestätigen",
+  "confirm": "OK",
   "selectedItems": "ausgewählt",
   "batchDelete": "Auswahl löschen",
   "clearSelection": "Zurücksetzen",
@@ -253,5 +253,9 @@
     "update": "Aktualisieren",
     "trigger": "Auslösen",
     "retry": "Wiederholen"
-  }
+  },
+  "selectMedia": "Aus Bibliothek wählen",
+  "changeMedia": "Ändern",
+  "noMediaSelected": "Keine Auswahl",
+  "clear": "Löschen"
 }

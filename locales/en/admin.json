@@ -253,5 +253,9 @@
     "update": "Update",
     "trigger": "Trigger",
     "retry": "Retry"
-  }
+  },
+  "selectMedia": "Select from library",
+  "changeMedia": "Change",
+  "noMediaSelected": "No media selected",
+  "clear": "Clear"
 }

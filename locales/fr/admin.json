@@ -253,5 +253,9 @@
     "update": "Mettre à jour",
     "trigger": "Déclencher",
     "retry": "Réessayer"
-  }
+  },
+  "selectMedia": "Choisir dans la bibliothèque",
+  "changeMedia": "Changer",
+  "noMediaSelected": "Aucun média",
+  "clear": "Effacer"
 }

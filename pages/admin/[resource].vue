@@ -59,6 +59,7 @@
                   <el-tag v-if="f.i18n" type="info" size="small" style="margin-left: 4px;">[{{ locale }}]</el-tag>
                 </template>
                 <el-input v-if="f.type === 'text'" v-model="form[f.key]" :placeholder="f.placeholder" />
+                <MediaPicker v-if="f.type === 'media'" v-model="form[f.key]" />
                 <el-input v-if="f.type === 'number'" v-model="form[f.key]" type="number" />
                 <el-select v-if="f.type === 'select'" v-model="form[f.key]" style="width: 100%;">
                   <el-option label="—" value="" />
