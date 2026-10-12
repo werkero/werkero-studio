@@ -257,5 +257,6 @@
   "selectMedia": "Выбрать из библиотеки",
   "changeMedia": "Заменить",
   "noMediaSelected": "Не выбрано",
-  "clear": "Очистить"
+  "clear": "Очистить",
+  "viewMedia": "Просмотр"
 }

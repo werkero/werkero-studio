@@ -1,20 +1,32 @@
 <template>
   <div class="media-field">
-    <div v-if="modelValue" class="media-field-preview">
-      <img v-if="isImage" :src="previewUrl" alt="" />
-      <video v-else-if="isVideo" :src="previewUrl" preload="metadata" />
-      <div v-else class="media-field-file">{{ fileName }}</div>
-      <div class="media-field-id">{{ modelValue }}</div>
-    </div>
-    <div v-else class="media-field-empty">{{ t('noMediaSelected') }}</div>
-    <div class="media-field-actions">
-      <el-button size="small" type="primary" plain @click="pickerOpen = true">
-        {{ modelValue ? t('changeMedia') : t('selectMedia') }}
-      </el-button>
-      <el-button v-if="modelValue" size="small" text @click="$emit('update:modelValue', '')">
-        {{ t('clear') }}
-      </el-button>
-    </div>
+    <el-input
+      :model-value="displayText"
+      readonly
+      :placeholder="t('noMediaSelected')"
+      class="media-input"
+    >
+      <template #append>
+        <el-button @click="onMainBtn">{{ modelValue ? t('viewMedia') : t('selectMedia') }}</el-button>
+      </template>
+      <template v-if="modelValue" #suffix>
+        <el-icon class="media-clear" @click="clear"><CircleClose /></el-icon>
+      </template>
+    </el-input>
+
+    <!-- preview dialog -->
+    <el-dialog v-model="previewOpen" :title="t('viewMedia')" width="560px" append-to-body>
+      <div class="preview-body">
+        <img v-if="isImage" :src="previewUrl" alt="" />
+        <video v-else-if="isVideo" :src="previewUrl" controls preload="metadata" />
+        <div v-else class="preview-file">{{ fileName }}</div>
+        <p class="preview-id">{{ modelValue }}</p>
+      </div>
+      <template #footer>
+        <el-button @click="previewOpen = false">{{ t('close') }}</el-button>
+        <el-button type="primary" plain @click="previewOpen = false; pickerOpen = true">{{ t('changeMedia') }}</el-button>
+      </template>
+    </el-dialog>
 
     <el-dialog
       v-model="pickerOpen"
@@ -71,6 +83,7 @@
 <script setup lang="ts">
 import { useAdminApi } from '~/composables/useAdminApi'
 import { useAdminLocale } from '~/composables/useAdminLocale'
+import { CircleClose } from '@element-plus/icons-vue'
 
 const props = defineProps<{ modelValue: string }>()
 const emit = defineEmits(['update:modelValue'])
@@ -79,6 +92,7 @@ const { t } = useAdminLocale()
 const api = useAdminApi()
 
 const pickerOpen = ref(false)
+const previewOpen = ref(false)
 const loading = ref(false)
 const rows = ref<any[]>([])
 const total = ref(0)
@@ -91,7 +105,14 @@ const previewKind = ref('')
 
 const isImage = computed(() => previewKind.value === 'image')
 const isVideo = computed(() => previewKind.value === 'video')
-const fileName = computed(() => previewUrl.value.split('/').pop() || '')
+const fileName = computed(() => previewUrl.value.split('/').pop() || props.modelValue)
+const displayText = computed(() => props.modelValue ? (fileName.value || props.modelValue) : '')
+
+function onMainBtn() {
+  if (props.modelValue) previewOpen.value = true
+  else pickerOpen.value = true
+}
+function clear() { emit('update:modelValue', '') }
 
 function kindOf(m: any): string {
   const mt = (m.mime_type || '').toLowerCase()
@@ -132,18 +153,12 @@ function confirm() {
 </script>
 
 <style scoped>
-.media-field-preview {
-  display: flex; align-items: center; gap: 12px;
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px; padding: 8px 12px; margin-bottom: 8px;
-}
-.media-field-preview img, .media-field-preview video {
-  width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0;
-}
-.media-field-file { font-size: 13px; color: #d4d7dc; }
-.media-field-id { font-size: 11px; color: #8b8f98; font-family: monospace; word-break: break-all; }
-.media-field-empty { font-size: 13px; color: #8b8f98; margin-bottom: 8px; }
-.media-field-actions { display: flex; gap: 8px; }
+.media-clear { cursor: pointer; color: #909399; }
+.media-clear:hover { color: #f56c6c; }
+.preview-body { text-align: center; }
+.preview-body img, .preview-body video { max-width: 100%; max-height: 50vh; border-radius: 12px; }
+.preview-file { font-size: 15px; color: #d4d7dc; padding: 30px 0; }
+.preview-id { font-size: 11px; color: #8b8f98; font-family: monospace; margin-top: 12px; word-break: break-all; }
 .picker-toolbar { margin-bottom: 14px; }
 .picker-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));

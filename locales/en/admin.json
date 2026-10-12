@@ -257,5 +257,6 @@
   "selectMedia": "Select from library",
   "changeMedia": "Change",
   "noMediaSelected": "No media selected",
-  "clear": "Clear"
+  "clear": "Clear",
+  "viewMedia": "View"
 }

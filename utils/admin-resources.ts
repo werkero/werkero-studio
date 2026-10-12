@@ -102,7 +102,7 @@ export const ADMIN_RESOURCES: Record<string, AdminResource> = {
       { key: 'client_name', type: 'text', label: 'Client name', i18n: false, required: true },
       { key: 'client_title', type: 'text', label: 'Client title', i18n: true },
       { key: 'rating', type: 'select', label: 'Rating', i18n: false, options: ['1', '2', '3', '4', '5'].map((v) => ({ value: v, label: v })) },
-      { key: 'avatar_asset_id', type: 'text', label: 'Avatar asset ID', i18n: false },
+      { key: 'avatar_asset_id', type: 'media', label: 'Avatar asset ID', i18n: false },
       { key: 'sort_order', type: 'number', label: 'Sort order', i18n: false },
       { key: 'status', type: 'select', label: 'Status', i18n: false, list: true, options: ['pending', 'approved', 'rejected'].map((s) => ({ value: s, label: s })) },
     ],

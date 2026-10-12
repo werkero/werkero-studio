@@ -257,5 +257,6 @@
   "selectMedia": "ライブラリから選択",
   "changeMedia": "変更",
   "noMediaSelected": "未選択",
-  "clear": "クリア"
+  "clear": "クリア",
+  "viewMedia": "表示"
 }

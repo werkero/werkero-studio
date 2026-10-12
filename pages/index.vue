@@ -317,6 +317,29 @@ useHead({
 .work-tagline { color: var(--muted); font-size: 0.95rem; margin: 0 0 1rem; }
 .work-desc { color: #4a463d; line-height: 1.65; font-size: 0.95rem; margin: 0 0 1.6rem; flex: 1; }
 
+/* ---------- WORKS responsive ---------- */
+@media (max-width: 1024px) {
+  .work-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .work-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .work-art { min-height: 180px; padding: 1.6rem; }
+  .work-body { padding: 1.4rem 1.4rem 1.6rem; }
+  .work-body h3 { font-size: 1.4rem; }
+  /* featured card */
+  .feat-card { border-radius: 22px; margin-top: 2rem; }
+  .feat-dash { padding: 1.4rem 1.4rem 0; }
+  .feat-grid { grid-template-columns: 1fr; padding: 1rem; gap: 0.8rem; }
+  .feat-panel { padding: 1rem; }
+  .feat-banner { font-size: 1.15rem; padding: 1.1rem 1.4rem; border-radius: 12px; }
+  .feat-badge { width: 72px; height: 72px; top: 0.8rem; right: 2rem; }
+  .feat-badge-star { font-size: 1.3rem; }
+  .feat-body { padding: 1.6rem; }
+  .feat-body h3 { font-size: 1.8rem; }
+  .feat-rms { font-size: 1.15rem; }
+  .feat-cap { font-size: 0.7rem; }
+}
+
 /* ---------- PROCESS ---------- */
 .proc-list { margin-top: 3rem; border-top: 1px solid var(--line); }
 .proc-row { border-bottom: 1px solid var(--line); }

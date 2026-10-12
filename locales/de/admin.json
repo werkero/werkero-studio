@@ -257,5 +257,6 @@
   "selectMedia": "Aus Bibliothek wählen",
   "changeMedia": "Ändern",
   "noMediaSelected": "Keine Auswahl",
-  "clear": "Löschen"
+  "clear": "Löschen",
+  "viewMedia": "Ansehen"
 }

@@ -257,5 +257,6 @@
   "selectMedia": "从媒体库选择",
   "changeMedia": "更换",
   "noMediaSelected": "未选择媒体",
-  "clear": "清除"
+  "clear": "清除",
+  "viewMedia": "查看"
 }

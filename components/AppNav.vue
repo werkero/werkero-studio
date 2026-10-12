@@ -16,8 +16,8 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 L17 7 M8 7 h9 v9" /></svg>
         </NuxtLink>
         <LangSwitcher />
-        <button class="burger" :class="{ open: menuOpen }" @click="menuOpen = !menuOpen" aria-label="Menu">
-          <span /><span /><span />
+        <button class="menu-btn" @click="menuOpen = !menuOpen" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6 h18 M3 12 h18 M3 18 h18" /></svg>
         </button>
       </div>
     </div>
@@ -92,28 +92,13 @@ onMounted(() => {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
   width: min(920px, 94vw);
 }
-@media (max-width: 860px) {
-  .nav-links { display: none; }
-  .burger { display: flex; }
-  .contact-pill { display: none; }
-}
-@media (max-width: 560px) {
-  .brand-word { display: none; }
-}
-
-/* burger */
-.burger {
-  display: none; flex-direction: column; justify-content: center; gap: 5px;
+/* menu button (three lines) */
+.menu-btn {
+  display: none; align-items: center; justify-content: center;
   width: 40px; height: 40px; background: none; border: none; cursor: pointer;
-  padding: 8px; align-items: center;
+  color: inherit; padding: 8px;
 }
-.burger span {
-  display: block; width: 22px; height: 2px; border-radius: 2px;
-  background: currentColor; transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.burger.open span:nth-child(2) { opacity: 0; }
-.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-btn svg { width: 24px; height: 24px; }
 
 /* mobile menu */
 .mobile-menu {
@@ -126,7 +111,13 @@ onMounted(() => {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
 @media (max-width: 860px) {
+  .nav-links { display: none; }
+  .menu-btn { display: flex; }
+  .contact-pill { display: none; }
   .mobile-menu { display: flex; }
+}
+@media (max-width: 560px) {
+  .brand-word { display: none; }
 }
 .mobile-menu a {
   color: var(--ink); font-size: 1rem; font-weight: 600;
