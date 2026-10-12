@@ -214,9 +214,18 @@ async function loadAdminLogo() {
   try {
     const settings = await $fetch('/api/admin/settings')
     const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
-    // logo.value is now the URL directly
-    if (logo && typeof logo.value === 'string' && logo.value) {
-      adminLogoUrl.value = logo.value
+    const v = logo?.value
+    if (typeof v === 'string' && v) {
+      if (v.startsWith('http')) {
+        // new format: URL directly
+        adminLogoUrl.value = v
+      } else {
+        // old format: media asset ID, resolve to URL
+        try {
+          const m = await $fetch(`/api/admin/media/${v}`)
+          adminLogoUrl.value = m.url || ''
+        } catch {}
+      }
     }
   } catch { /* keep default */ }
 }
