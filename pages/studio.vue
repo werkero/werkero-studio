@@ -88,7 +88,7 @@ const pickSetting = (key: string, fallback = '') => {
 const t = computed(() => page.value.studio ?? {})
 
 // Brand name/tagline from brands table (editable in admin Settings → Brand tab)
-const { data: brand } = await useFetch('/api/brand', { key: 'brand-studio' })
+const { data: brand } = await useFetch('/api/brand', { key: 'brand-studio', query: { locale } })
 const heroScript = computed(() => (brand.value as any)?.name || t.value.heroScript || 'Werkero')
 const heroIntro = computed(() => (brand.value as any)?.tagline || t.value.heroIntro || '')
 const aboutP1 = computed(() => pickSetting('studio.about_p1', t.value.aboutP1))

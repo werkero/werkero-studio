@@ -181,8 +181,9 @@ img, svg { display: block; }
   font-size: clamp(4rem, 18.5vw, 19rem);
   line-height: 0.82; letter-spacing: 0.01em;
   color: var(--lime);
-  white-space: nowrap; user-select: none;
-  text-align: center;
+  user-select: none;
+  display: flex; justify-content: space-between; align-items: baseline;
+  width: 100%; padding: 0 clamp(1rem, 4vw, 4rem);
 }
 .footer-crop { overflow: hidden; height: clamp(2.6rem, 11.5vw, 12rem); margin-top: 2rem; }
 

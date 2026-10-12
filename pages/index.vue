@@ -209,10 +209,10 @@
           <p class="cta-text">{{ page.cta.text }}</p>
         </Reveal>
         <Reveal :delay="120">
-          <a :href="`mailto:${page.footer.email}`" class="btn-lime btn-big">
+          <NuxtLink :to="localePath('/contact')" class="btn-lime btn-big">
             {{ page.cta.button }}
             <svg class="arr" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 L17 7 M8 7 h9 v9" /></svg>
-          </a>
+          </NuxtLink>
         </Reveal>
       </div>
     </section>

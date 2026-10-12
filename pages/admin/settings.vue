@@ -2,6 +2,7 @@
   <div>
     <el-tabs v-model="tab">
       <el-tab-pane :label="t('settings')" name="settings" />
+      <el-tab-pane :label="t('advancedSettings')" name="advanced" />
       <el-tab-pane :label="t('brand')" name="brand" />
       <el-tab-pane :label="`${t('provider')} / API`" name="credentials" />
     </el-tabs>
@@ -40,7 +41,10 @@
 
         <el-button type="primary" :loading="basicSaving" @click="saveBasic">{{ t('save') }}</el-button>
       </el-card>
+    </template>
 
+    <!-- advanced settings: key-value table -->
+    <template v-if="tab === 'advanced'">
       <!-- Key-value table -->
       <el-card>
         <template #header>

@@ -84,7 +84,7 @@
 const { locale, page } = useSiteContent()
 const { settings } = await useSiteSettings()
 // Brand contact email (brands.contact_email), editable in admin Settings → Brand tab.
-const { data: brand } = await useFetch('/api/brand', { key: 'brand-contact' })
+const { data: brand } = await useFetch('/api/brand', { key: 'brand-contact', query: { locale } })
 const t = computed(() => page.value.contact ?? {})
 
 // site_settings JSONB values: { en: '…', 'zh-cn': '…' } — pick current locale

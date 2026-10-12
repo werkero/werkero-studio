@@ -4,21 +4,8 @@
       <div class="cols">
         <div class="col-brand">
           <div class="brand"><LogoMark :size="28" /><span class="brand-word">{{ siteName }}</span></div>
-          <p class="intro">{{ foot.intro }}</p>
         </div>
         <div class="col">
-          <p class="col-h">{{ foot.explore }}</p>
-          <a :href="anchor('#services')">{{ nav.services }}</a>
-          <a :href="anchor('#work')">{{ nav.work }}</a>
-          <a :href="anchor('#process')">{{ nav.workflow }}</a>
-          <a :href="anchor('#about')">{{ nav.about }}</a>
-        </div>
-        <div class="col">
-          <p class="col-h">{{ foot.services }}</p>
-          <span v-for="(s, i) in foot.serviceList" :key="i">{{ s }}</span>
-        </div>
-        <div class="col">
-          <p class="col-h">{{ foot.connect }}</p>
           <a href="https://github.com/adlerdler" target="_blank" rel="noopener" class="github-link" aria-label="GitHub">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.7 5.38-5.27 5.66.41.35.77 1.05.77 2.12 0 1.53-.01 2.76-.01 3.14 0 .3.2.67.8.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
           </a>
@@ -29,18 +16,18 @@
         <a href="#top" @click.prevent="toTop">{{ foot.backToTop }} ↑</a>
       </div>
     </div>
-    <div class="footer-crop" aria-hidden="true"><div class="giant-word">{{ siteName }}</div></div>
+    <div class="footer-crop" aria-hidden="true"><div class="giant-word"><span v-for="(c, i) in nameChars" :key="i">{{ c }}</span></div></div>
   </footer>
 </template>
 
 <script setup lang="ts">
-const { nav, footer: foot } = useSiteContent()
+const { footer: foot } = useSiteContent()
 const { get: getSetting } = await useSiteSettings()
 const siteName = computed(() => getSetting('site.name', 'WERKERO'))
 const siteCopyright = computed(() => getSetting('site.copyright', ''))
-const localePath = useLocalePath()
-const anchor = (hash: string) => localePath({ path: '/', hash })
 const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+// split brand name into chars for justified giant word
+const nameChars = computed(() => siteName.value.split(''))
 </script>
 
 <style scoped>
