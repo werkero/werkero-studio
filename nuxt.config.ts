@@ -10,7 +10,7 @@ const prerenderRoutes: string[] = LOCALES.flatMap((l) => [
 ])
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/content', '@nuxtjs/i18n', '@element-plus/nuxt', '@pinia/nuxt', '@vercel/speed-insights/nuxt'],
+  modules: ['@nuxt/content', '@nuxtjs/i18n', '@element-plus/nuxt', '@pinia/nuxt', '@vercel/speed-insights/nuxt', '@vercel/analytics/nuxt'],
 
   css: ['flag-icons/css/flag-icons.min.css', '~/assets/css/main.css'],
 
