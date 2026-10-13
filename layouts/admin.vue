@@ -212,7 +212,7 @@ const sidebarCollapsed = ref(false)
 const adminLogoUrl = ref('')
 async function loadAdminLogo() {
   try {
-    const settings = await $fetch('/api/admin/settings')
+    const settings = await api.get<any[]>('/api/admin/settings')
     const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
     // directly use admin.logo value; show W only if empty
     const v = typeof logo?.value === 'string' ? logo.value.trim() : ''
