@@ -153,6 +153,7 @@
   "siteDesc": "Website-Beschreibung",
   "siteTimezone": "Zeitzone",
   "siteCopyright": "Copyright",
+  "mailFrom": "Absenderadresse",
   "credHint": "Vollständiger Schlüssel jedes Mal erforderlich. AES-256-GCM verschlüsselt gespeichert.",
   "res.works": "Arbeiten",
   "res.products": "Produkte",

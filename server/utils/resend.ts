@@ -23,6 +23,18 @@ interface InquiryMail {
   message: string
 }
 
+// Get sender address from site_settings (mail.from), fallback to default.
+async function getFromAddress(brandId: string): Promise<string> {
+  try {
+    const { rows } = await useDb().query(
+      `SELECT value FROM site_settings WHERE brand_id=$1 AND key='mail.from' LIMIT 1`,
+      [brandId])
+    const v = typeof rows[0]?.value === 'string' ? rows[0].value.trim() : ''
+    if (v) return v
+  } catch { /* use default */ }
+  return 'Werkero Studio <noreply@email.a1l.xyz>'
+}
+
 // Send new-inquiry notification email. Fire-and-forget: never throws.
 export async function sendInquiryNotification(
   brandId: string,
@@ -32,6 +44,8 @@ export async function sendInquiryNotification(
   try {
     const apiKey = await getResendKey(brandId)
     if (!apiKey || !to) return
+
+    const from = await getFromAddress(brandId)
 
     const subject = `New inquiry from ${inquiry.name}`
     const lines = [
@@ -51,7 +65,7 @@ export async function sendInquiryNotification(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Werkero Studio <noreply@werkero.studio>',
+        from,
         to: [to],
         subject,
         text: lines.join('\n'),

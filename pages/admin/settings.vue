@@ -36,6 +36,9 @@
             <el-form-item :label="t('siteCopyright')" style="grid-column: span 2">
               <el-input v-model="basicForm['site.copyright']" style="width: 100%" />
             </el-form-item>
+            <el-form-item :label="t('mailFrom')" style="grid-column: span 2">
+              <el-input v-model="basicForm['mail.from']" placeholder="Werkero Studio <noreply@email.a1l.xyz>" style="width: 100%" />
+            </el-form-item>
           </div>
         </el-form>
 
@@ -216,7 +219,7 @@ const cred = ref({ provider: '', label: '', secret: '' })
 const credError = ref('')
 const credSaving = ref(false)
 // Basic site settings form (maps to site_settings keys)
-const BASIC_KEYS = ['site.name', 'site.url', 'site.description', 'site.timezone', 'site.copyright']
+const BASIC_KEYS = ['site.name', 'site.url', 'site.description', 'site.timezone', 'site.copyright', 'mail.from']
 const basicForm = ref<Record<string, string>>({})
 const basicError = ref('')
 const basicSaving = ref(false)

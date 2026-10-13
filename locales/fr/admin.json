@@ -153,6 +153,7 @@
   "siteDesc": "Description du site",
   "siteTimezone": "Fuseau horaire",
   "siteCopyright": "Copyright",
+  "mailFrom": "Adresse d'expéditeur",
   "credHint": "Clé complète requise à chaque fois. Stockage chiffré AES-256-GCM.",
   "res.works": "Réalisations",
   "res.products": "Produits",

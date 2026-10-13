@@ -153,6 +153,7 @@
   "siteDesc": "サイト説明",
   "siteTimezone": "タイムゾーン",
   "siteCopyright": "コピーライト",
+  "mailFrom": "送信者アドレス",
   "credHint": "毎回完全なキーが必要です。AES-256-GCM で暗号化して保存。",
   "res.works": "作品",
   "res.products": "製品",

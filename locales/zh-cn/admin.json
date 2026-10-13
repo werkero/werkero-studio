@@ -153,6 +153,7 @@
   "siteDesc": "网站描述",
   "siteTimezone": "时区",
   "siteCopyright": "版权信息",
+  "mailFrom": "发件人地址",
   "credHint": "每次需填写完整密钥。AES-256-GCM 加密存储。",
   "res.works": "作品",
   "res.products": "产品",
