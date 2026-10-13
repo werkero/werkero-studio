@@ -214,10 +214,9 @@ async function loadAdminLogo() {
   try {
     const settings = await $fetch('/api/admin/settings')
     const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
-    // admin.logo stores the URL directly
-    if (logo && typeof logo.value === 'string' && logo.value.startsWith('http')) {
-      adminLogoUrl.value = logo.value
-    }
+    // directly use admin.logo value; show W only if empty
+    const v = typeof logo?.value === 'string' ? logo.value.trim() : ''
+    if (v) adminLogoUrl.value = v
   } catch { /* keep default W */ }
 }
 
