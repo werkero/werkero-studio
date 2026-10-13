@@ -214,20 +214,11 @@ async function loadAdminLogo() {
   try {
     const settings = await $fetch('/api/admin/settings')
     const logo = (settings || []).find((s: any) => s.key === 'admin.logo')
-    const v = logo?.value
-    if (typeof v === 'string' && v) {
-      if (v.startsWith('http')) {
-        // new format: URL directly
-        adminLogoUrl.value = v
-      } else {
-        // old format: media asset ID, resolve to URL
-        try {
-          const m = await $fetch(`/api/admin/media/${v}`)
-          adminLogoUrl.value = m.url || ''
-        } catch {}
-      }
+    // admin.logo stores the URL directly
+    if (logo && typeof logo.value === 'string' && logo.value.startsWith('http')) {
+      adminLogoUrl.value = logo.value
     }
-  } catch { /* keep default */ }
+  } catch { /* keep default W */ }
 }
 
 const localeModel = computed({

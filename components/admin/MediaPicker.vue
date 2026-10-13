@@ -151,7 +151,11 @@ watch(pickerOpen, (v) => { if (v) { picked.value = props.modelValue; page.value 
 
 function confirm() {
   const m = rows.value.find((x: any) => x.id === picked.value)
-  emit('update:modelValue', m?.url || picked.value)
+  // Always store the full URL, never ID or filename
+  const url = m?.url || ''
+  if (url) {
+    emit('update:modelValue', url)
+  }
   pickerOpen.value = false
 }
 </script>
