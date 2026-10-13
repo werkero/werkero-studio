@@ -1,5 +1,6 @@
 import { useDb } from '../../utils/db'
 import { getBrandId, apiError } from '../../utils/api'
+import { sendInquiryNotification } from '../../utils/resend'
 
 // POST /api/inquiries — public contact form.
 // Anti-spam: IP rate limit (5/hour, 20/day) + honeypot → spam.
@@ -27,14 +28,26 @@ export default defineEventHandler(async (event) => {
     if (rows[0].h >= 5 || rows[0].d >= 20) apiError(429, 'RATE_LIMITED', 'too many inquiries from this IP')
   }
 
+  const company = String(body.company || '').slice(0, 200) || null
+  const budget = String(body.budget || '').slice(0, 100) || null
+
   await useDb().query(
     `INSERT INTO inquiries (brand_id, name, email, company, budget, message, source, ip_address, user_agent, status)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-    [brandId, name, email, String(body.company || '').slice(0, 200) || null,
-     String(body.budget || '').slice(0, 100) || null, message,
+    [brandId, name, email, company, budget, message,
      String(body.source || '').slice(0, 100) || null, ip,
      getRequestHeader(event, 'user-agent')?.slice(0, 500) || null, status])
 
-  // TODO: Resend email notification to brands.contact_email (needs service_credentials)
+  // Email notification (fire-and-forget, skip for spam)
+  if (!isHoneypot) {
+    const { rows: brandRows } = await useDb().query(
+      `SELECT contact_email FROM brands WHERE id=$1`, [brandId])
+    const contactEmail = brandRows[0]?.contact_email
+    if (contactEmail) {
+      // don't await: respond to user immediately
+      sendInquiryNotification(brandId, contactEmail, { name, email, company, budget, message })
+    }
+  }
+
   return { ok: true }
 })
