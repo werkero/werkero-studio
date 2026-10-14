@@ -142,7 +142,7 @@ useHead({ title: () => `${t.value.heroTitle} — Werkero Studio` })
 .contact-hero .hero-glow-b { width: 46vw; height: 46vw; right: -12vw; top: 6vw; opacity: 0.5; }
 .contact-hero .hero-glow-p { width: 40vw; height: 40vw; left: 30vw; bottom: -16vw; opacity: 0.4; }
 .contact-hero-inner { text-align: center; position: relative; z-index: 1; padding-top: 4rem; }
-.contact-hero .contact-title { font-size: clamp(3.4rem, 9vw, 8.5rem); line-height: 1.02; letter-spacing: -0.01em; color: #faf7f0; margin: 0; font-weight: 500; }
+.contact-hero .contact-title { font-size: clamp(3.4rem, 9vw, 10rem); line-height: 1.02; letter-spacing: -0.01em; color: #faf7f0; margin: 0; font-weight: 500; }
 .contact-hero-sub { color: rgba(250, 247, 240, 0.72); font-size: clamp(1.05rem, 1.6vw, 1.35rem); margin: 1.6rem 0 0; letter-spacing: 0.02em; }
 
 /* ---------- INTRO + FORM ---------- */

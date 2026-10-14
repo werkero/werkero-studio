@@ -47,6 +47,10 @@ img, svg { display: block; }
 
 /* ---------- layout ---------- */
 .wrap { width: min(1220px, 92vw); margin: 0 auto; }
+/* 大屏：内容区放宽，背景层保持全宽撑满两侧 */
+@media (min-width: 1600px) {
+  .wrap { width: min(1600px, 94vw); }
+}
 .section { padding: clamp(4.5rem, 2rem + 8vh, 8.5rem) 0; }
 .on-dark { background: var(--ink); color: var(--paper); }
 

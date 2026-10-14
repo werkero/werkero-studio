@@ -1,12 +1,9 @@
 <template>
   <main v-if="page">
-    <!-- HERO (dark) -->
-    <section class="hero-dark glow-wrap">
-      <div class="glow glow-red hero-glow-r" aria-hidden="true" />
-      <div class="glow glow-blue hero-glow-b" aria-hidden="true" />
-      <div class="glow glow-purple hero-glow-p" aria-hidden="true" />
+    <!-- HERO (dark, full-screen, studio style) -->
+    <section class="hero-full">
+      <div class="hero-bg" aria-hidden="true" />
       <div class="wrap hero-inner">
-        <p class="kicker on-dark-k rise in"><span class="ast lime">✳</span> {{ page.hero.eyebrow }}</p>
         <h1 class="hero-title">
           <span class="rise in" style="transition-delay: 120ms">{{ page.hero.line1 }}</span>
           <span class="rise in" style="transition-delay: 240ms">{{ page.hero.line2a }} <em class="acc">{{ page.hero.line2b }}</em></span>
@@ -21,6 +18,10 @@
             <a :href="anchor('#contact')" class="btn-outline">{{ page.hero.ctaSecondary }}</a>
           </div>
         </div>
+      </div>
+      <div class="scroll-line" aria-hidden="true">
+        <svg class="clover" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="12" cy="8" rx="3.2" ry="4"/><ellipse cx="12" cy="15" rx="3.2" ry="4"/><ellipse cx="8" cy="11.5" rx="4" ry="3.2"/><ellipse cx="16" cy="11.5" rx="4" ry="3.2"/><path d="M12 18.5c0 2-.8 3.2-2.2 4.5" stroke-linecap="round"/></svg>
+        <span />
       </div>
     </section>
 
@@ -236,19 +237,25 @@ useHead({
 </script>
 
 <style scoped>
-/* ---------- HERO (dark) ---------- */
-.hero-dark { position: relative; background: #0a0a0e; color: var(--paper); padding: 10rem 0 7rem; overflow: hidden; }
-.hero-glow-r { width: 52vw; height: 52vw; left: -14vw; top: -10vw; opacity: 0.55; }
-.hero-glow-b { width: 46vw; height: 46vw; right: -12vw; top: 6vw; opacity: 0.5; }
-.hero-glow-p { width: 40vw; height: 40vw; left: 30vw; bottom: -16vw; opacity: 0.4; }
-.hero-inner { position: relative; z-index: 1; }
-.kicker.on-dark-k { color: rgba(250, 247, 240, 0.72); }
-.kicker .ast.lime { color: var(--lime); }
-.hero-title { font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: 1.02; letter-spacing: -0.01em; margin: 1.4rem 0 0; color: #faf7f0; font-weight: 500; }
+/* ---------- HERO (dark, full-screen, studio style) ---------- */
+.hero-full { position: relative; min-height: 100svh; display: flex; align-items: center; justify-content: center; background: #0a0a0e; color: var(--paper); overflow: hidden; text-align: center; }
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60vw 60vw at 20% 10%, rgba(120, 40, 40, 0.35), transparent 60%),
+    radial-gradient(50vw 50vw at 85% 80%, rgba(40, 60, 120, 0.3), transparent 60%),
+    radial-gradient(40vw 40vw at 60% 40%, rgba(80, 50, 120, 0.22), transparent 60%),
+    #0a0a0e;
+}
+.hero-inner { position: relative; z-index: 1; padding: 6rem 0 4rem; }
+.hero-title { font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: 1.05; letter-spacing: -0.01em; margin: 0; color: #faf7f0; font-weight: 500; }
 .hero-title span { display: block; }
-.hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 2.5rem; margin-top: 3rem; }
-.hero-desc { color: rgba(250, 247, 240, 0.72); line-height: 1.65; margin: 0; max-width: 52ch; font-size: 1.05rem; }
-.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; flex-shrink: 0; }
+.hero-bottom { display: flex; flex-direction: column; align-items: center; gap: 2.2rem; margin-top: 2.6rem; }
+.hero-desc { color: rgba(250, 247, 240, 0.72); line-height: 1.75; margin: 0 auto; max-width: 52ch; font-size: 1.05rem; }
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.scroll-line { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
+.scroll-line .clover { color: var(--lime); }
+.scroll-line span { display: block; width: 1px; height: 48px; background: rgba(250, 247, 240, 0.35); }
 
 /* ---------- POSITION ---------- */
 .pos-headline { max-width: 20ch; }
@@ -436,7 +443,7 @@ useHead({
 
 /* ---------- responsive ---------- */
 @media (max-width: 1000px) {
-  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.8rem; }
+  .hero-bottom { gap: 1.8rem; }
   .pos-grid { grid-template-columns: 1fr; }
   .svc-grid { grid-template-columns: 1fr; }
   .svc-wide { grid-template-columns: 1fr; }
