@@ -229,6 +229,7 @@ const wideService = computed(() => (page.value as any)?.services?.items?.find((x
 useHead({
   title: () => 'Werkero Studio',
 })
+usePageSeo({ title: 'Werkero Studio' })
 </script>
 
 <style scoped>

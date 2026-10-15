@@ -57,6 +57,7 @@ function tags(w: any) {
 }
 
 useHead({ title: () => `${page.value.works.listTitle} — Werkero Studio` })
+usePageSeo({ title: () => `${page.value.works.listTitle} — Werkero Studio` })
 </script>
 
 <style scoped>

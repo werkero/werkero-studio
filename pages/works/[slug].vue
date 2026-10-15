@@ -87,6 +87,10 @@ const nextWork = computed(() => {
 })
 
 useHead({ title: () => `${(work.value as any)?.title ?? 'Work'} — Werkero Studio` })
+usePageSeo({
+  title: () => `${(work.value as any)?.title ?? 'Work'} — Werkero Studio`,
+  description: () => (work.value as any)?.tagline ?? '',
+})
 </script>
 
 <style scoped>

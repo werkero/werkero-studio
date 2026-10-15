@@ -1,0 +1,18 @@
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-User
+Disallow: /
+
+User-agent: Claude-SearchBot
+Disallow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://werkero.vercel.app/sitemap.xml

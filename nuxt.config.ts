@@ -43,6 +43,11 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'Werkero Studio — independent studio for web products, brands, and AI tools.' },
+        { property: 'og:site_name', content: 'Werkero Studio' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:image', content: 'https://werkero.vercel.app/og-image.png' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: 'https://werkero.vercel.app/og-image.png' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },

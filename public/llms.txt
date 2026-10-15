@@ -1,0 +1,39 @@
+# Werkero Studio
+
+> Independent digital product studio — design and engineering, end to end.
+
+Werkero is an independent digital product studio based in Shenzhen, China.
+It designs and builds web products, brands, and AI tools — design,
+engineering, and launch, end to end.
+
+## Services
+
+- Web product design and development
+- Brand identity and marketing websites
+- AI tools and integrations
+
+## Selected work
+
+- https://werkero.vercel.app/works/laurero
+- https://werkero.vercel.app/works/ai-archives
+- https://werkero.vercel.app/works/awarely
+- https://werkero.vercel.app/works/aether
+- https://werkero.vercel.app/works/arkhyx-blog
+- https://werkero.vercel.app/works/kyvero
+
+All work: https://werkero.vercel.app/works
+
+## Contact
+
+- Start a project: https://werkero.vercel.app/contact
+- About the studio: https://werkero.vercel.app/studio
+- Testimonials: https://werkero.vercel.app/testimonials
+
+## Languages
+
+This site is published in 7 languages: English, 简体中文， 繁體中文，
+Français, Deutsch, Русский， 日本語.
+
+## Sitemap
+
+- https://werkero.vercel.app/sitemap.xml
