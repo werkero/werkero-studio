@@ -1,7 +1,8 @@
 <template>
   <main v-if="page">
-    <!-- HERO (dark, full-screen, left aligned) -->
+    <!-- HERO (dark, full-screen, bubbles bg, CTAs bottom-right) -->
     <section class="hero-full">
+      <div class="bubbles" aria-hidden="true"><i /><i /><i /><i /></div>
       <div class="wrap hero-inner">
         <h1 class="hero-title">
           <span class="rise in" style="transition-delay: 120ms">{{ page.hero.line1 }}</span>
@@ -231,13 +232,21 @@ useHead({
 </script>
 
 <style scoped>
-/* ---------- HERO (dark, full-screen, left aligned) ---------- */
-.hero-full { position: relative; min-height: 100svh; display: flex; align-items: center; background: #0a0a0e; color: var(--paper); overflow: hidden; }
-.hero-inner { position: relative; z-index: 1; padding: 6rem 0 4rem; }
-.hero-title { font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: 1.05; letter-spacing: -0.01em; margin: 0; color: #faf7f0; font-weight: 500; text-align: left; }
+/* ---------- HERO (dark, full-screen, bubbles bg, CTAs bottom-right) ---------- */
+.hero-full { position: relative; min-height: 100svh; background: #0a0a0e; color: var(--paper); overflow: hidden; }
+.bubbles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.bubbles i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; animation: drift 20s ease-in-out infinite alternate; }
+.bubbles i:first-child { width: 44vmax; height: 44vmax; left: -10vmax; top: -12vmax; background: radial-gradient(circle, #ff4d6d 0, transparent 70%); animation-duration: 22s; }
+.bubbles i:nth-child(2) { width: 38vmax; height: 38vmax; right: -8vmax; top: 8vh; background: radial-gradient(circle, #4d7cff 0, transparent 70%); animation-duration: 17s; animation-delay: -6s; }
+.bubbles i:nth-child(3) { width: 34vmax; height: 34vmax; left: 30vw; bottom: -14vmax; background: radial-gradient(circle, #a855f7 0, transparent 70%); animation-duration: 26s; animation-delay: -11s; }
+.bubbles i:nth-child(4) { width: 22vmax; height: 22vmax; left: 55vw; top: -6vmax; background: radial-gradient(circle, #f2fe67 0, transparent 70%); opacity: 0.22; animation-duration: 15s; animation-delay: -3s; }
+@keyframes drift { 0% { transform: translateZ(0) scale(1); } to { transform: translate3d(6vmax, 4vmax, 0) scale(1.18); } }
+.hero-inner { position: relative; z-index: 1; min-height: 100svh; display: flex; flex-direction: column; padding: 7rem 0 3rem; }
+.hero-title { font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: 1.05; letter-spacing: -0.01em; margin: auto 0; color: #faf7f0; font-weight: 500; text-align: left; }
 .hero-title span { display: block; }
-.hero-bottom { display: flex; flex-direction: column; align-items: flex-start; gap: 2.2rem; margin-top: 2.6rem; }
-.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-start; }
+.hero-bottom { display: flex; justify-content: flex-end; margin-top: 2.5rem; }
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
+@media (prefers-reduced-motion: reduce) { .bubbles i { animation: none; } }
 
 /* ---------- POSITION ---------- */
 .pos-headline { max-width: 20ch; }
