@@ -52,7 +52,7 @@
         <el-alert v-if="formError" type="error" :closable="false" :title="formError" style="margin-bottom: 16px;" />
         <el-form label-position="top">
           <el-row :gutter="16">
-            <el-col v-for="f in res.fields" :key="f.key" :span="['textarea','markdown','json'].includes(f.type) ? 24 : 12">
+            <el-col v-for="f in res.fields" :key="f.key" :span="['textarea','markdown','json','seo-meta'].includes(f.type) ? 24 : 12">
               <el-form-item>
                 <template #label>
                   {{ t('field.' + f.key) }}<span v-if="f.required" style="color: #f56c6c;"> *</span>
@@ -82,6 +82,23 @@
                   :placeholder="f.placeholder || (f.lines ? 'one per line' : 'JSON')"
                   :input-style="{ fontFamily: 'monospace' }"
                 />
+                <div
+                  v-if="f.type === 'seo-meta'"
+                  style="display: flex; flex-direction: column; gap: 12px; border: 1px solid #dcdfe6; border-radius: 4px; padding: 12px;"
+                >
+                  <div>
+                    <div style="margin-bottom: 4px; color: #606266; font-size: 13px;">{{ t('field.title') }}</div>
+                    <el-input v-model="form[f.key].title" :placeholder="t('field.title')" maxlength="70" show-word-limit />
+                  </div>
+                  <div>
+                    <div style="margin-bottom: 4px; color: #606266; font-size: 13px;">{{ t('field.description') }}</div>
+                    <el-input v-model="form[f.key].description" type="textarea" :rows="3" :placeholder="t('field.description')" maxlength="160" show-word-limit />
+                  </div>
+                  <div>
+                    <div style="margin-bottom: 4px; color: #606266; font-size: 13px;">{{ t('field.og_image') }}</div>
+                    <el-input v-model="form[f.key].og_image" placeholder="https://…" />
+                  </div>
+                </div>
                 <div v-if="f.placeholder && f.type !== 'json'" style="color: #909399; font-size: 12px; margin-top: 4px;">{{ f.placeholder }}</div>
               </el-form-item>
             </el-col>
@@ -166,9 +183,13 @@ function onSizeChange(v: number) {
 }
 
 
-/** Convert a stored value into an editable string for the form. */
-function toForm(f: AdminField, row: any): string {
+/** Convert a stored value into an editable form value. */
+function toForm(f: AdminField, row: any): any {
   const raw = row[f.key]
+  if (f.type === 'seo-meta') {
+    const v = (raw && typeof raw === 'object' ? (raw as any)[locale.value] : null) || {}
+    return { title: v.title || '', description: v.description || '', og_image: v.og_image || '' }
+  }
   if (raw == null) return ''
   if (f.i18n && typeof raw === 'object') {
     const v = (raw as any)[locale.value]
@@ -185,8 +206,16 @@ function toForm(f: AdminField, row: any): string {
   return String(raw)
 }
 
-/** Convert a form string back into the API value. */
-function fromForm(f: AdminField, s: string): any {
+/** Convert a form value back into the API value. */
+function fromForm(f: AdminField, s: any): any {
+  if (f.type === 'seo-meta') {
+    const o = (s && typeof s === 'object' ? s : {}) as Record<string, any>
+    const title = String(o.title ?? '').trim()
+    const description = String(o.description ?? '').trim()
+    const og_image = String(o.og_image ?? '').trim()
+    if (!title && !description && !og_image) return undefined // skip → don't overwrite other locales
+    return { title, description, og_image }
+  }
   const str = (s ?? '').trim()
   if (str === '') return undefined // skip → don't overwrite other locales
   if (f.type === 'number') { const n = Number(str); return Number.isNaN(n) ? undefined : n }
@@ -203,7 +232,9 @@ function openNew() {
   form.value = {}
   formError.value = ''
   for (const f of res.value.fields) {
-    form.value[f.key] = f.type === 'select' && f.key === 'status' ? 'draft' : ''
+    form.value[f.key] = f.type === 'seo-meta'
+      ? { title: '', description: '', og_image: '' }
+      : (f.type === 'select' && f.key === 'status' ? 'draft' : '')
   }
 }
 function openEdit(row: any) {

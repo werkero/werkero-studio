@@ -4,7 +4,7 @@
  *  - i18n: false → plain column, locale-independent
  */
 
-export type AdminFieldType = 'text' | 'textarea' | 'markdown' | 'number' | 'select' | 'json'
+export type AdminFieldType = 'text' | 'textarea' | 'markdown' | 'number' | 'select' | 'json' | 'seo-meta'
 
 export interface AdminField {
   key: string
@@ -133,8 +133,15 @@ export const ADMIN_RESOURCES: Record<string, AdminResource> = {
     slug: 'seo', name: 'SEO', nameZh: 'SEO', perm: 'seo',
     titleField: 'page_key', statuses: [],
     fields: [
-      { key: 'page_key', type: 'text', label: 'Page key', i18n: false, required: true, list: true, placeholder: 'home' },
-      { key: 'meta', type: 'json', label: 'Meta (JSON)', i18n: true, placeholder: '{"title":{"en":"…"}}' },
+      { key: 'page_key', type: 'select', label: 'Page key', i18n: false, required: true, list: true,
+        options: [
+          { value: 'home', label: 'Home' },
+          { value: 'studio', label: 'Studio' },
+          { value: 'works', label: 'Works' },
+          { value: 'testimonials', label: 'Testimonials' },
+          { value: 'contact', label: 'Contact' },
+        ] },
+      { key: 'meta', type: 'seo-meta', label: 'Meta', i18n: true },
       { key: 'noindex', type: 'select', label: 'Noindex', i18n: false, options: [{ value: 'false', label: 'false' }, { value: 'true', label: 'true' }] },
     ],
   },

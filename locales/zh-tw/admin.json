@@ -118,7 +118,7 @@
   "field.description": "描述",
   "field.highlights": "亮點",
   "field.icon": "圖標",
-  "field.meta": "元信息 (JSON)",
+  "field.meta": "元資訊",
   "field.name": "名稱",
   "field.noindex": "禁止索引",
   "field.overview": "概述",
@@ -261,5 +261,11 @@
   "clear": "清除",
   "viewMedia": "查看",
   "clearCache": "清除快取",
-  "cacheCleared": "快取已清除"
+  "cacheCleared": "快取已清除",
+  "field.og_image": "分享圖",
+  "opt.home": "首頁（/）",
+  "opt.studio": "工作室（/studio）",
+  "opt.works": "作品（/works）",
+  "opt.testimonials": "用戶評價（/testimonials）",
+  "opt.contact": "聯繫（/contact）"
 }

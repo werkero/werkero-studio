@@ -118,7 +118,7 @@
   "field.description": "説明",
   "field.highlights": "ハイライト",
   "field.icon": "アイコン",
-  "field.meta": "メタ (JSON)",
+  "field.meta": "メタ",
   "field.name": "名前",
   "field.noindex": "Noindex",
   "field.overview": "概要",
@@ -261,5 +261,11 @@
   "clear": "クリア",
   "viewMedia": "表示",
   "clearCache": "キャッシュをクリア",
-  "cacheCleared": "キャッシュをクリアしました"
+  "cacheCleared": "キャッシュをクリアしました",
+  "field.og_image": "OG画像",
+  "opt.home": "ホーム（/）",
+  "opt.studio": "スタジオ（/studio）",
+  "opt.works": "作品（/works）",
+  "opt.testimonials": "お客様の声（/testimonials）",
+  "opt.contact": "お問い合わせ（/contact）"
 }
