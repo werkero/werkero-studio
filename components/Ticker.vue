@@ -1,6 +1,5 @@
 <template>
   <div class="ticker-block">
-    <p class="kicker wrap tick-label"><span class="ast">✳</span> {{ label }}</p>
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
         <template v-for="n in 2" :key="n">
