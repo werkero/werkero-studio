@@ -419,7 +419,7 @@ INSERT INTO permissions (slug, name, module) VALUES
   ('inquiries.view','查看询盘','inquiries'),('inquiries.update','跟进询盘','inquiries'),
   ('translation.trigger','触发翻译','translation'),('translation.retry','重试翻译','translation'),
   ('settings.view','查看设置','settings'),('settings.edit','编辑设置','settings'),
-  ('seo.view','查看SEO','seo'),('seo.edit','编辑SEO','seo'),
+  ('seo.view','查看SEO','seo'),('seo.create','新建SEO','seo'),('seo.edit','编辑SEO','seo'),('seo.delete','删除SEO','seo'),
   ('credentials.view','查看凭证','credentials'),('credentials.edit','编辑凭证','credentials'),
   ('users.view','查看用户','users'),('users.create','新建用户','users'),
   ('users.edit','编辑用户','users'),('users.delete','删除用户','users'),

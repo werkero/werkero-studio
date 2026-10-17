@@ -173,7 +173,7 @@ export const PERMISSION_CATALOG: { module: string; perms: string[] }[] = [
   { module: 'inquiries', perms: ['inquiries.view', 'inquiries.update'] },
   { module: 'translation', perms: ['translation.trigger', 'translation.retry'] },
   { module: 'settings', perms: ['settings.view', 'settings.edit'] },
-  { module: 'seo', perms: ['seo.view', 'seo.edit'] },
+  { module: 'seo', perms: ['seo.view', 'seo.create', 'seo.edit', 'seo.delete'] },
   { module: 'credentials', perms: ['credentials.view', 'credentials.edit'] },
   { module: 'users', perms: ['users.view', 'users.create', 'users.edit', 'users.delete'] },
   { module: 'roles', perms: ['roles.view', 'roles.edit'] },
