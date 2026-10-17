@@ -82,20 +82,17 @@
                   :placeholder="f.placeholder || (f.lines ? 'one per line' : 'JSON')"
                   :input-style="{ fontFamily: 'monospace' }"
                 />
-                <div
-                  v-if="f.type === 'seo-meta'"
-                  style="display: flex; flex-direction: column; gap: 12px; border: 1px solid #dcdfe6; border-radius: 4px; padding: 12px;"
-                >
-                  <div>
-                    <div style="margin-bottom: 4px; color: #606266; font-size: 13px;">{{ t('field.title') }}</div>
+                <div v-if="f.type === 'seo-meta'" class="seo-meta-box">
+                  <div class="seo-meta-field">
+                    <div class="seo-meta-label">{{ t('field.title') }}</div>
                     <el-input v-model="form[f.key].title" :placeholder="t('field.title')" maxlength="70" show-word-limit />
                   </div>
-                  <div>
-                    <div style="margin-bottom: 4px; color: #606266; font-size: 13px;">{{ t('field.description') }}</div>
+                  <div class="seo-meta-field">
+                    <div class="seo-meta-label">{{ t('field.description') }}</div>
                     <el-input v-model="form[f.key].description" type="textarea" :rows="3" :placeholder="t('field.description')" maxlength="160" show-word-limit />
                   </div>
-                  <div>
-                    <div style="margin-bottom: 4px; color: #606266; font-size: 13px;">{{ t('field.og_image') }}</div>
+                  <div class="seo-meta-field">
+                    <div class="seo-meta-label">{{ t('field.og_image') }}</div>
                     <el-input v-model="form[f.key].og_image" placeholder="https://…" />
                   </div>
                 </div>
@@ -297,3 +294,22 @@ async function remove(row: any) {
 watch([() => route.params.resource, locale], () => { page.value = 1; load() })
 onMounted(load)
 </script>
+
+<style scoped>
+/* SEO meta editor: soft card inside the dialog */
+.seo-meta-box {
+  background: #f7f8fa;
+  border: 1px solid #e4e7ed;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.seo-meta-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #303133;
+  margin-bottom: 6px;
+}
+</style>
