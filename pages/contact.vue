@@ -133,7 +133,7 @@ async function submit() {
 }
 
 useHead({ title: () => `${t.value.heroTitle} — Werkero Studio` })
-usePageSeo({ title: () => `${t.value.heroTitle} — Werkero Studio` })
+usePageSeo({ title: () => `${t.value.heroTitle} — Werkero Studio`, pageKey: 'contact' })
 </script>
 
 <style scoped>

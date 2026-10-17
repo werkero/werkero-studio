@@ -112,7 +112,7 @@ const ctaText = computed(() => page.value.cta?.text ?? '')
 const ctaButton = computed(() => page.value.cta?.button ?? '')
 
 useHead({ title: () => `Studio — Werkero Studio` })
-usePageSeo({ title: () => `Studio — Werkero Studio` })
+usePageSeo({ title: () => `Studio — Werkero Studio`, pageKey: 'studio' })
 </script>
 
 <style scoped>

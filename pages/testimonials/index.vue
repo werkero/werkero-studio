@@ -59,7 +59,7 @@ const list = computed(() => (testimonials.value ?? []).filter((t: any) => t.cont
 const featured = computed(() => list.value[0] ?? null)
 
 useHead({ title: () => `${page.value.testimonials.listTitle} — Werkero Studio` })
-usePageSeo({ title: () => `${page.value.testimonials.listTitle} — Werkero Studio` })
+usePageSeo({ title: () => `${page.value.testimonials.listTitle} — Werkero Studio`, pageKey: 'testimonials' })
 </script>
 
 <style scoped>
